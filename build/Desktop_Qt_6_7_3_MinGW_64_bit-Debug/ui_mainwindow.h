@@ -12,7 +12,6 @@
 #include <QtCore/QVariant>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QComboBox>
-#include <QtWidgets/QDateEdit>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
@@ -37,21 +36,20 @@ public:
     QLabel *label;
     QLabel *label_2;
     QLineEdit *lineEdit_2;
-    QLabel *label_3;
-    QLineEdit *lineEdit_3;
-    QLabel *label_4;
-    QSpinBox *spinBox;
     QLabel *label_6;
     QLabel *label_7;
     QLineEdit *lineEdit_4;
     QLineEdit *lineEdit_5;
-    QLabel *label_5;
     QComboBox *comboBox;
     QLabel *label_8;
     QPushButton *pushButton_4;
     QLabel *label_9;
-    QDateEdit *dateEdit;
-    QLabel *label_11;
+    QLabel *label_4;
+    QLabel *label_5;
+    QSpinBox *spinBox;
+    QLineEdit *lineEdit_3;
+    QLabel *label_3;
+    QPushButton *pushButton_3;
     QTableView *tableView;
     QComboBox *trier;
     QLineEdit *recherche;
@@ -73,6 +71,7 @@ public:
     QPushButton *rech;
     QPushButton *pdf;
     QPushButton *pdf_2;
+    QPushButton *pushButton;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -86,7 +85,7 @@ public:
         centralwidget->setObjectName("centralwidget");
         groupBox = new QGroupBox(centralwidget);
         groupBox->setObjectName("groupBox");
-        groupBox->setGeometry(QRect(180, 40, 221, 621));
+        groupBox->setGeometry(QRect(220, 40, 221, 621));
         lineEdit = new QLineEdit(groupBox);
         lineEdit->setObjectName("lineEdit");
         lineEdit->setGeometry(QRect(30, 60, 113, 26));
@@ -95,55 +94,52 @@ public:
         label->setGeometry(QRect(10, 30, 121, 20));
         label_2 = new QLabel(groupBox);
         label_2->setObjectName("label_2");
-        label_2->setGeometry(QRect(10, 90, 63, 20));
+        label_2->setGeometry(QRect(10, 150, 63, 20));
         lineEdit_2 = new QLineEdit(groupBox);
         lineEdit_2->setObjectName("lineEdit_2");
         lineEdit_2->setGeometry(QRect(30, 110, 113, 26));
-        label_3 = new QLabel(groupBox);
-        label_3->setObjectName("label_3");
-        label_3->setGeometry(QRect(10, 140, 63, 20));
-        lineEdit_3 = new QLineEdit(groupBox);
-        lineEdit_3->setObjectName("lineEdit_3");
-        lineEdit_3->setGeometry(QRect(30, 170, 113, 26));
-        label_4 = new QLabel(groupBox);
-        label_4->setObjectName("label_4");
-        label_4->setGeometry(QRect(10, 200, 81, 20));
-        spinBox = new QSpinBox(groupBox);
-        spinBox->setObjectName("spinBox");
-        spinBox->setGeometry(QRect(30, 360, 111, 26));
         label_6 = new QLabel(groupBox);
         label_6->setObjectName("label_6");
-        label_6->setGeometry(QRect(10, 260, 81, 20));
+        label_6->setGeometry(QRect(10, 290, 81, 20));
         label_7 = new QLabel(groupBox);
         label_7->setObjectName("label_7");
         label_7->setGeometry(QRect(10, 440, 63, 20));
         lineEdit_4 = new QLineEdit(groupBox);
         lineEdit_4->setObjectName("lineEdit_4");
-        lineEdit_4->setGeometry(QRect(30, 230, 113, 26));
+        lineEdit_4->setGeometry(QRect(30, 260, 113, 26));
         lineEdit_5 = new QLineEdit(groupBox);
         lineEdit_5->setObjectName("lineEdit_5");
-        lineEdit_5->setGeometry(QRect(30, 290, 113, 26));
-        label_5 = new QLabel(groupBox);
-        label_5->setObjectName("label_5");
-        label_5->setGeometry(QRect(10, 330, 63, 20));
+        lineEdit_5->setGeometry(QRect(30, 340, 113, 26));
         comboBox = new QComboBox(groupBox);
         comboBox->setObjectName("comboBox");
-        comboBox->setGeometry(QRect(30, 490, 111, 31));
+        comboBox->setGeometry(QRect(30, 480, 111, 31));
         label_8 = new QLabel(groupBox);
         label_8->setObjectName("label_8");
-        label_8->setGeometry(QRect(10, 460, 63, 20));
+        label_8->setGeometry(QRect(10, 450, 63, 20));
         pushButton_4 = new QPushButton(groupBox);
         pushButton_4->setObjectName("pushButton_4");
         pushButton_4->setGeometry(QRect(40, 560, 93, 29));
         label_9 = new QLabel(groupBox);
         label_9->setObjectName("label_9");
-        label_9->setGeometry(QRect(0, 530, 101, 20));
-        dateEdit = new QDateEdit(groupBox);
-        dateEdit->setObjectName("dateEdit");
-        dateEdit->setGeometry(QRect(30, 430, 110, 26));
-        label_11 = new QLabel(groupBox);
-        label_11->setObjectName("label_11");
-        label_11->setGeometry(QRect(10, 400, 101, 20));
+        label_9->setGeometry(QRect(50, 600, 101, 20));
+        label_4 = new QLabel(groupBox);
+        label_4->setObjectName("label_4");
+        label_4->setGeometry(QRect(10, 90, 81, 20));
+        label_5 = new QLabel(groupBox);
+        label_5->setObjectName("label_5");
+        label_5->setGeometry(QRect(10, 390, 63, 20));
+        spinBox = new QSpinBox(groupBox);
+        spinBox->setObjectName("spinBox");
+        spinBox->setGeometry(QRect(30, 430, 111, 26));
+        lineEdit_3 = new QLineEdit(groupBox);
+        lineEdit_3->setObjectName("lineEdit_3");
+        lineEdit_3->setGeometry(QRect(30, 180, 113, 26));
+        label_3 = new QLabel(groupBox);
+        label_3->setObjectName("label_3");
+        label_3->setGeometry(QRect(0, 240, 63, 20));
+        pushButton_3 = new QPushButton(groupBox);
+        pushButton_3->setObjectName("pushButton_3");
+        pushButton_3->setGeometry(QRect(40, 210, 141, 29));
         tableView = new QTableView(centralwidget);
         tableView->setObjectName("tableView");
         tableView->setGeometry(QRect(490, 290, 851, 411));
@@ -161,7 +157,7 @@ public:
         pushButton_2->setGeometry(QRect(940, 250, 93, 29));
         groupBox_2 = new QGroupBox(centralwidget);
         groupBox_2->setObjectName("groupBox_2");
-        groupBox_2->setGeometry(QRect(190, 680, 211, 41));
+        groupBox_2->setGeometry(QRect(220, 670, 221, 41));
         radioButton = new QRadioButton(groupBox_2);
         radioButton->setObjectName("radioButton");
         radioButton->setGeometry(QRect(10, 10, 110, 24));
@@ -203,10 +199,13 @@ public:
         rech->setGeometry(QRect(950, 210, 91, 31));
         pdf = new QPushButton(centralwidget);
         pdf->setObjectName("pdf");
-        pdf->setGeometry(QRect(770, 140, 91, 51));
+        pdf->setGeometry(QRect(750, 120, 91, 51));
         pdf_2 = new QPushButton(centralwidget);
         pdf_2->setObjectName("pdf_2");
-        pdf_2->setGeometry(QRect(680, 140, 91, 51));
+        pdf_2->setGeometry(QRect(670, 120, 91, 51));
+        pushButton = new QPushButton(centralwidget);
+        pushButton->setObjectName("pushButton");
+        pushButton->setGeometry(QRect(1240, 250, 93, 29));
         MainWindow->setCentralWidget(centralwidget);
         groupBox->raise();
         tableView->raise();
@@ -228,6 +227,7 @@ public:
         rech->raise();
         pdf->raise();
         pdf_2->raise();
+        pushButton->raise();
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
         menubar->setGeometry(QRect(0, 0, 1404, 26));
@@ -248,15 +248,15 @@ public:
         groupBox->setTitle(QCoreApplication::translate("MainWindow", "Ajouter ", nullptr));
         label->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:700;\">Id_equipement</span></p></body></html>", nullptr));
         label_2->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:700;\">Image</span></p></body></html>", nullptr));
-        label_3->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:700;\">type</span></p></body></html>", nullptr));
-        label_4->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:700;\">nom</span></p></body></html>", nullptr));
         label_6->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:700;\">description</span></p></body></html>", nullptr));
         label_7->setText(QString());
-        label_5->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:700;\">quantit\303\251</span></p></body></html>", nullptr));
         label_8->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:700;\">etat</span></p></body></html>", nullptr));
         pushButton_4->setText(QCoreApplication::translate("MainWindow", "ajouter", nullptr));
         label_9->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><br/></p></body></html>", nullptr));
-        label_11->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:700;\">date</span></p></body></html>", nullptr));
+        label_4->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:700;\">nom</span></p></body></html>", nullptr));
+        label_5->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:700;\">quantit\303\251</span></p></body></html>", nullptr));
+        label_3->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:700;\">type</span></p></body></html>", nullptr));
+        pushButton_3->setText(QCoreApplication::translate("MainWindow", "choiser un imager", nullptr));
         pushButton_2->setText(QCoreApplication::translate("MainWindow", "supprimer", nullptr));
         groupBox_2->setTitle(QString());
         radioButton->setText(QCoreApplication::translate("MainWindow", "Ajouter", nullptr));
@@ -265,17 +265,18 @@ public:
 #if QT_CONFIG(whatsthis)
         btnemploye->setWhatsThis(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:700;\">employe</span></p></body></html>", nullptr));
 #endif // QT_CONFIG(whatsthis)
-        btnemploye->setText(QCoreApplication::translate("MainWindow", "employe", nullptr));
-        btnpatient->setText(QCoreApplication::translate("MainWindow", "patient", nullptr));
-        btnvaccins->setText(QCoreApplication::translate("MainWindow", "vaccins", nullptr));
-        btnequipement->setText(QCoreApplication::translate("MainWindow", "equipement", nullptr));
-        btnformation->setText(QCoreApplication::translate("MainWindow", "formation", nullptr));
-        btnrecherche->setText(QCoreApplication::translate("MainWindow", "recherche", nullptr));
+        btnemploye->setText(QCoreApplication::translate("MainWindow", "Employe", nullptr));
+        btnpatient->setText(QCoreApplication::translate("MainWindow", "Patient", nullptr));
+        btnvaccins->setText(QCoreApplication::translate("MainWindow", "Vaccins", nullptr));
+        btnequipement->setText(QCoreApplication::translate("MainWindow", "Equipement", nullptr));
+        btnformation->setText(QCoreApplication::translate("MainWindow", "Formation", nullptr));
+        btnrecherche->setText(QCoreApplication::translate("MainWindow", "Recherche", nullptr));
         logout->setText(QString());
         logo->setText(QString());
         rech->setText(QString());
         pdf->setText(QString());
         pdf_2->setText(QString());
+        pushButton->setText(QCoreApplication::translate("MainWindow", "afficher", nullptr));
     } // retranslateUi
 
 };
