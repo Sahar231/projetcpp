@@ -2,13 +2,13 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-
-
-
+#include "recherche.h"
+#include "connection.h"
+#include <QList>
+#include <QString>
+#include <QSqlQuery>
 QT_BEGIN_NAMESPACE
-namespace Ui {
-class MainWindow;
-}
+namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
 class MainWindow : public QMainWindow
@@ -19,12 +19,21 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-
 private slots:
 
+    void on_Rc_push_Supprimer_clicked();
 
+    void on_Rc_push_Modifier_clicked();
+
+    void on_Rc_push_Ajouter_clicked();
+
+    void on_RC_combo_ID_currentIndexChanged(int index);
 
 private:
     Ui::MainWindow *ui;
+    Recherche R;
+    void clearFields();
+    void populateComboBoxes();
 };
+
 #endif // MAINWINDOW_H

@@ -12,11 +12,13 @@ CONFIG += c++17
 SOURCES += \
     connection.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    recherche.cpp
 
 HEADERS += \
     connection.h \
-    mainwindow.h
+    mainwindow.h \
+    recherche.h
 
 FORMS += \
     mainwindow.ui

@@ -8,19 +8,30 @@
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QFileDialog>
+#include <QEventLoop>
+#include <QJsonObject>
+#include <QJsonDocument>
+#include <QDebug>
+#include <QUrlQuery>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    setWindowTitle("Recherche");
+
+    ui->Rc_TableView_Res->setModel(R.afficher());
+    ui->Rc_TableView_Res->setColumnWidth(3, 250);
+    ui->RC_combo_ID->setModel(R.afficher_id());
+    populateComboBoxes();
 
 
 
 
 
     QPalette palette;
-    QPixmap pixmap("c:/Users/Sahar/Bureau/project/interfce/back55.jpg");
+    QPixmap pixmap("C:/Users/slimc/OneDrive/Documents/GitHub/projetcpp/back55.jpg");
     palette.setBrush(QPalette::Window,  pixmap);
     ui->centralwidget->setPalette(palette);
     ui->centralwidget->setAutoFillBackground(true);
@@ -53,56 +64,201 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
-    ui->logo->setIcon(QIcon("c:/Users/Sahar/Bureau/project/interfce/logo9.png"));
+    ui->logo->setIcon(QIcon("C:/Users/slimc/OneDrive/Documents/GitHub/projetcpp/logo9.png"));
     ui->logo->setIconSize(QSize(150, 150));
     ui->logo->setStyleSheet(commonButtonStyle);
-    ui->comboBox->addItem("en panne ");
-    ui->comboBox->addItem("en service");
-    ui->comboBox->addItem("disponble");
 
 
-    ui->btnemploye->setIcon(QIcon("c:/Users/Sahar/Bureau/project/interfce/employe.png"));
+    ui->btnemploye->setIcon(QIcon("C:/Users/slimc/OneDrive/Documents/GitHub/projetcpp/employe.png"));
     ui->btnemploye->setIconSize(QSize(50, 50));
     ui->btnemploye->setStyleSheet(commonButtonStyle);
-    ui->btnpatient->setIcon(QIcon("c:/Users/Sahar/Bureau/project/interfce/patient.png"));
+    ui->btnpatient->setIcon(QIcon("C:/Users/slimc/OneDrive/Documents/GitHub/projetcpp/patient.png"));
     ui->btnpatient->setIconSize(QSize(50, 50));
     ui->btnpatient->setStyleSheet(commonButtonStyle);
-    ui->btnvaccins->setIcon(QIcon("c:/Users/Sahar/Bureau/project/interfce/vaccins.png"));
+    ui->btnvaccins->setIcon(QIcon("C:/Users/slimc/OneDrive/Documents/GitHub/projetcpp/vaccins.png"));
     ui->btnvaccins->setIconSize(QSize(50, 50));
     ui->btnvaccins->setStyleSheet(commonButtonStyle);
-    ui->btnequipement->setIcon(QIcon("c:/Users/Sahar/Bureau/project/interfce/equipement.png"));
+    ui->btnequipement->setIcon(QIcon("C:/Users/slimc/OneDrive/Documents/GitHub/projetcpp/equipement.png"));
     ui->btnequipement->setIconSize(QSize(50, 50));
     ui->btnequipement->setStyleSheet(commonButtonStyle);
-    ui->btnformation->setIcon(QIcon("c:/Users/Sahar/Bureau/project/interfce/formation.png"));
+    ui->btnformation->setIcon(QIcon("C:/Users/slimc/OneDrive/Documents/GitHub/projetcpp/formation.png"));
     ui->btnformation->setIconSize(QSize(50, 50));
     ui->btnformation->setStyleSheet(commonButtonStyle);
-    ui->btnrecherche->setIcon(QIcon("c:/Users/Sahar/Bureau/project/interfce/recherche.png"));
+    ui->btnrecherche->setIcon(QIcon("C:/Users/slimc/OneDrive/Documents/GitHub/projetcpp/recherche.png"));
     ui->btnrecherche->setIconSize(QSize(50, 50));
-    ui->logout->setIcon(QIcon("c:/Users/Sahar/Bureau/project/interfce/logout1.png"));
+    ui->logout->setIcon(QIcon("C:/Users/slimc/OneDrive/Documents/GitHub/projetcpp/logout1.png"));
     ui->logout->setIconSize(QSize(50, 50));
     ui->btnrecherche->setStyleSheet(commonButtonStyle);
     ui->logout->setStyleSheet(commonButtonStyle);
-    ui->rech->setIcon(QIcon("c:/Users/Sahar/Bureau/project/interfce/reche.png"));
-    ui->rech->setIconSize(QSize(91, 31));
-    ui->rech->setStyleSheet("QPushButton { border: 0px; background: transparent; }");
-    ui->pdf->setIcon(QIcon("c:/Users/Sahar/Bureau/project/interfce/pdf2.png"));
-    ui->pdf->setIconSize(QSize(91, 51));
-    ui->pdf->setStyleSheet("QPushButton { border: 0px; background: transparent; }");
-    ui->pdf_2->setIcon(QIcon("c:/Users/Sahar/Bureau/project/interfce/sta.png"));
-    ui->pdf_2->setIconSize(QSize(91, 51));
-    ui->pdf_2->setStyleSheet("QPushButton { border: 0px; background: transparent; }");
-    ui->recherche->setPlaceholderText("rechercher un equipement par ... ");
-    ui->comboBox_3->addItem("nom");
-    ui->comboBox_3->addItem("type");
-    ui->comboBox_3->addItem("etat");
-    ui->comboBox_3->addItem("localisation");
-    ui->supprimer->setPlaceholderText("ID");
-    ui->trier->addItem("trier par");
-    ui->trier->addItem("nom");
-    ui->trier->addItem("type");
-    ui->trier->addItem("etat");
-    ui->trier->addItem("quantité");
 
 
+}
+MainWindow::~MainWindow()
+{
+    delete ui;
+}
+
+void MainWindow::populateComboBoxes()
+{
+    QSqlQuery queryVaccin;
+    queryVaccin.prepare("SELECT id_vaccin FROM vaccins");
+    if (queryVaccin.exec()) {
+        ui->Rc_vaccin_combo->clear();
+        while (queryVaccin.next()) {
+            ui->Rc_vaccin_combo->addItem(queryVaccin.value(0).toString());
+        }
+    } else {
+        qDebug() << "Failed to populate Rc_vaccin_combo:" << queryVaccin.lastError().text();
+    }
+
+    // Populate Rc_employe_combox with IDs from employes table
+    QSqlQuery queryEmploye;
+    queryEmploye.prepare("SELECT id_employe FROM employes");
+    if (queryEmploye.exec()) {
+        ui->Rc_employe_combox->clear(); // Corrected to Rc_employe_combox
+        while (queryEmploye.next()) {
+            ui->Rc_employe_combox->addItem(queryEmploye.value(0).toString());
+        }
+    } else {
+        qDebug() << "Failed to populate Rc_employe_combox:" << queryEmploye.lastError().text();
+    }
+
+    // Populate Rc_equip_combo with IDs from equipements table
+    QSqlQuery queryEquipement;
+    queryEquipement.prepare("SELECT id_equipement FROM equipements");
+    if (queryEquipement.exec()) {
+        ui->Rc_equip_combo->clear();
+        while (queryEquipement.next()) {
+            ui->Rc_equip_combo->addItem(queryEquipement.value(0).toString());
+        }
+    } else {
+        qDebug() << "Failed to populate Rc_equip_combo:" << queryEquipement.lastError().text();
+    }
+
+    // Populate Rc_statut_combox with predefined values
+    ui->Rc_statut_combo->clear(); // Added Rc_statut_combox
+    ui->Rc_statut_combo->addItem("En cours");
+    ui->Rc_statut_combo->addItem("Terminé");
+    ui->Rc_statut_combo->addItem("Annulé");
+}
+
+
+
+void MainWindow::clearFields()
+{
+    // Clear all QLineEdit fields
+    ui->Rc_id_field->clear();
+    ui->Rc_nom_field->clear();
+    ui->Rc_type_field->clear();
+
+    // Reset QDateEdit field to a default date (e.g., current date)
+    ui->Rc_date_field->setDate(QDate::currentDate());
+
+    // Reset combo boxes to default (e.g., first item or clear)
+    if (ui->Rc_statut_combo->count() > 0) ui->Rc_statut_combo->setCurrentIndex(0);
+    if (ui->Rc_vaccin_combo->count() > 0) ui->Rc_vaccin_combo->setCurrentIndex(0);
+    if (ui->Rc_employe_combox->count() > 0) ui->Rc_employe_combox->setCurrentIndex(0);
+    if (ui->Rc_equip_combo->count() > 0) ui->Rc_equip_combo->setCurrentIndex(0);
+}
+
+void MainWindow::on_Rc_push_Supprimer_clicked()
+{
+    Recherche R;
+    R.setIdRech(ui->RC_combo_ID->currentText().toInt());
+    bool test = R.supprimer(R.getIdRech());
+    if (test) {
+        ui->Rc_Label_InfoAffichage->setText("Suppression Effectuée");
+        ui->Rc_TableView_Res->setModel(R.afficher());
+        ui->RC_combo_ID->setModel(R.afficher_id());
+        clearFields();
+        populateComboBoxes(); // Refresh combo boxes after deletion
+    } else {
+        ui->Rc_Label_InfoAffichage->setText("Suppression non effectuée");
+    }
+
+}
+
+void MainWindow::on_Rc_push_Modifier_clicked()
+{
+    int idRech = ui->Rc_id_field->text().toInt();
+    QString nomRech = ui->Rc_nom_field->text();
+    QString typeRech = ui->Rc_type_field->text();
+    QDate dateRech = ui->Rc_date_field->date();
+    QString statut = ui->Rc_statut_combo->currentText(); // Changed to use Rc_statut_combox
+    int idVaccin = ui->Rc_vaccin_combo->currentText().toInt();
+    int idEmploye = ui->Rc_employe_combox->currentText().toInt(); // Corrected to Rc_employe_combox
+    int idEquipement = ui->Rc_equip_combo->currentText().toInt();
+    QString idRechString = ui->Rc_id_field->text();
+
+    if (idRechString.isEmpty() || idRech == 0 || nomRech.isEmpty() || typeRech.isEmpty() || statut.isEmpty()) {
+        ui->Rc_Label_InfoAffichage->setText("Erreur de contrôle de saisie");
+        return;
+    }
+
+    Recherche R(idRech, nomRech, typeRech, dateRech, statut, idVaccin, idEmploye, idEquipement);
+    bool test = R.modifier();
+    if (test) {
+        ui->Rc_Label_InfoAffichage->setText("Modification Effectuée ID: " + QString::number(idRech));
+        ui->Rc_TableView_Res->setModel(R.afficher());
+        ui->RC_combo_ID->setModel(R.afficher_id());
+        clearFields();
+        populateComboBoxes(); // Refresh combo boxes after modification
+    } else {
+        ui->Rc_Label_InfoAffichage->setText("Modification non effectuée");
+    }
+}
+
+void MainWindow::on_Rc_push_Ajouter_clicked()
+{
+    int idRech = ui->Rc_id_field->text().toInt();
+    QString nomRech = ui->Rc_nom_field->text();
+    QString typeRech = ui->Rc_type_field->text();
+    QDate dateRech = ui->Rc_date_field->date();
+    QString statut = ui->Rc_statut_combo->currentText(); // Changed to use Rc_statut_combox
+    int idVaccin = ui->Rc_vaccin_combo->currentText().toInt();
+    int idEmploye = ui->Rc_employe_combox->currentText().toInt(); // Corrected to Rc_employe_combox
+    int idEquipement = ui->Rc_equip_combo->currentText().toInt();
+    QString idRechString = ui->Rc_id_field->text();
+
+    if (idRechString.isEmpty() || idRech == 0 || nomRech.isEmpty() || typeRech.isEmpty() || statut.isEmpty()) {
+        ui->Rc_Label_InfoAffichage->setText("Erreur de contrôle de saisie");
+        return;
+    }
+
+    Recherche R(idRech, nomRech, typeRech, dateRech, statut, idVaccin, idEmploye, idEquipement);
+    ui->Rc_Label_InfoAffichage->setText("Ajout Effectué ID: " + QString::number(idRech));
+    bool test = R.ajouter();
+    if (test) {
+        ui->Rc_TableView_Res->setModel(R.afficher());
+        ui->RC_combo_ID->setModel(R.afficher_id());
+        clearFields();
+        populateComboBoxes(); // Refresh combo boxes after addition
+    } else {
+        ui->Rc_Label_InfoAffichage->setText("Ajout non effectué");
+    }
+
+}
+
+void MainWindow::on_RC_combo_ID_currentIndexChanged(int index)
+{
+    int idRech = ui->RC_combo_ID->currentText().toInt();
+    QString idRechString = QString::number(idRech);
+    QSqlQuery query;
+    query.prepare("SELECT * FROM RECHERCHES WHERE ID_RECH = :ID_RECH");
+    query.bindValue(":ID_RECH", idRech);
+    if (query.exec()) {
+        while (query.next()) {
+            ui->Rc_id_field->setText(query.value(0).toString());
+            ui->Rc_nom_field->setText(query.value(1).toString());
+            ui->Rc_type_field->setText(query.value(2).toString());
+            ui->Rc_date_field->setDate(query.value(3).toDate());
+            ui->Rc_statut_combo->setCurrentText(query.value(4).toString()); // Set statut combo box
+            ui->Rc_vaccin_combo->setCurrentText(query.value(5).toString()); // Set vaccin combo box
+            ui->Rc_employe_combox->setCurrentText(query.value(6).toString()); // Set employe combo box
+            ui->Rc_equip_combo->setCurrentText(query.value(7).toString()); // Set equipement combo box
+        }
+    } else {
+        ui->Rc_Label_InfoAffichage->setText("Échec de chargement");
+    }
 
 }
