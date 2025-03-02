@@ -11,13 +11,11 @@ CONFIG += c++17
 
 SOURCES += \
     connection.cpp \
-    equipement.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     connection.h \
-    equipement.h \
     mainwindow.h
 
 FORMS += \

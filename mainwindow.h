@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "equipement.h"
+
 
 
 QT_BEGIN_NAMESPACE
@@ -24,26 +24,7 @@ private slots:
 
 
 
-
-    void on_pushButton_4_clicked();
-
-    void on_pushButton_2_clicked();
-
-
-
-    void on_pushButton_clicked();
-
-
-
-
-    void on_radioButton_clicked();
-
-    void on_radioButton_2_clicked();
-
-    void on_pushButton_3_clicked();
-
 private:
     Ui::MainWindow *ui;
-    equipement equ;
 };
 #endif // MAINWINDOW_H

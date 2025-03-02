@@ -6,15 +6,14 @@ connection::connection()
 
 }
 bool connection::createconnect()
-{bool test=false;;
+{bool test=false;
     db = QSqlDatabase::addDatabase("QODBC");
-    db.setHostName("localhost");
-    db.setDatabaseName("Source_Projet2A17v");//inserer le nom de la source de données
-    db.setUserName("labsync");//inserer nom de l'utilisateur
-    db.setPassword("labsync");//inserer mot de passe de cet utilisateur
+    db.setDatabaseName("ProjetCPP");
+    db.setUserName("Slim");
+    db.setPassword("Slim");
+
     if (db.open())
         test=true;
-
 
 
 return  test;
