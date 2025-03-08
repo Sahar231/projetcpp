@@ -137,88 +137,17 @@
      <string/>
     </property>
    </widget>
-   <widget class="QTabWidget" name="tabWidget">
+   <widget class="QGroupBox" name="Recherche_Infos">
     <property name="geometry">
      <rect>
       <x>190</x>
-      <y>90</y>
-      <width>1171</width>
-      <height>611</height>
+      <y>150</y>
+      <width>361</width>
+      <height>521</height>
      </rect>
     </property>
     <property name="styleSheet">
-     <string notr="true">QTabWidget::pane {
-
-   border: 1px solid rgba(35, 10, 80, 150); /* Darker purple, semi-transparent */
-    background: rgba(248, 249, 250, 150); /* Light neutral with transparency */
-    border-radius: 8px;
-    padding: 5px;
-}
-
-/* 🔹 Tab Bar (The Strip Holding Tabs) */
-QTabBar::tab {
-    background: white;
-    border: 1px solid #230A50; /* Darker purple, thin border */
-    padding: 10px 20px;
-    border-radius: 6px 6px 0px 0px;
-    font-size: 14px;
-    font-weight: bold;
-    color: #555;
-    transition: all 0.3s ease-in-out;
-    min-width: 180px;
-}
-
-/* 🔹 Hover Effect */
-QTabBar::tab:hover {
-    background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, 
-        stop:0 #5A1E8B, /* Dark purple */
-        stop:1 #230A50); /* Even darker purple */
-    color: white;
-    border-color: #230A50; /* Darker purple */
-}
-
-/* 🔹 Selected Tab */
-QTabBar::tab:selected {
-    background: rgba(35,10,152,200); /* Blue */
-    color: white;
-    border-color: #230A50; /* Darker purple */
-}
-
-/* 🔹 Unselected Tabs */
-QTabBar::tab:!selected {
-    margin-top: 2px;
-}
-
-/* 🔹 Close Button on Tabs (if enabled) */
-QTabBar::close-button {
-    image: url(:/icons/close.png);
-    padding: 5px;
-}
-
-QTabBar::close-button:hover {
-    image: url(:/icons/close_hover.png);
-}
-
-</string>
-    </property>
-    <property name="currentIndex">
-     <number>0</number>
-    </property>
-    <widget class="QWidget" name="tab">
-     <attribute name="title">
-      <string>Gestion des Recherches</string>
-     </attribute>
-     <widget class="QGroupBox" name="Recherche_Infos">
-      <property name="geometry">
-       <rect>
-        <x>70</x>
-        <y>30</y>
-        <width>371</width>
-        <height>481</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QGroupBox {
+     <string notr="true">QGroupBox {
     background: rgba(35, 10, 152, 50); /* Matched the specified background color */
     border: 2px solid;
     border-top-right-radius: 7px;
@@ -243,80 +172,80 @@ QGroupBox:hover {
     background: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(117, 201, 187, 100), stop:1 rgba(35, 10, 152, 50)); /* Adjusted gradient with lower opacity */
     border-color: rgba(117, 201, 187, 200); /* Matched start of gradient for hover border */
 }</string>
+    </property>
+    <property name="title">
+     <string>Recherche Informations</string>
+    </property>
+    <widget class="QWidget" name="layoutWidget_2">
+     <property name="geometry">
+      <rect>
+       <x>20</x>
+       <y>50</y>
+       <width>321</width>
+       <height>351</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="Labels_Lines_2">
+      <property name="sizeConstraint">
+       <enum>QLayout::SetDefaultConstraint</enum>
       </property>
-      <property name="title">
-       <string>Recherche Informations</string>
+      <property name="verticalSpacing">
+       <number>24</number>
       </property>
-      <widget class="QWidget" name="layoutWidget_2">
-       <property name="geometry">
-        <rect>
-         <x>20</x>
-         <y>50</y>
-         <width>321</width>
-         <height>351</height>
-        </rect>
-       </property>
-       <layout class="QGridLayout" name="Labels_Lines_2">
-        <property name="sizeConstraint">
-         <enum>QLayout::SetDefaultConstraint</enum>
+      <item row="8" column="1">
+       <widget class="QComboBox" name="Rc_vaccin_combo">
+        <property name="styleSheet">
+         <string notr="true">QComboBox
+{
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    selection-background-color: #111;
+    selection-color: yellow;
+    color: white; /* Changed to white to match button text color */
+    background-color: rgba(35, 10, 152, 200); /* Matched button's base color */
+    border-style: solid;
+    border: 1px solid #1e1e1e;
+    border-radius: 5px; /* Changed to 5px to match button's 8px radius more closely */
+    padding: 1px 0px 1px 20px;
+}
+
+QComboBox:hover
+{
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(117, 201, 187, 200), stop:1 rgba(35, 10, 152, 200)); /* Matched button's hover gradient */
+    border: 1px solid #1e1e1e;
+}</string>
         </property>
-        <property name="verticalSpacing">
-         <number>24</number>
+       </widget>
+      </item>
+      <item row="10" column="1">
+       <widget class="QComboBox" name="Rc_equip_combo">
+        <property name="styleSheet">
+         <string notr="true">QComboBox
+{
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    selection-background-color: #111;
+    selection-color: yellow;
+    color: white; /* Changed to white to match button text color */
+    background-color: rgba(35, 10, 152, 200); /* Matched button's base color */
+    border-style: solid;
+    border: 1px solid #1e1e1e;
+    border-radius: 5px; /* Changed to 5px to match button's 8px radius more closely */
+    padding: 1px 0px 1px 20px;
+}
+
+QComboBox:hover
+{
+    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(117, 201, 187, 200), stop:1 rgba(35, 10, 152, 200)); /* Matched button's hover gradient */
+    border: 1px solid #1e1e1e;
+}</string>
         </property>
-        <item row="8" column="1">
-         <widget class="QComboBox" name="Rc_vaccin_combo">
-          <property name="styleSheet">
-           <string notr="true">QComboBox
-{
-    subcontrol-origin: padding;
-    subcontrol-position: top right;
-    selection-background-color: #111;
-    selection-color: yellow;
-    color: white; /* Changed to white to match button text color */
-    background-color: rgba(35, 10, 152, 200); /* Matched button's base color */
-    border-style: solid;
-    border: 1px solid #1e1e1e;
-    border-radius: 5px; /* Changed to 5px to match button's 8px radius more closely */
-    padding: 1px 0px 1px 20px;
-}
-
-QComboBox:hover
-{
-    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(117, 201, 187, 200), stop:1 rgba(35, 10, 152, 200)); /* Matched button's hover gradient */
-    border: 1px solid #1e1e1e;
-}</string>
-          </property>
-         </widget>
-        </item>
-        <item row="10" column="1">
-         <widget class="QComboBox" name="Rc_equip_combo">
-          <property name="styleSheet">
-           <string notr="true">QComboBox
-{
-    subcontrol-origin: padding;
-    subcontrol-position: top right;
-    selection-background-color: #111;
-    selection-color: yellow;
-    color: white; /* Changed to white to match button text color */
-    background-color: rgba(35, 10, 152, 200); /* Matched button's base color */
-    border-style: solid;
-    border: 1px solid #1e1e1e;
-    border-radius: 5px; /* Changed to 5px to match button's 8px radius more closely */
-    padding: 1px 0px 1px 20px;
-}
-
-QComboBox:hover
-{
-    background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(117, 201, 187, 200), stop:1 rgba(35, 10, 152, 200)); /* Matched button's hover gradient */
-    border: 1px solid #1e1e1e;
-}</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1" rowspan="2" colspan="2">
-         <widget class="QLineEdit" name="Rc_type_field">
-          <property name="styleSheet">
-           <string notr="true">QLineEdit {
+       </widget>
+      </item>
+      <item row="4" column="1" rowspan="2" colspan="2">
+       <widget class="QLineEdit" name="Rc_type_field">
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
     background-color: rgba(35, 10, 152, 200); /* Matched button's base color */
     border: 2px solid rgba(35, 10, 152, 200); /* Matched button's base color for border */
     border-radius: 10px;
@@ -328,32 +257,32 @@ QLineEdit:hover {
     border: 2px solid rgba(117, 201, 187, 200); /* Adjusted border to start color of gradient for hover effect */
     border-radius: 10px;
 }</string>
-          </property>
-         </widget>
-        </item>
-        <item row="9" column="0">
-         <widget class="QLabel" name="Event_label_Lieu_3">
-          <property name="font">
-           <font>
-            <family>Arial</family>
-            <pointsize>10</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true"/>
-          </property>
-          <property name="text">
-           <string>ID_Employe</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="1" rowspan="2" colspan="2">
-         <widget class="QLineEdit" name="Rc_id_field">
-          <property name="styleSheet">
-           <string notr="true">QLineEdit {
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="0">
+       <widget class="QLabel" name="Event_label_Lieu_3">
+        <property name="font">
+         <font>
+          <family>Arial</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>ID_Employe</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" rowspan="2" colspan="2">
+       <widget class="QLineEdit" name="Rc_id_field">
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
     background-color: rgba(35, 10, 152, 200); /* Matched button's base color */
     border: 2px solid rgba(35, 10, 152, 200); /* Matched button's base color for border */
     border-radius: 10px;
@@ -365,35 +294,35 @@ QLineEdit:hover {
     border: 2px solid rgba(117, 201, 187, 200); /* Adjusted border to start color of gradient for hover effect */
     border-radius: 10px;
 }</string>
-          </property>
-          <property name="text">
-           <string>dzjpdz4</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="0" rowspan="2">
-         <widget class="QLabel" name="Event_label_Nom">
-          <property name="font">
-           <font>
-            <family>Arial</family>
-            <pointsize>10</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true"/>
-          </property>
-          <property name="text">
-           <string>Nom</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="1">
-         <widget class="QComboBox" name="Rc_statut_combo">
-          <property name="styleSheet">
-           <string notr="true">QComboBox
+        </property>
+        <property name="text">
+         <string>dzjpdz4</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" rowspan="2">
+       <widget class="QLabel" name="Event_label_Nom">
+        <property name="font">
+         <font>
+          <family>Arial</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>Nom</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="1">
+       <widget class="QComboBox" name="Rc_statut_combo">
+        <property name="styleSheet">
+         <string notr="true">QComboBox
 {
     subcontrol-origin: padding;
     subcontrol-position: top right;
@@ -412,28 +341,28 @@ QComboBox:hover
     background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(117, 201, 187, 200), stop:1 rgba(35, 10, 152, 200)); /* Matched button's hover gradient */
     border: 1px solid #1e1e1e;
 }</string>
-          </property>
-          <item>
-           <property name="text">
-            <string>En Cours</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Termine</string>
-           </property>
-          </item>
-          <item>
-           <property name="text">
-            <string>Annule</string>
-           </property>
-          </item>
-         </widget>
+        </property>
+        <item>
+         <property name="text">
+          <string>En Cours</string>
+         </property>
         </item>
-        <item row="2" column="1" rowspan="2" colspan="2">
-         <widget class="QLineEdit" name="Rc_nom_field">
-          <property name="styleSheet">
-           <string notr="true">QLineEdit {
+        <item>
+         <property name="text">
+          <string>Termine</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>Annule</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="2" column="1" rowspan="2" colspan="2">
+       <widget class="QLineEdit" name="Rc_nom_field">
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
     background-color: rgba(35, 10, 152, 200); /* Matched button's base color */
     border: 2px solid rgba(35, 10, 152, 200); /* Matched button's base color for border */
     border-radius: 10px;
@@ -445,70 +374,70 @@ QLineEdit:hover {
     border: 2px solid rgba(117, 201, 187, 200); /* Adjusted border to start color of gradient for hover effect */
     border-radius: 10px;
 }</string>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="0">
-         <widget class="QLabel" name="Event_label_Date_2">
-          <property name="font">
-           <font>
-            <family>Arial</family>
-            <pointsize>10</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true"/>
-          </property>
-          <property name="text">
-           <string>Statut</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="0" column="0" rowspan="2">
-         <widget class="QLabel" name="Event_label_ID">
-          <property name="font">
-           <font>
-            <family>Arial</family>
-            <pointsize>10</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true"/>
-          </property>
-          <property name="text">
-           <string>ID</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="8" column="0">
-         <widget class="QLabel" name="Event_label_Lieu_2">
-          <property name="font">
-           <font>
-            <family>Arial</family>
-            <pointsize>10</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true"/>
-          </property>
-          <property name="text">
-           <string>ID_Vaccin</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="9" column="1">
-         <widget class="QComboBox" name="Rc_employe_combox">
-          <property name="styleSheet">
-           <string notr="true">QComboBox
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="Event_label_Date_2">
+        <property name="font">
+         <font>
+          <family>Arial</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>Statut</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="0" rowspan="2">
+       <widget class="QLabel" name="Event_label_ID">
+        <property name="font">
+         <font>
+          <family>Arial</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>ID</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="8" column="0">
+       <widget class="QLabel" name="Event_label_Lieu_2">
+        <property name="font">
+         <font>
+          <family>Arial</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>ID_Vaccin</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="9" column="1">
+       <widget class="QComboBox" name="Rc_employe_combox">
+        <property name="styleSheet">
+         <string notr="true">QComboBox
 {
     subcontrol-origin: padding;
     subcontrol-position: top right;
@@ -527,76 +456,76 @@ QComboBox:hover
     background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(117, 201, 187, 200), stop:1 rgba(35, 10, 152, 200)); /* Matched button's hover gradient */
     border: 1px solid #1e1e1e;
 }</string>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="0">
-         <widget class="QLabel" name="Event_label_Date">
-          <property name="font">
-           <font>
-            <family>Arial</family>
-            <pointsize>10</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true"/>
-          </property>
-          <property name="text">
-           <string>Date</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="10" column="0">
-         <widget class="QLabel" name="Event_label_Lieu_4">
-          <property name="font">
-           <font>
-            <family>Arial</family>
-            <pointsize>10</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true"/>
-          </property>
-          <property name="text">
-           <string>ID_Equipement</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0" rowspan="2">
-         <widget class="QLabel" name="Event_label_Type">
-          <property name="font">
-           <font>
-            <family>Arial</family>
-            <pointsize>10</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true"/>
-          </property>
-          <property name="text">
-           <string>Type</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="1">
-         <widget class="QDateEdit" name="Rc_date_field">
-          <property name="font">
-           <font>
-            <family>Montserrat Medium</family>
-            <pointsize>10</pointsize>
-           </font>
-          </property>
-          <property name="styleSheet">
-           <string notr="true">QDateEdit {
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="0">
+       <widget class="QLabel" name="Event_label_Date">
+        <property name="font">
+         <font>
+          <family>Arial</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>Date</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="10" column="0">
+       <widget class="QLabel" name="Event_label_Lieu_4">
+        <property name="font">
+         <font>
+          <family>Arial</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>ID_Equipement</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0" rowspan="2">
+       <widget class="QLabel" name="Event_label_Type">
+        <property name="font">
+         <font>
+          <family>Arial</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>Type</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="6" column="1">
+       <widget class="QDateEdit" name="Rc_date_field">
+        <property name="font">
+         <font>
+          <family>Montserrat Medium</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QDateEdit {
     subcontrol-origin: padding;
     subcontrol-position: top right;
     selection-background-color: #111;
@@ -613,34 +542,34 @@ QDateEdit:hover {
     background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(117, 201, 187, 200), stop:1 rgba(35, 10, 152, 200)); /* Matched button's hover gradient */
     border: 1px solid rgba(117, 201, 187, 200); /* Adjusted border to start color of gradient for hover effect */
 }</string>
-          </property>
-          <property name="alignment">
-           <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-          </property>
-          <property name="displayFormat">
-           <string>dd-MM-yyyy</string>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QPushButton" name="Rc_push_Ajouter">
-       <property name="geometry">
-        <rect>
-         <x>110</x>
-         <y>430</y>
-         <width>141</width>
-         <height>31</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <family>Montserrat Medium</family>
-         <pointsize>10</pointsize>
-        </font>
-       </property>
-       <property name="styleSheet">
-        <string notr="true">QPushButton {
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+        <property name="displayFormat">
+         <string>dd-MM-yyyy</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QPushButton" name="Rc_push_Ajouter">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>430</y>
+       <width>141</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Montserrat Medium</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
 background-color: rgba(35,10,152, 200);
 border-radius: 8px;
 color: white;
@@ -648,23 +577,81 @@ color: white;
 QPushButton:hover {
 background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(117, 201, 187, 200), stop:1 rgba(35,10,152, 200));
 }</string>
-       </property>
-       <property name="text">
-        <string>Ajouter</string>
-       </property>
-      </widget>
-     </widget>
-     <widget class="QComboBox" name="RC_combo_ID">
-      <property name="geometry">
-       <rect>
-        <x>770</x>
-        <y>110</y>
-        <width>181</width>
-        <height>22</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QComboBox
+     </property>
+     <property name="text">
+      <string>Ajouter</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="Rc_push_Modifier">
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>430</y>
+       <width>141</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Montserrat Medium</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+background-color: rgba(35,10,152, 200);
+border-radius: 8px;
+color: white;
+}
+QPushButton:hover {
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(117, 201, 187, 200), stop:1 rgba(35,10,152, 200));
+}</string>
+     </property>
+     <property name="text">
+      <string>Modifier</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="Rc_push_Supprimer">
+     <property name="geometry">
+      <rect>
+       <x>110</x>
+       <y>470</y>
+       <width>141</width>
+       <height>31</height>
+      </rect>
+     </property>
+     <property name="font">
+      <font>
+       <family>Montserrat Medium</family>
+       <pointsize>10</pointsize>
+      </font>
+     </property>
+     <property name="styleSheet">
+      <string notr="true">QPushButton {
+background-color: rgba(35,10,152, 200);
+border-radius: 8px;
+color: white;
+}
+QPushButton:hover {
+background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(117, 201, 187, 200), stop:1 rgba(35,10,152, 200));
+}</string>
+     </property>
+     <property name="text">
+      <string>Supprimer</string>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QComboBox" name="RC_combo_ID">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>100</y>
+      <width>181</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QComboBox
 {
     subcontrol-origin: padding;
     subcontrol-position: top right;
@@ -683,25 +670,51 @@ QComboBox:hover
     background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(117, 201, 187, 200), stop:1 rgba(35, 10, 152, 200)); /* Matched button's hover gradient */
     border: 1px solid #1e1e1e;
 }</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="Rc_push_Supprimer">
-      <property name="geometry">
-       <rect>
-        <x>710</x>
-        <y>170</y>
-        <width>141</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Montserrat Medium</family>
-        <pointsize>10</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton {
+    </property>
+   </widget>
+   <widget class="QTableView" name="Rc_TableView_Res">
+    <property name="geometry">
+     <rect>
+      <x>590</x>
+      <y>260</y>
+      <width>801</width>
+      <height>411</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color:rgba(35,10,152, 50);</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="Rc_Label_InfoAffichage">
+    <property name="geometry">
+     <rect>
+      <x>720</x>
+      <y>100</y>
+      <width>511</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(35,10,152, 0);
+border: 1px solid #230a98;
+border-radius: 10px;
+</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Rc_Button_ExportPDF">
+    <property name="geometry">
+     <rect>
+      <x>1260</x>
+      <y>170</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
 background-color: rgba(35,10,152, 200);
 border-radius: 8px;
 color: white;
@@ -709,142 +722,47 @@ color: white;
 QPushButton:hover {
 background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(117, 201, 187, 200), stop:1 rgba(35,10,152, 200));
 }</string>
-      </property>
-      <property name="text">
-       <string>Supprimer</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="Rc_push_Modifier">
-      <property name="geometry">
-       <rect>
-        <x>880</x>
-        <y>170</y>
-        <width>141</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <family>Montserrat Medium</family>
-        <pointsize>10</pointsize>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton {
-background-color: rgba(35,10,152, 200);
-border-radius: 8px;
-color: white;
-}
-QPushButton:hover {
-background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(117, 201, 187, 200), stop:1 rgba(35,10,152, 200));
-}</string>
-      </property>
-      <property name="text">
-       <string>Modifier</string>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="tab_2">
-     <attribute name="title">
-      <string>Liste des Recherches</string>
-     </attribute>
-     <widget class="QPushButton" name="Rc_Button_Tri_Numtel">
-      <property name="geometry">
-       <rect>
-        <x>290</x>
-        <y>450</y>
-        <width>81</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton {
-background-color: rgba(35,10,152, 200);
-border-radius: 8px;
-color: white;
-}
-QPushButton:hover {
-background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(117, 201, 187, 200), stop:1 rgba(35,10,152, 200));
-}</string>
-      </property>
-      <property name="text">
-       <string>Statut</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="Rc_Label_TriPar">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>450</y>
-        <width>71</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Tri par :</string>
-      </property>
-     </widget>
-     <widget class="QLineEdit" name="Rc_Line_Recherche">
-      <property name="geometry">
-       <rect>
-        <x>950</x>
-        <y>460</y>
-        <width>181</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QLineEdit {
+    </property>
+    <property name="text">
+     <string>Export PDF</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="Rc_Line_Recherche">
+    <property name="geometry">
+     <rect>
+      <x>590</x>
+      <y>169</y>
+      <width>181</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QLineEdit {
 		border: 1px solid #230a98;
 		border-radius: 5px;
 }
 QLineEdit:hover {
 		border: 1px solid #7359f0;
 }</string>
-      </property>
-      <property name="inputMask">
-       <string/>
-      </property>
-      <property name="placeholderText">
-       <string>Par nom</string>
-      </property>
-     </widget>
-     <widget class="QTableView" name="Rc_TableView_Res">
-      <property name="geometry">
-       <rect>
-        <x>30</x>
-        <y>90</y>
-        <width>1091</width>
-        <height>331</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color:rgba(35,10,152, 50);</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="Rc_Button_Fermer">
-      <property name="geometry">
-       <rect>
-        <x>530</x>
-        <y>520</y>
-        <width>81</width>
-        <height>23</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton {
+    </property>
+    <property name="inputMask">
+     <string/>
+    </property>
+    <property name="placeholderText">
+     <string>Recherche Par...</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Rc_Button_Tri_Numtel">
+    <property name="geometry">
+     <rect>
+      <x>850</x>
+      <y>217</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
 background-color: rgba(35,10,152, 200);
 border-radius: 8px;
 color: white;
@@ -852,22 +770,41 @@ color: white;
 QPushButton:hover {
 background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(117, 201, 187, 200), stop:1 rgba(35,10,152, 200));
 }</string>
-      </property>
-      <property name="text">
-       <string>Fermer</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="Rc_Button_Tri_Nom">
-      <property name="geometry">
-       <rect>
-        <x>110</x>
-        <y>450</y>
-        <width>81</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton {
+    </property>
+    <property name="text">
+     <string>Statut</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="Rc_Label_TriPar">
+    <property name="geometry">
+     <rect>
+      <x>590</x>
+      <y>215</y>
+      <width>71</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <weight>75</weight>
+      <bold>true</bold>
+     </font>
+    </property>
+    <property name="text">
+     <string>Tri par :</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Rc_Button_Tri_Nom">
+    <property name="geometry">
+     <rect>
+      <x>670</x>
+      <y>217</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
 background-color: rgba(35,10,152, 200);
 border-radius: 8px;
 color: white;
@@ -875,22 +812,22 @@ color: white;
 QPushButton:hover {
 background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(117, 201, 187, 200), stop:1 rgba(35,10,152, 200));
 }</string>
-      </property>
-      <property name="text">
-       <string>Nom</string>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="Rc_Button_ExportPDF">
-      <property name="geometry">
-       <rect>
-        <x>1040</x>
-        <y>40</y>
-        <width>81</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton {
+    </property>
+    <property name="text">
+     <string>Nom</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Rc_Button_Tri_Email">
+    <property name="geometry">
+     <rect>
+      <x>760</x>
+      <y>217</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
 background-color: rgba(35,10,152, 200);
 border-radius: 8px;
 color: white;
@@ -898,78 +835,35 @@ color: white;
 QPushButton:hover {
 background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(117, 201, 187, 200), stop:1 rgba(35,10,152, 200));
 }</string>
-      </property>
-      <property name="text">
-       <string>Export PDF</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="Rc_Label_InfoAffichage">
-      <property name="geometry">
-       <rect>
-        <x>320</x>
-        <y>30</y>
-        <width>511</width>
-        <height>41</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">background-color: rgba(35,10,152, 0);
-border: 1px solid #230a98;
-border-radius: 10px;
-</string>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-     <widget class="QPushButton" name="Rc_Button_Tri_Email">
-      <property name="geometry">
-       <rect>
-        <x>200</x>
-        <y>450</y>
-        <width>81</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="styleSheet">
-       <string notr="true">QPushButton {
-background-color: rgba(35,10,152, 200);
-border-radius: 8px;
-color: white;
-}
-QPushButton:hover {
-background-color: qlineargradient(spread:pad, x1:0, y1:0, x2:0, y2:1, stop:0 rgba(117, 201, 187, 200), stop:1 rgba(35,10,152, 200));
-}</string>
-      </property>
-      <property name="text">
-       <string>Type</string>
-      </property>
-     </widget>
-     <widget class="QLabel" name="Rc_Label_Recherche">
-      <property name="geometry">
-       <rect>
-        <x>860</x>
-        <y>460</y>
-        <width>81</width>
-        <height>31</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <weight>75</weight>
-        <bold>true</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Recherche :</string>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="Statistique">
-     <attribute name="title">
-      <string>Statistique</string>
-     </attribute>
-    </widget>
+    </property>
+    <property name="text">
+     <string>Type</string>
+    </property>
+   </widget>
+   <widget class="QComboBox" name="comboBox">
+    <property name="geometry">
+     <rect>
+      <x>800</x>
+      <y>174</y>
+      <width>171</width>
+      <height>22</height>
+     </rect>
+    </property>
+    <item>
+     <property name="text">
+      <string>nom</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>type</string>
+     </property>
+    </item>
+    <item>
+     <property name="text">
+      <string>statut</string>
+     </property>
+    </item>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
