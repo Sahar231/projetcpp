@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/new/prefix1">
+        <file>sta.png</file>
+        <file>reche.png</file>
+        <file>statstique.png</file>
+        <file>pdf2.png</file>
+        <file>imageeq.jpg</file>
+        <file>back55.jpg</file>
+        <file>../../../Downloads/rech.png</file>
+    </qresource>
+    <qresource prefix="/">
+        <file>../../../Downloads/tri-removebg-preview.png</file>
+    </qresource>
+</RCC>
