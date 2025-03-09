@@ -22,7 +22,6 @@ MainWindow::MainWindow(QWidget *parent)
     setWindowTitle("Recherche");
 
     ui->Rc_TableView_Res->setModel(R.afficher());
-    ui->Rc_TableView_Res->setColumnWidth(3, 250);
     ui->RC_combo_ID->setModel(R.afficher_id());
     populateComboBoxes();
 
@@ -100,22 +99,11 @@ MainWindow::~MainWindow()
 
 void MainWindow::populateComboBoxes()
 {
-    QSqlQuery queryVaccin;
-    queryVaccin.prepare("SELECT id_vaccin FROM vaccins");
-    if (queryVaccin.exec()) {
-        ui->Rc_vaccin_combo->clear();
-        while (queryVaccin.next()) {
-            ui->Rc_vaccin_combo->addItem(queryVaccin.value(0).toString());
-        }
-    } else {
-        qDebug() << "Failed to populate Rc_vaccin_combo:" << queryVaccin.lastError().text();
-    }
-
-    // Populate Rc_employe_combox with IDs from employes table
+    // Populate Rc_employe_combox with IDs from EMPLOYES table
     QSqlQuery queryEmploye;
-    queryEmploye.prepare("SELECT id_employe FROM employes");
+    queryEmploye.prepare("SELECT ID_EMP FROM EMPLOYES"); // Fixed table & column name
     if (queryEmploye.exec()) {
-        ui->Rc_employe_combox->clear(); // Corrected to Rc_employe_combox
+        ui->Rc_employe_combox->clear();
         while (queryEmploye.next()) {
             ui->Rc_employe_combox->addItem(queryEmploye.value(0).toString());
         }
@@ -123,24 +111,13 @@ void MainWindow::populateComboBoxes()
         qDebug() << "Failed to populate Rc_employe_combox:" << queryEmploye.lastError().text();
     }
 
-    // Populate Rc_equip_combo with IDs from equipements table
-    QSqlQuery queryEquipement;
-    queryEquipement.prepare("SELECT id_equipement FROM equipements");
-    if (queryEquipement.exec()) {
-        ui->Rc_equip_combo->clear();
-        while (queryEquipement.next()) {
-            ui->Rc_equip_combo->addItem(queryEquipement.value(0).toString());
-        }
-    } else {
-        qDebug() << "Failed to populate Rc_equip_combo:" << queryEquipement.lastError().text();
-    }
-
     // Populate Rc_statut_combox with predefined values
-    ui->Rc_statut_combo->clear(); // Added Rc_statut_combox
+    ui->Rc_statut_combo->clear();
     ui->Rc_statut_combo->addItem("En cours");
     ui->Rc_statut_combo->addItem("Terminé");
     ui->Rc_statut_combo->addItem("Annulé");
 }
+
 
 
 
@@ -156,9 +133,7 @@ void MainWindow::clearFields()
 
     // Reset combo boxes to default (e.g., first item or clear)
     if (ui->Rc_statut_combo->count() > 0) ui->Rc_statut_combo->setCurrentIndex(0);
-    if (ui->Rc_vaccin_combo->count() > 0) ui->Rc_vaccin_combo->setCurrentIndex(0);
     if (ui->Rc_employe_combox->count() > 0) ui->Rc_employe_combox->setCurrentIndex(0);
-    if (ui->Rc_equip_combo->count() > 0) ui->Rc_equip_combo->setCurrentIndex(0);
 }
 
 void MainWindow::on_Rc_push_Supprimer_clicked()
@@ -185,9 +160,7 @@ void MainWindow::on_Rc_push_Modifier_clicked()
     QString typeRech = ui->Rc_type_field->text();
     QDate dateRech = ui->Rc_date_field->date();
     QString statut = ui->Rc_statut_combo->currentText(); // Changed to use Rc_statut_combox
-    int idVaccin = ui->Rc_vaccin_combo->currentText().toInt();
     int idEmploye = ui->Rc_employe_combox->currentText().toInt(); // Corrected to Rc_employe_combox
-    int idEquipement = ui->Rc_equip_combo->currentText().toInt();
     QString idRechString = ui->Rc_id_field->text();
 
     if (idRechString.isEmpty() || idRech == 0 || nomRech.isEmpty() || typeRech.isEmpty() || statut.isEmpty()) {
@@ -195,7 +168,7 @@ void MainWindow::on_Rc_push_Modifier_clicked()
         return;
     }
 
-    Recherche R(idRech, nomRech, typeRech, dateRech, statut, idVaccin, idEmploye, idEquipement);
+    Recherche R(idRech, nomRech, typeRech, dateRech, statut, idEmploye);
     bool test = R.modifier();
     if (test) {
         ui->Rc_Label_InfoAffichage->setText("Modification Effectuée ID: " + QString::number(idRech));
@@ -215,9 +188,7 @@ void MainWindow::on_Rc_push_Ajouter_clicked()
     QString typeRech = ui->Rc_type_field->text();
     QDate dateRech = ui->Rc_date_field->date();
     QString statut = ui->Rc_statut_combo->currentText(); // Changed to use Rc_statut_combox
-    int idVaccin = ui->Rc_vaccin_combo->currentText().toInt();
     int idEmploye = ui->Rc_employe_combox->currentText().toInt(); // Corrected to Rc_employe_combox
-    int idEquipement = ui->Rc_equip_combo->currentText().toInt();
     QString idRechString = ui->Rc_id_field->text();
 
     if (idRechString.isEmpty() || idRech == 0 || nomRech.isEmpty() || typeRech.isEmpty() || statut.isEmpty()) {
@@ -225,7 +196,7 @@ void MainWindow::on_Rc_push_Ajouter_clicked()
         return;
     }
 
-    Recherche R(idRech, nomRech, typeRech, dateRech, statut, idVaccin, idEmploye, idEquipement);
+    Recherche R(idRech, nomRech, typeRech, dateRech, statut, idEmploye);
     ui->Rc_Label_InfoAffichage->setText("Ajout Effectué ID: " + QString::number(idRech));
     bool test = R.ajouter();
     if (test) {
@@ -253,9 +224,7 @@ void MainWindow::on_RC_combo_ID_currentIndexChanged(int index)
             ui->Rc_type_field->setText(query.value(2).toString());
             ui->Rc_date_field->setDate(query.value(3).toDate());
             ui->Rc_statut_combo->setCurrentText(query.value(4).toString()); // Set statut combo box
-            ui->Rc_vaccin_combo->setCurrentText(query.value(5).toString()); // Set vaccin combo box
-            ui->Rc_employe_combox->setCurrentText(query.value(6).toString()); // Set employe combo box
-            ui->Rc_equip_combo->setCurrentText(query.value(7).toString()); // Set equipement combo box
+            ui->Rc_employe_combox->setCurrentText(query.value(5).toString()); // Set employe combo box
         }
     } else {
         ui->Rc_Label_InfoAffichage->setText("Échec de chargement");
