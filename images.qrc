@@ -10,5 +10,8 @@
     </qresource>
     <qresource prefix="/">
         <file>../../../Downloads/tri-removebg-preview.png</file>
+        <file>CLAER.png</file>
+        <file>delete.png</file>
+        <file>READ.png</file>
     </qresource>
 </RCC>

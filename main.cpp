@@ -1,13 +1,15 @@
-#include "mainwindow.h"
+#include "Mainwindow.h"
 #include <QMessageBox>
 #include <QApplication>
 #include "connection.h"
-
-
-int main(int argc, char *argv[])
+#include "connection.cpp"
+#include <QString>
+#include <QChar>
+int main(int arg, char *ar[])
 {
-    QApplication a(argc, argv);
+    QApplication a(arg, ar);
     MainWindow w;
+
     connection c;
     bool test=c.createconnect();
     if(test)
