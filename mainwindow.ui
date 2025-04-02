@@ -736,7 +736,7 @@ QLineEdit:hover {
      <string>Recherche Par...</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="Rc_Button_Tri_Numtel">
+   <widget class="QPushButton" name="Rc_Button_Tri_Statut">
     <property name="geometry">
      <rect>
       <x>850</x>
@@ -809,7 +809,7 @@ QPushButton:hover {
      <string>Nom</string>
     </property>
    </widget>
-   <widget class="QPushButton" name="Rc_Button_Tri_Email">
+   <widget class="QPushButton" name="Rc_Button_Tri_Type">
     <property name="geometry">
      <rect>
       <x>760</x>
@@ -836,7 +836,7 @@ QPushButton:hover {
      <string>Type</string>
     </property>
    </widget>
-   <widget class="QComboBox" name="comboBox">
+   <widget class="QComboBox" name="Rc_comboBox">
     <property name="geometry">
      <rect>
       <x>800</x>
@@ -876,17 +876,17 @@ QComboBox QAbstractItemView {
     </property>
     <item>
      <property name="text">
-      <string>nom</string>
+      <string>NOM</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>type</string>
+      <string>TYPE</string>
      </property>
     </item>
     <item>
      <property name="text">
-      <string>statut</string>
+      <string>STATUT</string>
      </property>
     </item>
    </widget>

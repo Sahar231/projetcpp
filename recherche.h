@@ -33,12 +33,17 @@ public:
     void setStatut(QString statut) { this->statut = statut; }
     void setIdEmploye(int idEmploye) { this->idEmploye = idEmploye; }
 
+    void clearTable(QTableView *table);
+    void Rechercher(QTableView *table, QString x, QString critere);
 
     bool ajouter();
     bool supprimer(int idRech);
     bool modifier();
     QSqlQueryModel* afficher();
     QSqlQueryModel* afficher_id();
+    QSqlQueryModel* Afficher_Tri_STATUT();
+    QSqlQueryModel* Afficher_Tri_TYPE();
+    QSqlQueryModel* Afficher_Tri_NOM();
 };
 
 #endif

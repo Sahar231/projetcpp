@@ -13,7 +13,8 @@
 #include <QJsonDocument>
 #include <QDebug>
 #include <QUrlQuery>
-
+#include <QPrinter>
+#include <QTextDocument>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -24,6 +25,12 @@ MainWindow::MainWindow(QWidget *parent)
     ui->Rc_TableView_Res->setModel(R.afficher());
     ui->RC_combo_ID->setModel(R.afficher_id());
     populateComboBoxes();
+    // Display text: user-friendly, underlying data: real column name
+    ui->Rc_comboBox->clear();
+    ui->Rc_comboBox->addItem("NOM", "NOM_RECH");
+    ui->Rc_comboBox->addItem("TYPE", "TYPE_RECH");
+    ui->Rc_comboBox->addItem("STATUT", "STATUT");
+
 
 
 
@@ -229,5 +236,89 @@ void MainWindow::on_RC_combo_ID_currentIndexChanged(int index)
     } else {
         ui->Rc_Label_InfoAffichage->setText("Échec de chargement");
     }
+
+}
+
+void MainWindow::on_Rc_Button_Tri_Nom_clicked()
+{
+     ui->Rc_Label_InfoAffichage->setText("Tri par NOM effectué");
+     ui->Rc_TableView_Res->setModel(R.Afficher_Tri_NOM());
+}
+
+
+void MainWindow::on_Rc_Button_Tri_Type_clicked()
+{
+    ui->Rc_Label_InfoAffichage->setText("Tri par TYPE effectué");
+    ui->Rc_TableView_Res->setModel(R.Afficher_Tri_TYPE());
+}
+
+void MainWindow::on_Rc_Button_Tri_Statut_clicked()
+{
+    ui->Rc_Label_InfoAffichage->setText("Tri par STATUT effectué");
+    ui->Rc_TableView_Res->setModel(R.Afficher_Tri_STATUT());
+}
+
+void MainWindow::on_Rc_Line_Recherche_textChanged(const QString &arg1)
+{
+     QString critere = ui->Rc_comboBox->currentData().toString(); // should contain column names like "NOM_RECH", "TYPE_RECH", "STATUT"
+        R.clearTable(ui->Rc_TableView_Res);
+        R.Rechercher(ui->Rc_TableView_Res, arg1, critere);
+}
+
+void MainWindow::on_Rc_Button_ExportPDF_clicked()
+{
+
+        QString strStream;
+        QTextStream out(&strStream);
+
+        const int rowCount = ui->Rc_TableView_Res->model()->rowCount();
+        const int columnCount = ui->Rc_TableView_Res->model()->columnCount();
+
+        out << "<html>\n"
+               "<head>\n"
+               "<meta Content=\"Text/html; charset=Windows-1251\">\n"
+            << QString("<title>%1</title>\n").arg("Export PDF")
+            << "</head>\n"
+               "<body bgcolor=#ffffff link=#5000A0>\n"
+               "<center><H1>Liste des Recherches</H1><br><br>\n"
+               "<table border=1 cellspacing=0 cellpadding=2>\n";
+
+        // Table headers
+        out << "<thead><tr bgcolor=#f0f0f0><th>Numero</th>";
+        for (int column = 0; column < columnCount; column++) {
+            if (!ui->Rc_TableView_Res->isColumnHidden(column)) {
+                out << QString("<th>%1</th>").arg(ui->Rc_TableView_Res->model()->headerData(column, Qt::Horizontal).toString());
+            }
+        }
+        out << "</tr></thead>\n";
+
+        // Table rows
+        for (int row = 0; row < rowCount; row++) {
+            out << "<tr><td>" << row + 1 << "</td>";
+            for (int column = 0; column < columnCount; column++) {
+                if (!ui->Rc_TableView_Res->isColumnHidden(column)) {
+                    QString data = ui->Rc_TableView_Res->model()->data(ui->Rc_TableView_Res->model()->index(row, column)).toString().simplified();
+                    out << QString("<td>%1</td>").arg(data.isEmpty() ? "&nbsp;" : data);
+                }
+            }
+            out << "</tr>\n";
+        }
+
+        out << "</table></center>\n</body>\n</html>\n";
+
+        QString fileName = QFileDialog::getSaveFileName(this, "Sauvegarder en PDF", QString(), "*.pdf");
+        if (QFileInfo(fileName).suffix().isEmpty())
+            fileName.append(".pdf");
+
+        QPrinter printer(QPrinter::PrinterResolution);
+        printer.setOutputFormat(QPrinter::PdfFormat);
+        printer.setPaperSize(QPrinter::A4);
+        printer.setOutputFileName(fileName);
+
+        QTextDocument doc;
+        doc.setHtml(strStream);
+        doc.setPageSize(printer.pageRect().size());
+        doc.print(&printer);
+
 
 }

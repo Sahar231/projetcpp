@@ -85,3 +85,71 @@ QSqlQueryModel* Recherche::afficher_id()
     model->setHeaderData(0, Qt::Horizontal, QObject::tr("ID Recherche"));
     return model;
 }
+QSqlQueryModel* Recherche::Afficher_Tri_NOM() {
+    QSqlQueryModel* model = new QSqlQueryModel();
+    model->setQuery("SELECT TO_CHAR(ID_RECH) AS ID_RECH, NOM_RECH, TYPE_RECH, TO_CHAR(DATE_RECH, 'YYYY-MM-DD') AS DATE_RECH, STATUT, TO_CHAR(ID_EMPLOYE) AS ID_EMPLOYE FROM RECHERCHES ORDER BY NOM_RECH");
+
+    model->setHeaderData(0, Qt::Horizontal, QObject::tr("ID Recherche"));
+    model->setHeaderData(1, Qt::Horizontal, QObject::tr("Nom Recherche"));
+    model->setHeaderData(2, Qt::Horizontal, QObject::tr("Type Recherche"));
+    model->setHeaderData(3, Qt::Horizontal, QObject::tr("Date Recherche"));
+    model->setHeaderData(4, Qt::Horizontal, QObject::tr("Statut"));
+    model->setHeaderData(5, Qt::Horizontal, QObject::tr("ID Employé"));
+
+    return model;
+}
+
+QSqlQueryModel* Recherche::Afficher_Tri_TYPE() {
+    QSqlQueryModel* model = new QSqlQueryModel();
+    model->setQuery("SELECT TO_CHAR(ID_RECH) AS ID_RECH, NOM_RECH, TYPE_RECH, TO_CHAR(DATE_RECH, 'YYYY-MM-DD') AS DATE_RECH, STATUT, TO_CHAR(ID_EMPLOYE) AS ID_EMPLOYE FROM RECHERCHES ORDER BY TYPE_RECH");
+
+    model->setHeaderData(0, Qt::Horizontal, QObject::tr("ID Recherche"));
+    model->setHeaderData(1, Qt::Horizontal, QObject::tr("Nom Recherche"));
+    model->setHeaderData(2, Qt::Horizontal, QObject::tr("Type Recherche"));
+    model->setHeaderData(3, Qt::Horizontal, QObject::tr("Date Recherche"));
+    model->setHeaderData(4, Qt::Horizontal, QObject::tr("Statut"));
+    model->setHeaderData(5, Qt::Horizontal, QObject::tr("ID Employé"));
+
+    return model;
+}
+
+QSqlQueryModel* Recherche::Afficher_Tri_STATUT() {
+    QSqlQueryModel* model = new QSqlQueryModel();
+    model->setQuery("SELECT TO_CHAR(ID_RECH) AS ID_RECH, NOM_RECH, TYPE_RECH, TO_CHAR(DATE_RECH, 'YYYY-MM-DD') AS DATE_RECH, STATUT, TO_CHAR(ID_EMPLOYE) AS ID_EMPLOYE FROM RECHERCHES ORDER BY STATUT");
+
+    model->setHeaderData(0, Qt::Horizontal, QObject::tr("ID Recherche"));
+    model->setHeaderData(1, Qt::Horizontal, QObject::tr("Nom Recherche"));
+    model->setHeaderData(2, Qt::Horizontal, QObject::tr("Type Recherche"));
+    model->setHeaderData(3, Qt::Horizontal, QObject::tr("Date Recherche"));
+    model->setHeaderData(4, Qt::Horizontal, QObject::tr("Statut"));
+    model->setHeaderData(5, Qt::Horizontal, QObject::tr("ID Employé"));
+
+    return model;
+}
+void Recherche::clearTable(QTableView *table) {
+    QSqlQueryModel* modelFeragh = new QSqlQueryModel();
+    modelFeragh->clear();
+    table->setModel(modelFeragh);
+}
+
+void Recherche::Rechercher(QTableView *table, QString x, QString critere) {
+    QSqlQueryModel *model = new QSqlQueryModel();
+    QSqlQuery *query = new QSqlQuery;
+
+    QString baseQuery = "SELECT TO_CHAR(ID_RECH) AS ID_RECH, NOM_RECH, TYPE_RECH, TO_CHAR(DATE_RECH, 'YYYY-MM-DD') AS DATE_RECH, STATUT, TO_CHAR(ID_EMPLOYE) AS ID_EMPLOYE "
+                        "FROM RECHERCHES";
+
+    if (!x.isEmpty()) {
+        baseQuery += " WHERE regexp_like(" + critere + ", :X, 'i')";
+        query->prepare(baseQuery);
+        query->bindValue(":X", x);
+    } else {
+        query->prepare(baseQuery);
+    }
+
+    query->exec();
+    model->setQuery(*query);
+    table->setModel(model);
+    table->show();
+}
+

@@ -29,6 +29,16 @@ private slots:
 
     void on_RC_combo_ID_currentIndexChanged(int index);
 
+    void on_Rc_Button_Tri_Nom_clicked();
+
+    void on_Rc_Button_Tri_Type_clicked();
+
+    void on_Rc_Button_Tri_Statut_clicked();
+
+    void on_Rc_Line_Recherche_textChanged(const QString &arg1);
+
+    void on_Rc_Button_ExportPDF_clicked();
+
 private:
     Ui::MainWindow *ui;
     Recherche R;
