@@ -142,22 +142,39 @@ void MainWindow::clearFields()
     if (ui->Rc_statut_combo->count() > 0) ui->Rc_statut_combo->setCurrentIndex(0);
     if (ui->Rc_employe_combox->count() > 0) ui->Rc_employe_combox->setCurrentIndex(0);
 }
-
 void MainWindow::on_Rc_push_Supprimer_clicked()
 {
+    int idRech = ui->RC_combo_ID->currentText().toInt();
+
+    // 🔍 Vérification si la recherche est liée à un vaccin
+    QSqlQuery check;
+    check.prepare("SELECT COUNT(*) FROM VACCINS WHERE ID_RECH = :id");
+    check.bindValue(":id", idRech);
+
+    if (check.exec() && check.next()) {
+        int count = check.value(0).toInt();
+        if (count > 0) {
+            ui->Rc_Label_InfoAffichage->setText("❌ Impossible de supprimer : cette recherche est liée à un vaccin.");
+            return;
+        }
+    } else {
+        ui->Rc_Label_InfoAffichage->setText("❌ Erreur lors de la vérification dans la table VACCINS.");
+        return;
+    }
+
+    // ✅ Suppression autorisée
     Recherche R;
-    R.setIdRech(ui->RC_combo_ID->currentText().toInt());
+    R.setIdRech(idRech);
     bool test = R.supprimer(R.getIdRech());
     if (test) {
-        ui->Rc_Label_InfoAffichage->setText("Suppression Effectuée");
+        ui->Rc_Label_InfoAffichage->setText("✅ Suppression effectuée.");
         ui->Rc_TableView_Res->setModel(R.afficher());
         ui->RC_combo_ID->setModel(R.afficher_id());
         clearFields();
-        populateComboBoxes(); // Refresh combo boxes after deletion
+        populateComboBoxes(); // Mise à jour des listes déroulantes
     } else {
-        ui->Rc_Label_InfoAffichage->setText("Suppression non effectuée");
+        ui->Rc_Label_InfoAffichage->setText("❌ Suppression non effectuée.");
     }
-
 }
 
 void MainWindow::on_Rc_push_Modifier_clicked()
