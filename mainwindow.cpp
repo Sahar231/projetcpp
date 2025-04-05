@@ -37,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     QPalette palette;
-    QPixmap pixmap("C:/Users/slimc/OneDrive/Documents/GitHub/projetcpp/back55.jpg");
+    QPixmap pixmap("C:/Users/slimc/Desktop/projetcpp/back55.jpg");
     palette.setBrush(QPalette::Window,  pixmap);
     ui->centralwidget->setPalette(palette);
     ui->centralwidget->setAutoFillBackground(true);
@@ -70,29 +70,29 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
-    ui->logo->setIcon(QIcon("C:/Users/slimc/OneDrive/Documents/GitHub/projetcpp/logo9.png"));
+    ui->logo->setIcon(QIcon("C:/Users/slimc/Desktop/projetcpp/logo9.png"));
     ui->logo->setIconSize(QSize(150, 150));
     ui->logo->setStyleSheet(commonButtonStyle);
 
 
-    ui->btnemploye->setIcon(QIcon("C:/Users/slimc/OneDrive/Documents/GitHub/projetcpp/employe.png"));
+    ui->btnemploye->setIcon(QIcon("C:/Users/slimc/Desktop/projetcpp/employe.png"));
     ui->btnemploye->setIconSize(QSize(50, 50));
     ui->btnemploye->setStyleSheet(commonButtonStyle);
-    ui->btnpatient->setIcon(QIcon("C:/Users/slimc/OneDrive/Documents/GitHub/projetcpp/patient.png"));
+    ui->btnpatient->setIcon(QIcon("C:/Users/slimc/Desktop/projetcpp/patient.png"));
     ui->btnpatient->setIconSize(QSize(50, 50));
     ui->btnpatient->setStyleSheet(commonButtonStyle);
-    ui->btnvaccins->setIcon(QIcon("C:/Users/slimc/OneDrive/Documents/GitHub/projetcpp/vaccins.png"));
+    ui->btnvaccins->setIcon(QIcon("C:/Users/slimc/Desktop/projetcpp/vaccins.png"));
     ui->btnvaccins->setIconSize(QSize(50, 50));
     ui->btnvaccins->setStyleSheet(commonButtonStyle);
-    ui->btnequipement->setIcon(QIcon("C:/Users/slimc/OneDrive/Documents/GitHub/projetcpp/equipement.png"));
+    ui->btnequipement->setIcon(QIcon("C:/Users/slimc/Desktop/projetcpp/equipement.png"));
     ui->btnequipement->setIconSize(QSize(50, 50));
     ui->btnequipement->setStyleSheet(commonButtonStyle);
-    ui->btnformation->setIcon(QIcon("C:/Users/slimc/OneDrive/Documents/GitHub/projetcpp/formation.png"));
+    ui->btnformation->setIcon(QIcon("C:/Users/slimc/Desktop/projetcpp/formation.png"));
     ui->btnformation->setIconSize(QSize(50, 50));
     ui->btnformation->setStyleSheet(commonButtonStyle);
-    ui->btnrecherche->setIcon(QIcon("C:/Users/slimc/OneDrive/Documents/GitHub/projetcpp/recherche.png"));
+    ui->btnrecherche->setIcon(QIcon("C:/Users/slimc/Desktop/projetcpp/recherche.png"));
     ui->btnrecherche->setIconSize(QSize(50, 50));
-    ui->logout->setIcon(QIcon("C:/Users/slimc/OneDrive/Documents/GitHub/projetcpp/logout1.png"));
+    ui->logout->setIcon(QIcon("C:/Users/slimc/Desktop/projetcpp/logout1.png"));
     ui->logout->setIconSize(QSize(50, 50));
     ui->btnrecherche->setStyleSheet(commonButtonStyle);
     ui->logout->setStyleSheet(commonButtonStyle);
@@ -162,60 +162,90 @@ void MainWindow::on_Rc_push_Supprimer_clicked()
 
 void MainWindow::on_Rc_push_Modifier_clicked()
 {
-    int idRech = ui->Rc_id_field->text().toInt();
-    QString nomRech = ui->Rc_nom_field->text();
-    QString typeRech = ui->Rc_type_field->text();
+    QString idRechString = ui->Rc_id_field->text().trimmed();
+    QString nomRech = ui->Rc_nom_field->text().trimmed();
+    QString typeRech = ui->Rc_type_field->text().trimmed();
     QDate dateRech = ui->Rc_date_field->date();
-    QString statut = ui->Rc_statut_combo->currentText(); // Changed to use Rc_statut_combox
-    int idEmploye = ui->Rc_employe_combox->currentText().toInt(); // Corrected to Rc_employe_combox
-    QString idRechString = ui->Rc_id_field->text();
+    QString statut = ui->Rc_statut_combo->currentText().trimmed();
+    QString idEmployeString = ui->Rc_employe_combox->currentText().trimmed();
 
-    if (idRechString.isEmpty() || idRech == 0 || nomRech.isEmpty() || typeRech.isEmpty() || statut.isEmpty()) {
-        ui->Rc_Label_InfoAffichage->setText("Erreur de contrôle de saisie");
+    // Vérification des champs
+    if (idRechString.isEmpty() || nomRech.isEmpty() || typeRech.isEmpty() || statut.isEmpty() || idEmployeString.isEmpty()) {
+        ui->Rc_Label_InfoAffichage->setText("⚠️ Tous les champs doivent être remplis.");
+        return;
+    }
+
+    bool ok;
+    int idRech = idRechString.toInt(&ok);
+    if (!ok || idRech <= 0) {
+        ui->Rc_Label_InfoAffichage->setText("❌ L'ID doit être un entier valide.");
+        return;
+    }
+
+    int idEmploye = idEmployeString.toInt(&ok);
+    if (!ok || idEmploye <= 0) {
+        ui->Rc_Label_InfoAffichage->setText("❌ L'ID employé n'est pas valide.");
         return;
     }
 
     Recherche R(idRech, nomRech, typeRech, dateRech, statut, idEmploye);
     bool test = R.modifier();
+
     if (test) {
-        ui->Rc_Label_InfoAffichage->setText("Modification Effectuée ID: " + QString::number(idRech));
+        ui->Rc_Label_InfoAffichage->setText("✅ Modification réussie (ID: " + QString::number(idRech) + ")");
         ui->Rc_TableView_Res->setModel(R.afficher());
         ui->RC_combo_ID->setModel(R.afficher_id());
         clearFields();
-        populateComboBoxes(); // Refresh combo boxes after modification
+        populateComboBoxes();
     } else {
-        ui->Rc_Label_InfoAffichage->setText("Modification non effectuée");
+        ui->Rc_Label_InfoAffichage->setText("❌ Modification non effectuée. L'ID existe-t-il ?");
     }
 }
+
 
 void MainWindow::on_Rc_push_Ajouter_clicked()
 {
-    int idRech = ui->Rc_id_field->text().toInt();
-    QString nomRech = ui->Rc_nom_field->text();
-    QString typeRech = ui->Rc_type_field->text();
+    QString idRechString = ui->Rc_id_field->text().trimmed();
+    QString nomRech = ui->Rc_nom_field->text().trimmed();
+    QString typeRech = ui->Rc_type_field->text().trimmed();
     QDate dateRech = ui->Rc_date_field->date();
-    QString statut = ui->Rc_statut_combo->currentText(); // Changed to use Rc_statut_combox
-    int idEmploye = ui->Rc_employe_combox->currentText().toInt(); // Corrected to Rc_employe_combox
-    QString idRechString = ui->Rc_id_field->text();
+    QString statut = ui->Rc_statut_combo->currentText().trimmed();
+    QString idEmployeString = ui->Rc_employe_combox->currentText().trimmed();
 
-    if (idRechString.isEmpty() || idRech == 0 || nomRech.isEmpty() || typeRech.isEmpty() || statut.isEmpty()) {
-        ui->Rc_Label_InfoAffichage->setText("Erreur de contrôle de saisie");
+    // Vérification de tous les champs obligatoires
+    if (idRechString.isEmpty() || nomRech.isEmpty() || typeRech.isEmpty() || statut.isEmpty() || idEmployeString.isEmpty()) {
+        ui->Rc_Label_InfoAffichage->setText("⚠️ Tous les champs doivent être remplis.");
         return;
     }
 
+    bool ok;
+    int idRech = idRechString.toInt(&ok);
+    if (!ok || idRech <= 0) {
+        ui->Rc_Label_InfoAffichage->setText("❌ L'ID doit être un entier valide supérieur à 0.");
+        return;
+    }
+
+    int idEmploye = idEmployeString.toInt(&ok);
+    if (!ok || idEmploye <= 0) {
+        ui->Rc_Label_InfoAffichage->setText("❌ L'ID employé doit être un entier valide.");
+        return;
+    }
+
+    // Création et insertion
     Recherche R(idRech, nomRech, typeRech, dateRech, statut, idEmploye);
-    ui->Rc_Label_InfoAffichage->setText("Ajout Effectué ID: " + QString::number(idRech));
     bool test = R.ajouter();
+
     if (test) {
+        ui->Rc_Label_InfoAffichage->setText("✅ Ajout effectué avec succès (ID: " + QString::number(idRech) + ")");
         ui->Rc_TableView_Res->setModel(R.afficher());
         ui->RC_combo_ID->setModel(R.afficher_id());
         clearFields();
-        populateComboBoxes(); // Refresh combo boxes after addition
+        populateComboBoxes();
     } else {
-        ui->Rc_Label_InfoAffichage->setText("Ajout non effectué");
+        ui->Rc_Label_InfoAffichage->setText("❌ Échec de l'ajout. L'ID existe peut-être déjà.");
     }
-
 }
+
 
 void MainWindow::on_RC_combo_ID_currentIndexChanged(int index)
 {

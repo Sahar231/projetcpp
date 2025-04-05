@@ -192,8 +192,8 @@ QGroupBox:hover {
       <property name="verticalSpacing">
        <number>24</number>
       </property>
-      <item row="4" column="0" rowspan="2">
-       <widget class="QLabel" name="Event_label_Type">
+      <item row="2" column="0" rowspan="2">
+       <widget class="QLabel" name="Event_label_Nom">
         <property name="font">
          <font>
           <family>Arial</family>
@@ -204,10 +204,30 @@ QGroupBox:hover {
          <string notr="true"/>
         </property>
         <property name="text">
-         <string>Type</string>
+         <string>Nom</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" rowspan="2" colspan="2">
+       <widget class="QLineEdit" name="Rc_nom_field">
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: rgba(255, 255, 255, 150); /* Semi-transparent white */
+    border: 2px solid black; /* Black border */
+    border-radius: 10px;
+    color: black; /* Default text color */
+}
+
+QLineEdit:hover {
+    background-color: rgba(255, 255, 255, 180); /* Slightly less transparent on hover */
+    border: 2px solid black; /* Keep border black */
+    border-radius: 10px;
+}
+
+</string>
         </property>
        </widget>
       </item>
@@ -259,44 +279,6 @@ QComboBox QAbstractItemView {
         </item>
        </widget>
       </item>
-      <item row="4" column="1" rowspan="2" colspan="2">
-       <widget class="QLineEdit" name="Rc_type_field">
-        <property name="styleSheet">
-         <string notr="true">QLineEdit {
-    background-color: rgba(255, 255, 255, 150); /* Semi-transparent white */
-    border: 2px solid black; /* Black border */
-    border-radius: 10px;
-    color: black; /* Default text color */
-}
-
-QLineEdit:hover {
-    background-color: rgba(255, 255, 255, 180); /* Slightly less transparent on hover */
-    border: 2px solid black; /* Keep border black */
-    border-radius: 10px;
-}
-</string>
-        </property>
-       </widget>
-      </item>
-      <item row="7" column="0">
-       <widget class="QLabel" name="Event_label_Date_2">
-        <property name="font">
-         <font>
-          <family>Arial</family>
-          <pointsize>10</pointsize>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string>Statut</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
       <item row="8" column="1">
        <widget class="QComboBox" name="Rc_employe_combox">
         <property name="styleSheet">
@@ -330,6 +312,25 @@ QComboBox QAbstractItemView {
         </property>
        </widget>
       </item>
+      <item row="4" column="0" rowspan="2">
+       <widget class="QLabel" name="Event_label_Type">
+        <property name="font">
+         <font>
+          <family>Arial</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>Type</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
       <item row="6" column="0">
        <widget class="QLabel" name="Event_label_Date">
         <property name="font">
@@ -343,6 +344,25 @@ QComboBox QAbstractItemView {
         </property>
         <property name="text">
          <string>Date</string>
+        </property>
+        <property name="alignment">
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+        </property>
+       </widget>
+      </item>
+      <item row="7" column="0">
+       <widget class="QLabel" name="Event_label_Date_2">
+        <property name="font">
+         <font>
+          <family>Arial</family>
+          <pointsize>10</pointsize>
+         </font>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>Statut</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -410,6 +430,25 @@ QLineEdit:hover {
         </property>
        </widget>
       </item>
+      <item row="4" column="1" rowspan="2" colspan="2">
+       <widget class="QLineEdit" name="Rc_type_field">
+        <property name="styleSheet">
+         <string notr="true">QLineEdit {
+    background-color: rgba(255, 255, 255, 150); /* Semi-transparent white */
+    border: 2px solid black; /* Black border */
+    border-radius: 10px;
+    color: black; /* Default text color */
+}
+
+QLineEdit:hover {
+    background-color: rgba(255, 255, 255, 180); /* Slightly less transparent on hover */
+    border: 2px solid black; /* Keep border black */
+    border-radius: 10px;
+}
+</string>
+        </property>
+       </widget>
+      </item>
       <item row="6" column="1">
        <widget class="QDateEdit" name="Rc_date_field">
         <property name="font">
@@ -450,45 +489,6 @@ QDateEdit QAbstractItemView {
         </property>
         <property name="displayFormat">
          <string>dd-MM-yyyy</string>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="0" rowspan="2">
-       <widget class="QLabel" name="Event_label_Nom">
-        <property name="font">
-         <font>
-          <family>Arial</family>
-          <pointsize>10</pointsize>
-         </font>
-        </property>
-        <property name="styleSheet">
-         <string notr="true"/>
-        </property>
-        <property name="text">
-         <string>Nom</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-        </property>
-       </widget>
-      </item>
-      <item row="2" column="1" rowspan="2" colspan="2">
-       <widget class="QLineEdit" name="Rc_nom_field">
-        <property name="styleSheet">
-         <string notr="true">QLineEdit {
-    background-color: rgba(255, 255, 255, 150); /* Semi-transparent white */
-    border: 2px solid black; /* Black border */
-    border-radius: 10px;
-    color: black; /* Default text color */
-}
-
-QLineEdit:hover {
-    background-color: rgba(255, 255, 255, 180); /* Slightly less transparent on hover */
-    border: 2px solid black; /* Keep border black */
-    border-radius: 10px;
-}
-
-</string>
         </property>
        </widget>
       </item>
