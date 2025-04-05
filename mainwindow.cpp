@@ -37,7 +37,11 @@ MainWindow::MainWindow(QWidget *parent)
 
 
     QPalette palette;
+<<<<<<< Updated upstream
     QPixmap pixmap("C:/Users/slimc/Desktop/projetcpp/back55.jpg");
+=======
+    QPixmap pixmap("C:/Users/hp/Desktop/projetcpp/back55.jpg");
+>>>>>>> Stashed changes
     palette.setBrush(QPalette::Window,  pixmap);
     ui->centralwidget->setPalette(palette);
     ui->centralwidget->setAutoFillBackground(true);
@@ -70,11 +74,16 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
+<<<<<<< Updated upstream
     ui->logo->setIcon(QIcon("C:/Users/slimc/Desktop/projetcpp/logo9.png"));
+=======
+    ui->logo->setIcon(QIcon("C:/Users/hp/Desktop/projetcpp/logo9.png"));
+>>>>>>> Stashed changes
     ui->logo->setIconSize(QSize(150, 150));
     ui->logo->setStyleSheet(commonButtonStyle);
 
 
+<<<<<<< Updated upstream
     ui->btnemploye->setIcon(QIcon("C:/Users/slimc/Desktop/projetcpp/employe.png"));
     ui->btnemploye->setIconSize(QSize(50, 50));
     ui->btnemploye->setStyleSheet(commonButtonStyle);
@@ -93,6 +102,26 @@ MainWindow::MainWindow(QWidget *parent)
     ui->btnrecherche->setIcon(QIcon("C:/Users/slimc/Desktop/projetcpp/recherche.png"));
     ui->btnrecherche->setIconSize(QSize(50, 50));
     ui->logout->setIcon(QIcon("C:/Users/slimc/Desktop/projetcpp/logout1.png"));
+=======
+    ui->btnemploye->setIcon(QIcon("C:/Users/hp/Desktop/projetcpp/employe.png"));
+    ui->btnemploye->setIconSize(QSize(50, 50));
+    ui->btnemploye->setStyleSheet(commonButtonStyle);
+    ui->btnpatient->setIcon(QIcon("C:/Users/hp/Desktop/projetcpp/patient.png"));
+    ui->btnpatient->setIconSize(QSize(50, 50));
+    ui->btnpatient->setStyleSheet(commonButtonStyle);
+    ui->btnvaccins->setIcon(QIcon("C:/Users/hp/Desktop/projetcpp/vaccins.png"));
+    ui->btnvaccins->setIconSize(QSize(50, 50));
+    ui->btnvaccins->setStyleSheet(commonButtonStyle);
+    ui->btnequipement->setIcon(QIcon("C:/Users/hp/Desktop/projetcpp/equipement.png"));
+    ui->btnequipement->setIconSize(QSize(50, 50));
+    ui->btnequipement->setStyleSheet(commonButtonStyle);
+    ui->btnformation->setIcon(QIcon("C:/Users/hp/Desktop/projetcpp/formation.png"));
+    ui->btnformation->setIconSize(QSize(50, 50));
+    ui->btnformation->setStyleSheet(commonButtonStyle);
+    ui->btnrecherche->setIcon(QIcon("C:/Users/hp/Desktop/projetcpp/recherche.png"));
+    ui->btnrecherche->setIconSize(QSize(50, 50));
+    ui->logout->setIcon(QIcon("C:/Users/hp/Desktop/projetcpp/logout1.png"));
+>>>>>>> Stashed changes
     ui->logout->setIconSize(QSize(50, 50));
     ui->btnrecherche->setStyleSheet(commonButtonStyle);
     ui->logout->setStyleSheet(commonButtonStyle);
