@@ -302,7 +302,7 @@
     <property name="geometry">
      <rect>
       <x>450</x>
-      <y>290</y>
+      <y>360</y>
       <width>1021</width>
       <height>421</height>
      </rect>
@@ -580,7 +580,7 @@
     <property name="geometry">
      <rect>
       <x>450</x>
-      <y>290</y>
+      <y>360</y>
       <width>1021</width>
       <height>421</height>
      </rect>
@@ -590,11 +590,17 @@
       <pointsize>9</pointsize>
      </font>
     </property>
+    <property name="mouseTracking">
+     <bool>false</bool>
+    </property>
+    <property name="lineWidth">
+     <number>-3</number>
+    </property>
    </widget>
    <widget class="QPushButton" name="btnSave">
     <property name="geometry">
      <rect>
-      <x>440</x>
+      <x>270</x>
       <y>720</y>
       <width>93</width>
       <height>29</height>
@@ -630,6 +636,36 @@
      <string>pdf</string>
     </property>
    </widget>
+   <widget class="QPushButton" name="on_excel_clicked">
+    <property name="geometry">
+     <rect>
+      <x>1140</x>
+      <y>0</y>
+      <width>81</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>../../../../Downloads/excel-removebg-preview.png</normaloff>../../../../Downloads/excel-removebg-preview.png</iconset>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="pdf_4">
+    <property name="geometry">
+     <rect>
+      <x>1140</x>
+      <y>60</y>
+      <width>91</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>excel</string>
+    </property>
+   </widget>
    <zorder>comboBox_typeVaccin_2</zorder>
    <zorder>tableView</zorder>
    <zorder>trier</zorder>
@@ -654,6 +690,8 @@
    <zorder>btnSave</zorder>
    <zorder>statistiqueButton</zorder>
    <zorder>pdf_3</zorder>
+   <zorder>on_excel_clicked</zorder>
+   <zorder>pdf_4</zorder>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

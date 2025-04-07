@@ -26,6 +26,7 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
     // Déclaration de la fonction getVaccinsData
     QList<QPair<QString, QString>> getVaccinsData();
 
@@ -38,19 +39,19 @@ private slots:
     void on_btnRecherche_clicked();  // Déclaration du slot
     void trierVaccins(int index);    // Déclarez la méthode trierVaccins ici
     void genererPDFDocument();       // Add this declaration for your PDF function
-
-
-
+    void on_pdf_2_clicked();
+void on_excel_clicked();
 
 
 private:
     Ui::MainWindow *ui;
+    void setupTableView();
     QSqlDatabase db;  // Pour la base de données
     QSqlTableModel *modelVaccins;
     QTableView *tableViewVaccins;
     // Déclaration de la fonction nettoyerTexte
     QString nettoyerTexte(const QString &texte);
-
+    QList<QString> getListeVaccins();
 };
 
 

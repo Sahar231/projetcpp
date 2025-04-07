@@ -10,6 +10,7 @@
 #define UI_MAINWINDOW_H
 
 #include <QtCore/QVariant>
+#include <QtGui/QIcon>
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QDateEdit>
@@ -78,6 +79,8 @@ public:
     QPushButton *btnSave;
     QPushButton *statistiqueButton;
     QPushButton *pdf_3;
+    QPushButton *on_excel_clicked;
+    QPushButton *pdf_4;
     QMenuBar *menubar;
     QStatusBar *statusbar;
 
@@ -161,7 +164,7 @@ public:
         label_13->setGeometry(QRect(10, 530, 63, 20));
         tableView = new QTableView(centralwidget);
         tableView->setObjectName("tableView");
-        tableView->setGeometry(QRect(450, 290, 1021, 421));
+        tableView->setGeometry(QRect(450, 360, 1021, 421));
         QFont font;
         font.setFamilies({QString::fromUtf8("Cascadia Code")});
         font.setPointSize(9);
@@ -232,19 +235,30 @@ public:
         pdf_2->setGeometry(QRect(1370, 10, 71, 51));
         tableViewVaccin = new QTableView(centralwidget);
         tableViewVaccin->setObjectName("tableViewVaccin");
-        tableViewVaccin->setGeometry(QRect(450, 290, 1021, 421));
+        tableViewVaccin->setGeometry(QRect(450, 360, 1021, 421));
         QFont font1;
         font1.setPointSize(9);
         tableViewVaccin->setFont(font1);
+        tableViewVaccin->setMouseTracking(false);
+        tableViewVaccin->setLineWidth(-3);
         btnSave = new QPushButton(centralwidget);
         btnSave->setObjectName("btnSave");
-        btnSave->setGeometry(QRect(440, 720, 93, 29));
+        btnSave->setGeometry(QRect(270, 720, 93, 29));
         statistiqueButton = new QPushButton(centralwidget);
         statistiqueButton->setObjectName("statistiqueButton");
         statistiqueButton->setGeometry(QRect(1360, 60, 91, 31));
         pdf_3 = new QPushButton(centralwidget);
         pdf_3->setObjectName("pdf_3");
         pdf_3->setGeometry(QRect(1240, 60, 91, 31));
+        on_excel_clicked = new QPushButton(centralwidget);
+        on_excel_clicked->setObjectName("on_excel_clicked");
+        on_excel_clicked->setGeometry(QRect(1140, 0, 81, 61));
+        QIcon icon;
+        icon.addFile(QString::fromUtf8("../../../../Downloads/excel-removebg-preview.png"), QSize(), QIcon::Mode::Normal, QIcon::State::Off);
+        on_excel_clicked->setIcon(icon);
+        pdf_4 = new QPushButton(centralwidget);
+        pdf_4->setObjectName("pdf_4");
+        pdf_4->setGeometry(QRect(1140, 60, 91, 31));
         MainWindow->setCentralWidget(centralwidget);
         comboBox_typeVaccin_2->raise();
         tableView->raise();
@@ -270,6 +284,8 @@ public:
         btnSave->raise();
         statistiqueButton->raise();
         pdf_3->raise();
+        on_excel_clicked->raise();
+        pdf_4->raise();
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
         menubar->setGeometry(QRect(0, 0, 1616, 26));
@@ -329,6 +345,8 @@ public:
         btnSave->setText(QCoreApplication::translate("MainWindow", "save", nullptr));
         statistiqueButton->setText(QCoreApplication::translate("MainWindow", "statistique", nullptr));
         pdf_3->setText(QCoreApplication::translate("MainWindow", "pdf", nullptr));
+        on_excel_clicked->setText(QString());
+        pdf_4->setText(QCoreApplication::translate("MainWindow", "excel", nullptr));
     } // retranslateUi
 
 };

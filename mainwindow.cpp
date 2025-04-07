@@ -16,6 +16,22 @@
 #include <QFont>
 #include <QColor>
 #include <QBrush>
+#include <QMessageBox>
+#include <QPdfWriter>
+#include <QPainter>
+#include <QFontMetrics>
+#include <QSqlError>
+#include <QtCharts/QChartView>
+#include <QtCharts/QPieSeries>
+#include <QtCharts/QChart>
+#include <QSqlQuery>
+#include <QSqlRecord>
+#include <QMap>
+#include <QDate>
+#include <QStandardItemModel>
+#include <QTableView>
+
+
 
 
 QString MainWindow::nettoyerTexte(const QString &text) {
@@ -62,6 +78,24 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+
+
+
+
+    // Ajouter l'icône au bouton excel
+    QIcon excelIcon("C:/Users/hp/Desktop/2A17/qt/interfce/excel.png"); // Correct
+
+
+    if (!excelIcon.isNull()) {
+        ui->on_excel_clicked->setIcon(excelIcon);
+        ui->on_excel_clicked->setIconSize(QSize(71, 51)); // Même taille que le bouton
+        ui->on_excel_clicked->setFlat(true);              // Supprime l'effet 3D du bouton
+        ui->on_excel_clicked->setStyleSheet("QPushButton { background-color: transparent; border: none; }");
+    } else {
+        qDebug() << "Erreur: Impossible de charger l'icône Excel.";
+    }
+
+
     ui->trier->setCurrentIndex(0);  // Sélectionner l'option de tri par défaut, ici "id"
 
 
@@ -145,6 +179,7 @@ QString style = R"(
     connect(ui->btnRecherche, &QPushButton::clicked, this, &MainWindow::on_btnRecherche_clicked);
     connect(ui->trier, SIGNAL(currentIndexChanged(int)), this, SLOT(trierVaccins(int)));
     connect(ui->pdf_3, &QPushButton::clicked, this, &MainWindow::genererPDFDocument); // Ou genererPDF si vous utilisez ce nom
+    connect(ui->on_excel_clicked, &QPushButton::clicked, this, &MainWindow::on_excel_clicked);
 
 
 
@@ -358,9 +393,18 @@ void MainWindow::on_pushButton_4_clicked()
         qDebug() << "Erreur lors de l'insertion:" << query.lastError().text();
     } else {
         QMessageBox::information(this, "Succès", "Insertion réussie.");
+
+        // Vider les champs après une insertion réussie
+        ui->lineEdit_nomVaccin->clear();
+        ui->lineEdit_effetsSecondaires->clear();
+        ui->lineEdit_composition->clear();
+        ui->lineEdit_quantite->clear();
+        ui->lineEdit_idRech->clear();
+        ui->comboBox_typeVaccin->setCurrentIndex(0);
+        ui->dateEdit_dateCreation->setDate(QDate::currentDate());
+        ui->dateEdit_datePeremption->setDate(QDate::currentDate());
     }
 }
-
 
 
 // mainwindow.cpp
@@ -472,6 +516,8 @@ void MainWindow::on_btnModifier_clicked()
 
     // Remplir le formulaire avec les données existantes
     ui->lineEdit_idVaccin->setText(checkQuery.value("ID_VACCIN").toString());
+    ui->lineEdit_idVaccin->setReadOnly(true);  // Empêcher la modification de l'ID dans l'interface
+
     ui->lineEdit_nomVaccin->setText(checkQuery.value("NOM_VACCIN").toString());
     ui->lineEdit_effetsSecondaires->setText(checkQuery.value("EFFET_SECONDAIRE").toString());
     ui->lineEdit_composition->setText(checkQuery.value("COMPOSITION").toString());
@@ -501,6 +547,13 @@ void MainWindow::on_btnModifier_clicked()
         QDate datePeremption = ui->dateEdit_datePeremption->date();
         QString typeVaccin = ui->comboBox_typeVaccin->currentText();
         int idRech = ui->lineEdit_idRech->text().toInt();
+
+        // Vérifier que l'ID n'a pas été modifié
+        int idVaccinForm = ui->lineEdit_idVaccin->text().toInt();
+        if (idVaccinForm != idVaccin) {
+            QMessageBox::warning(this, "Erreur", "Vous ne pouvez pas modifier l'identifiant du vaccin.");
+            return;
+        }
 
         // Vérification des champs vides
         if (nomVaccin.isEmpty() || effetsSecondaires.isEmpty() || composition.isEmpty() ||
@@ -587,6 +640,7 @@ void MainWindow::on_btnModifier_clicked()
         }
     });
 }
+
 void MainWindow::on_btnRecherche_clicked() {
     // Vérifier si la base de données est connectée
     QSqlDatabase db = QSqlDatabase::database();
@@ -643,14 +697,16 @@ void MainWindow::on_btnRecherche_clicked() {
 void MainWindow::trierVaccins(int index)
 {
     QString critere;
+    QString ordre = "ASC"; // par défaut ordre croissant
 
-    // Déterminer le critère de tri en fonction de la sélection
+    // Déterminer le critère de tri et l'ordre en fonction de la sélection
     switch(index) {
     case 0:
-        critere = "ID_VACCIN";  // Tri par ID
+        critere = "ID_VACCIN";  // Tri par ID (ordre croissant)
         break;
     case 1:
-        critere = "QUANTITÉ";  // Tri par quantité
+        critere = "QUANTITÉ";   // Tri par quantité (ordre décroissant)
+        ordre = "DESC";
         break;
     default:
         return;  // Pas de tri si l'index n'est pas valide
@@ -658,39 +714,37 @@ void MainWindow::trierVaccins(int index)
 
     // Créer la requête SQL pour trier les données
     QSqlQuery query;
-    query.prepare(QString("SELECT * FROM \"C##LABSYNC_NEW\".\"VACCINS\" ORDER BY \"%1\"").arg(critere));
+    query.prepare(QString("SELECT * FROM \"C##LABSYNC_NEW\".\"VACCINS\" ORDER BY \"%1\" %2")
+                      .arg(critere, ordre));
 
     // Exécuter la requête
     if (query.exec()) {
         // Rafraîchir le modèle et mettre à jour l'affichage
         modelVaccins->setQuery(std::move(query));
-
         ui->tableViewVaccin->setModel(modelVaccins);
     } else {
         QMessageBox::critical(this, "Erreur", "Échec du tri des vaccins.");
         qDebug() << "Erreur lors du tri:" << query.lastError().text();
     }
 }
-//pdf
-// Structure pour contenir le vaccin, la description et les effets secondaires
-struct Vaccin {
-    QString nom;
-    QString description;
-    QString effetsSecondaires;
-};
 
+
+//pdf
 void MainWindow::genererPDFDocument() {
-    // Ouvrir une boîte de dialogue pour sélectionner l'emplacement et le nom du fichier
-    QString filePath = QFileDialog::getSaveFileName(this, "Enregistrer le fichier PDF", QApplication::applicationDirPath() + "/vaccin.pdf", "Fichiers PDF (*.pdf)");
+    // Ouvrir une boîte de dialogue pour enregistrer le fichier PDF
+    QString filePath = QFileDialog::getSaveFileName(this, "Enregistrer le fichier PDF",
+                                                    QApplication::applicationDirPath() + "/vaccins.pdf",
+                                                    "Fichiers PDF (*.pdf)");
 
     // Vérifier si l'utilisateur a sélectionné un fichier
     if (filePath.isEmpty()) {
-        // Si l'utilisateur annule la boîte de dialogue, ne pas poursuivre
         return;
     }
 
     // Créer un objet QPdfWriter pour écrire dans le fichier
     QPdfWriter writer(filePath);
+    writer.setPageSize(QPageSize::A4);
+
     QPainter painter(&writer);
 
     // Vérifier si le QPainter a bien été initialisé
@@ -699,74 +753,52 @@ void MainWindow::genererPDFDocument() {
         return;
     }
 
-    // Définir la taille de la page et la police
-    writer.setPageSize(QPageSize::A4);
-    QFont font("Arial", 10);
-    painter.setFont(font);
+    // Définir les marges et dimensions
+    int marginLeft = 50;   // Marge de gauche
+    int marginTop = 50;    // Marge en haut
+    int rowHeight = 40;    // Hauteur des lignes
+    int availableWidth = writer.width() - 2 * marginLeft; // Largeur disponible pour les vaccins
 
-    // Définir les marges
-    int margin = 30; // Marges de 30 pixels autour de la page
-    int pageWidth = writer.width();
-    int pageHeight = writer.height();
+    // Liste des vaccins
+    QList<QString> vaccinsList = {"Grippe", "Tétanos", "COVID-19", "Rougeole"};
 
-    // Dessiner l'en-tête du PDF
-    painter.drawText(margin, margin + 20, "Liste des Vaccins");
+    // Calculer l'espacement horizontal nécessaire
+    int totalTextWidth = 0;
+    for (const QString &vaccin : vaccinsList) {
+        totalTextWidth += painter.fontMetrics().horizontalAdvance(vaccin);  // Largeur totale des textes
+    }
 
-    // Récupérer les données des vaccins
-    QList<QPair<QString, QString>> vaccinsList = getVaccinsData();
+    // Calculer l'espacement horizontal disponible
+    int horizontalSpacing = (availableWidth - totalTextWidth) / (vaccinsList.size() + 1); // Ajouter un espacement entre chaque vaccin
 
-    int startY = margin + 40; // Début du tableau après l'en-tête
-    int rowHeight = 20;
-    int colWidth[] = {150, 250, 250}; // Largeur des colonnes
+    // Définir la police et la taille de l'en-tête
+    QFont titleFont("Arial", 18, QFont::Bold);
+    painter.setFont(titleFont);
 
-    // Dessiner l'en-tête du tableau
-    painter.drawRect(margin, startY - rowHeight, colWidth[0], rowHeight);
-    painter.drawRect(margin + colWidth[0], startY - rowHeight, colWidth[1], rowHeight);
-    painter.drawRect(margin + colWidth[0] + colWidth[1], startY - rowHeight, colWidth[2], rowHeight);
-    painter.drawText(margin + 5, startY - rowHeight + 15, "Nom Vaccin et Description");
-    painter.drawText(margin + colWidth[0] + 5, startY - rowHeight + 15, "Composition");
-    painter.drawText(margin + colWidth[0] + colWidth[1] + 5, startY - rowHeight + 15, "Effets secondaires");
+    // Dessiner l'en-tête du PDF centré
+    QString title = "Liste des Vaccins";
+    int titleWidth = painter.fontMetrics().horizontalAdvance(title);
+    painter.drawText((writer.width() - titleWidth) / 2, marginTop, title);
 
-    startY += rowHeight;
+    // Ajouter un espace vertical plus grand avant la liste des vaccins
+    int titleSpacing = 200; // Augmenter encore l'espacement entre le titre et la liste des vaccins
+    int startY = marginTop + titleSpacing;  // Nouveau point de départ pour la liste des vaccins
 
-    // Dessiner chaque ligne de vaccin
-    for (int row = 0; row < vaccinsList.size(); ++row) {
-        QString nomVaccinEtDescription = nettoyerTexte(vaccinsList[row].first);
-        QString composition = nettoyerTexte(vaccinsList[row].second);
-        QString effetsSecondaires = "Aucun effet secondaire";  // Remplacer par l'information adéquate
+    // Modifier la police pour la liste des vaccins
+    QFont vaccinFont("Arial", 14);
+    painter.setFont(vaccinFont);
 
-        // Dessiner les bordures des cellules et insérer les données sur une seule ligne
-        painter.drawRect(margin, startY, colWidth[0], rowHeight);
-        painter.drawRect(margin + colWidth[0], startY, colWidth[1], rowHeight);
-        painter.drawRect(margin + colWidth[0] + colWidth[1], startY, colWidth[2], rowHeight);
+    // Espacement vertical avant la liste des vaccins
+    startY += rowHeight;  // Commencer un peu plus bas après le titre et l'espacement
 
-        // Dessiner les informations sur une seule ligne
-        painter.drawText(margin + 5, startY + 15, nomVaccinEtDescription);
-        painter.drawText(margin + colWidth[0] + 5, startY + 15, composition);
-        painter.drawText(margin + colWidth[0] + colWidth[1] + 5, startY + 15, effetsSecondaires);
+    int startX = marginLeft;
 
-        startY += rowHeight;
+    // Afficher les vaccins sur la même ligne avec l'espacement calculé
+    for (const QString &vaccin : vaccinsList) {
+        painter.drawText(startX, startY, vaccin);  // Dessiner chaque vaccin à la position (startX, startY)
 
-        // Si la page est pleine, ajouter une nouvelle page
-        if (startY > pageHeight - margin - 50) { // Vérifier si la page est presque pleine
-            painter.end();
-            writer.newPage();
-            painter.begin(&writer);
-
-            // Réinitialiser l'en-tête et les marges pour la nouvelle page
-            painter.setFont(font);
-            painter.drawText(margin, margin + 20, "Liste des Vaccins");
-
-            // Redessiner l'en-tête du tableau
-            painter.drawRect(margin, margin + 40 - rowHeight, colWidth[0], rowHeight);
-            painter.drawRect(margin + colWidth[0], margin + 40 - rowHeight, colWidth[1], rowHeight);
-            painter.drawRect(margin + colWidth[0] + colWidth[1], margin + 40 - rowHeight, colWidth[2], rowHeight);
-            painter.drawText(margin + 5, margin + 40 - rowHeight + 15, "Nom Vaccin et Description");
-            painter.drawText(margin + colWidth[0] + 5, margin + 40 - rowHeight + 15, "Composition");
-            painter.drawText(margin + colWidth[0] + colWidth[1] + 5, margin + 40 - rowHeight + 15, "Effets secondaires");
-
-            startY = margin + 40;  // Réinitialiser la position Y pour la nouvelle page
-        }
+        // Mettre à jour la position horizontale pour le vaccin suivant
+        startX += painter.fontMetrics().horizontalAdvance(vaccin) + horizontalSpacing;  // Calculer la prochaine position horizontale
     }
 
     // Terminer l'écriture du PDF
@@ -774,4 +806,105 @@ void MainWindow::genererPDFDocument() {
 
     // Afficher un message de succès
     QMessageBox::information(this, "Succès", "Le PDF a été généré avec succès à l'emplacement : " + filePath);
+}
+
+//stat
+
+void MainWindow::on_pdf_2_clicked()
+{
+    // Vérifie que la base est connectée
+    QSqlDatabase db = QSqlDatabase::database();
+    if (!db.isOpen()) {
+        QMessageBox::critical(this, "Erreur", "Base de données non connectée !");
+        return;
+    }
+
+    // Préparer la requête pour additionner les quantités par nom de vaccin
+    QMap<QString, int> quantiteParVaccin;
+    QSqlQuery query("SELECT \"NOM_VACCIN\", \"QUANTITÉ\" FROM \"C##LABSYNC_NEW\".\"VACCINS\"");
+
+    while (query.next()) {
+        QString nomVaccin = query.value(0).toString();
+        int quantite = query.value(1).toInt();
+        quantiteParVaccin[nomVaccin] += quantite;
+    }
+
+    if (quantiteParVaccin.isEmpty()) {
+        QMessageBox::information(this, "Information", "Aucune donnée disponible pour générer les statistiques.");
+        return;
+    }
+
+    // Création de la série du diagramme
+    QPieSeries *series = new QPieSeries();
+
+    for (auto it = quantiteParVaccin.begin(); it != quantiteParVaccin.end(); ++it) {
+        series->append(it.key(), it.value());
+    }
+
+    // Personnalisation du design
+    int colorIndex = 0;
+    QStringList colors = { "#3498db", "#2ecc71", "#e74c3c", "#9b59b6", "#f39c12", "#1abc9c", "#e67e22", "#7f8c8d" };
+
+    for (auto slice : series->slices()) {
+        slice->setLabel(QString("%1 (%2)").arg(slice->label()).arg(slice->value()));
+        slice->setLabelVisible(true);
+        slice->setExploded(true); // Fait ressortir chaque tranche
+        slice->setLabelColor(Qt::black);
+        slice->setPen(QPen(Qt::darkGray, 1));
+        QColor color = QColor(colors[colorIndex % colors.size()]);
+        slice->setBrush(color);
+        colorIndex++;
+    }
+
+    // Créer et configurer le graphique
+    QChart *chart = new QChart();
+    chart->addSeries(series);
+    chart->setTitle("Quantité totale des vaccins par nom");
+    chart->legend()->setAlignment(Qt::AlignRight);
+    chart->setAnimationOptions(QChart::AllAnimations);
+
+    // Créer la vue du graphique
+    QChartView *chartView = new QChartView(chart);
+    chartView->setRenderHint(QPainter::Antialiasing);
+    chartView->resize(640, 480);
+    chartView->setWindowTitle("Statistiques des Vaccins (par Quantité)");
+    chartView->show(); // Affiche la fenêtre du graphique
+}
+void MainWindow::on_excel_clicked()
+{
+    qDebug() << "Bouton Excel cliqué !";
+
+    // Demander à l'utilisateur de choisir l'emplacement de sauvegarde
+    QString fileName = QFileDialog::getSaveFileName(this, "Exporter en Excel", "", "Fichiers CSV (*.csv)");
+    if (fileName.isEmpty())
+        return;
+
+    QFile file(fileName);
+    if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        QMessageBox::warning(this, "Erreur", "Impossible d'ouvrir le fichier pour écriture.");
+        return;
+    }
+
+    QTextStream out(&file);
+
+    // Exporter les en-têtes de colonnes
+    QAbstractItemModel *model = ui->tableViewVaccin->model();
+    QStringList headers;
+    for (int col = 0; col < model->columnCount(); ++col) {
+        headers << model->headerData(col, Qt::Horizontal).toString();
+    }
+    out << headers.join(";") << "\n";
+
+    // Exporter les données de chaque ligne
+    for (int row = 0; row < model->rowCount(); ++row) {
+        QStringList rowValues;
+        for (int col = 0; col < model->columnCount(); ++col) {
+            QString data = model->data(model->index(row, col)).toString();
+            rowValues << data;
+        }
+        out << rowValues.join(";") << "\n";
+    }
+
+    file.close();
+    QMessageBox::information(this, "Succès", "Exportation vers Excel réussie !");
 }
