@@ -1,4 +1,4 @@
-QT       += core gui printsupport \
+QT       += core gui printsupport multimedia multimediawidgets charts printsupport widgets axcontainer \
     quick
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -13,15 +13,18 @@ SOURCES += \
     connection.cpp \
     main.cpp \
     mainwindow.cpp \
-    recherche.cpp
+    recherche.cpp \
+    statistique.cpp
 
 HEADERS += \
     connection.h \
     mainwindow.h \
-    recherche.h
+    recherche.h \
+    statistique.h
 
 FORMS += \
-    mainwindow.ui
+    mainwindow.ui \
+    statistique.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

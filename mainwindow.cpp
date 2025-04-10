@@ -13,8 +13,15 @@
 #include <QJsonDocument>
 #include <QDebug>
 #include <QUrlQuery>
-#include <QPrinter>
+#include <QtPrintSupport/QPrinter>
+#include <QtPrintSupport/QPrintDialog>
 #include <QTextDocument>
+#include <QFileDialog>
+#include <QFileInfo>
+#include <QTextStream>
+#include <QTextDocument>
+#include "statistique.h"
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -120,9 +127,9 @@ void MainWindow::populateComboBoxes()
 
     // Populate Rc_statut_combox with predefined values
     ui->Rc_statut_combo->clear();
-    ui->Rc_statut_combo->addItem("En cours");
-    ui->Rc_statut_combo->addItem("Terminé");
-    ui->Rc_statut_combo->addItem("Annulé");
+    ui->Rc_statut_combo->addItem("En Cours");
+    ui->Rc_statut_combo->addItem("Termine");
+    ui->Rc_statut_combo->addItem("Annule");
 }
 
 
@@ -315,7 +322,7 @@ void MainWindow::on_Rc_Line_Recherche_textChanged(const QString &arg1)
 void MainWindow::on_Rc_Button_ExportPDF_clicked()
 {
 
-        QString strStream;
+    QString strStream;
         QTextStream out(&strStream);
 
         const int rowCount = ui->Rc_TableView_Res->model()->rowCount();
@@ -324,27 +331,31 @@ void MainWindow::on_Rc_Button_ExportPDF_clicked()
         out << "<html>\n"
                "<head>\n"
                "<meta Content=\"Text/html; charset=Windows-1251\">\n"
-            << QString("<title>%1</title>\n").arg("Export PDF")
-            << "</head>\n"
+               << QString("<title>%1</title>\n").arg("Export PDF")
+               << "</head>\n"
                "<body bgcolor=#ffffff link=#5000A0>\n"
-               "<center><H1>Liste des Recherches</H1><br><br>\n"
+               "<center><h1>Liste des Recherches</h1><br><br>\n"
                "<table border=1 cellspacing=0 cellpadding=2>\n";
 
         // Table headers
-        out << "<thead><tr bgcolor=#f0f0f0><th>Numero</th>";
-        for (int column = 0; column < columnCount; column++) {
+        out << "<thead><tr bgcolor=#f0f0f0><th>Numéro</th>";
+        for (int column = 0; column < columnCount; ++column) {
             if (!ui->Rc_TableView_Res->isColumnHidden(column)) {
-                out << QString("<th>%1</th>").arg(ui->Rc_TableView_Res->model()->headerData(column, Qt::Horizontal).toString());
+                out << QString("<th>%1</th>").arg(
+                    ui->Rc_TableView_Res->model()->headerData(column, Qt::Horizontal).toString());
             }
         }
         out << "</tr></thead>\n";
 
-        // Table rows
-        for (int row = 0; row < rowCount; row++) {
+        // Table data
+        for (int row = 0; row < rowCount; ++row) {
             out << "<tr><td>" << row + 1 << "</td>";
-            for (int column = 0; column < columnCount; column++) {
+            for (int column = 0; column < columnCount; ++column) {
                 if (!ui->Rc_TableView_Res->isColumnHidden(column)) {
-                    QString data = ui->Rc_TableView_Res->model()->data(ui->Rc_TableView_Res->model()->index(row, column)).toString().simplified();
+                    QString data = ui->Rc_TableView_Res->model()
+                                       ->data(ui->Rc_TableView_Res->model()->index(row, column))
+                                       .toString()
+                                       .simplified();
                     out << QString("<td>%1</td>").arg(data.isEmpty() ? "&nbsp;" : data);
                 }
             }
@@ -353,19 +364,36 @@ void MainWindow::on_Rc_Button_ExportPDF_clicked()
 
         out << "</table></center>\n</body>\n</html>\n";
 
-        QString fileName = QFileDialog::getSaveFileName(this, "Sauvegarder en PDF", QString(), "*.pdf");
+        QString fileName = QFileDialog::getSaveFileName(this, "Sauvegarder en PDF", "", "*.pdf");
         if (QFileInfo(fileName).suffix().isEmpty())
             fileName.append(".pdf");
 
-        QPrinter printer(QPrinter::PrinterResolution);
+        QPrinter printer(QPrinter::HighResolution);
         printer.setOutputFormat(QPrinter::PdfFormat);
-        printer.setPaperSize(QPrinter::A4);
+        printer.setPageSize(QPageSize(QPageSize::A4));
         printer.setOutputFileName(fileName);
 
         QTextDocument doc;
         doc.setHtml(strStream);
-        doc.setPageSize(printer.pageRect().size());
         doc.print(&printer);
 
+}
 
+void MainWindow::on_Rc_Button_Stat_clicked()
+{
+    Statistique *statWindow = new Statistique(this);
+
+
+        QSize statSize = statWindow->size();
+        QPoint mainWindowPos = this->pos();
+        QSize mainWindowSize = this->size();
+
+
+        int x = mainWindowPos.x() + (mainWindowSize.width() - statSize.width()) / 2;
+        int y = mainWindowPos.y() + (mainWindowSize.height() - statSize.height()) / 2;
+
+        statWindow->move(x, y);
+
+        // Show the window
+        statWindow->show();
 }

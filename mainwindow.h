@@ -39,6 +39,10 @@ private slots:
 
     void on_Rc_Button_ExportPDF_clicked();
 
+
+
+    void on_Rc_Button_Stat_clicked();
+
 private:
     Ui::MainWindow *ui;
     Recherche R;

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Statistique</class>
+ <widget class="QMainWindow" name="Statistique">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1022</width>
+    <height>703</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>-10</x>
+      <y>-10</y>
+      <width>1041</width>
+      <height>721</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-image: url(:/back55.jpg);
+background-size: contain;
+background-repeat: no-repeat;
+background-position: center;</string>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="Res_Label_Titre">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>0</y>
+      <width>341</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>LEMON MILK</family>
+      <pointsize>13</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">background-color: rgba(35,10,152,50);
+border-bottom-left-radius: 10px;
+border-bottom-right-radius: 10px;</string>
+    </property>
+    <property name="text">
+     <string>STATISTIQUE</string>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+   </widget>
+   <widget class="QLabel" name="Res_Label_Stats">
+    <property name="geometry">
+     <rect>
+      <x>214</x>
+      <y>71</y>
+      <width>571</width>
+      <height>521</height>
+     </rect>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Rc_push_Stat">
+    <property name="geometry">
+     <rect>
+      <x>430</x>
+      <y>630</y>
+      <width>141</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Montserrat Medium</family>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    background-color: rgba(255, 255, 255, 150); /* Semi-transparent white */
+    border: 2px solid black; /* Black border */
+    border-radius: 8px;
+    color: black; /* Default text color */
+}
+
+QPushButton:hover {
+    background-color: rgba(255, 255, 255, 180); /* Slightly less transparent on hover */
+    border: 2px solid black; /* Keep border black */
+}
+</string>
+    </property>
+    <property name="text">
+     <string>Stat</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

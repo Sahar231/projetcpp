@@ -890,6 +890,33 @@ QComboBox QAbstractItemView {
      </property>
     </item>
    </widget>
+   <widget class="QPushButton" name="Rc_Button_Stat">
+    <property name="geometry">
+     <rect>
+      <x>1260</x>
+      <y>210</y>
+      <width>81</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton {
+    background-color: rgba(255, 255, 255, 150); /* Semi-transparent white */
+    border: 2px solid black; /* Black border */
+    border-radius: 8px;
+    color: black; /* Default text color */
+}
+
+QPushButton:hover {
+    background-color: rgba(255, 255, 255, 180); /* Slightly less transparent on hover */
+    border: 2px solid black; /* Keep border black */
+}
+</string>
+    </property>
+    <property name="text">
+     <string>Statistique</string>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">
