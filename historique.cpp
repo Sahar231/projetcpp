@@ -8,7 +8,7 @@
 historique::historique(QWidget *parent) : QDialog(parent)
 {
     setWindowTitle("Historique des Actions");
-    resize(600, 400);
+    resize(700, 600);
 
     // Zone d'affichage en lecture seule
     textDisplay = new QTextEdit();

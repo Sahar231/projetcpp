@@ -15,7 +15,7 @@ statistique::statistique(QWidget *parent) :
 {
     ui->setupUi(this);
     setWindowTitle("Statistiques des Équipements");
-    resize(1200, 800);
+    resize(600, 500);
 
     QTabWidget *tabWidget = new QTabWidget(this);
 

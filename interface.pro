@@ -20,6 +20,7 @@ SOURCES += \
 HEADERS += \
     EtatDelegate.h \
     Mainwindow.h \
+    PythonWorker.h \
     connection.h \
     equipement.h \
     historique.h \
@@ -45,7 +46,3 @@ CONFIG +=console
 QT += printsupport
 
 QT += core gui charts
-INCLUDEPATH += C:/vosk/include
-LIBS += -LC:/vosk/lib -lvosk
-
-

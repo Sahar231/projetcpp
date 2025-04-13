@@ -1,0 +1,10 @@
+debug/Mainwindow.o
+debug/equipement.o
+debug/historique.o
+debug/main.o
+debug/statistique.o
+debug/qrc_res.o
+debug/moc_Mainwindow.o
+debug/moc_PythonWorker.o
+debug/moc_historique.o
+debug/moc_statistique.o

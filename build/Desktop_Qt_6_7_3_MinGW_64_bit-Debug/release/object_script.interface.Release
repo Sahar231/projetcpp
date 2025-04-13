@@ -1,0 +1,10 @@
+release/Mainwindow.o
+release/equipement.o
+release/historique.o
+release/main.o
+release/statistique.o
+release/qrc_res.o
+release/moc_Mainwindow.o
+release/moc_PythonWorker.o
+release/moc_historique.o
+release/moc_statistique.o

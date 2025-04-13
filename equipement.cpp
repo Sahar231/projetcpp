@@ -68,16 +68,17 @@ QSqlQueryModel * equipement::affichierEQ()
 
 
 
-    model->setQuery("SELECT * FROM EQUIPEMENT");
+    model->setQuery("SELECT ID_EQUIPEMENT, NOM_EQ, TYPE_EQ, DESCRIPTION, QUANTITE, ETAT, TO_CHAR(DATE_ACHAT, 'DD-MM-YYYY') as DATE_ACHAT FROM EQUIPEMENT");
 
 
-    model->setHeaderData(0, Qt::Horizontal, QObject::tr("ID EQUIPEMENT"));
-    model->setHeaderData(1, Qt::Horizontal, QObject::tr("NOM EQ"));
-    model->setHeaderData(2, Qt::Horizontal, QObject::tr("TYPE EQ"));
-    model->setHeaderData(3, Qt::Horizontal, QObject::tr("DESCRIPTION"));
-    model->setHeaderData(4, Qt::Horizontal, QObject::tr("QUANTITE"));
-    model->setHeaderData(5, Qt::Horizontal, QObject::tr("ETAT"));
-    model->setHeaderData(6, Qt::Horizontal, QObject::tr("DATE ACHAT"));
+
+    model->setHeaderData(0, Qt::Horizontal, QObject::tr("ID"));
+    model->setHeaderData(1, Qt::Horizontal, QObject::tr("Nom"));
+    model->setHeaderData(2, Qt::Horizontal, QObject::tr("Type"));
+    model->setHeaderData(3, Qt::Horizontal, QObject::tr("Description"));
+    model->setHeaderData(4, Qt::Horizontal, QObject::tr("Quantite"));
+    model->setHeaderData(5, Qt::Horizontal, QObject::tr("Etat"));
+    model->setHeaderData(6, Qt::Horizontal, QObject::tr("Date achat"));
 
 
 

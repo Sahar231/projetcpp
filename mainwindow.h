@@ -46,6 +46,8 @@ private slots:
 
 
 
+    void on_autoFillButton_clicked();
+
 private:
     Ui::MainWindow *ui;
     equipement equ;

@@ -29,4 +29,3 @@ int main(int arg, char *ar[])
 
     return a.exec();
 }
-

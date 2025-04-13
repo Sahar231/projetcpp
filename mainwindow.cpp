@@ -15,12 +15,16 @@
 #include <QPrintDialog>
 #include <QTextDocument>
 #include "statistique.h"
+#include "PythonWorker.h"
 
 #include <QMessageBox>
 #include <QBuffer>
 #include <QPainter>
 #include <QTextDocument>
-
+#include <QProcess>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QMessageBox>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -112,21 +116,11 @@ void MainWindow::on_pushButton_4_clicked()  //ajouter
     int ID_EQUIPEMENT = ui->lineEdit->text().toInt();
     QString NOM_EQ=ui->lineEdit_2->text();
     QString TYPE_eq = ui->lineEdit_4->text();
-    QString DESCRIPTION=ui->lineEdit_5->text();
+    QString DESCRIPTION=ui->lineEdit_3->text();
     QDate DATE_ACHAT=ui->dd->date();
     int QUANTITE = ui->spinBox->value();
     QString ETAT= ui->comboBox->currentText();
-
-
-
-
-
-
-
-
-
-
-    if (ID_EQUIPEMENT <= 0) {
+   if (ID_EQUIPEMENT <= 0) {
         QMessageBox::warning(this, "Erreur", "L'ID de l'équipement doit être un nombre positif et unique !");
         return;
     }
@@ -181,12 +175,42 @@ void MainWindow::on_pushButton_4_clicked()  //ajouter
     ui->lineEdit->clear();   // Réinitialise le champ pour l'ID_EQUIPEMENT
     ui->lineEdit_2->clear();  // Réinitialise le champ pour le NOM_EQ
     ui->lineEdit_4->clear();  // Réinitialise le champ pour le TYPE_eq
-    ui->lineEdit_5->clear();  // Réinitialise le champ pour la DESCRIPTION
+    ui->lineEdit_3->clear();  // Réinitialise le champ pour la DESCRIPTION
     ui->dd->setDate(QDate::currentDate()); // Réinitialise la date à la date actuelle (ou vous pouvez utiliser QDate())
     ui->spinBox->setValue(0);  // Réinitialise la valeur de QUANTITE à 0
     ui->comboBox->setCurrentIndex(0);  // Réinitialise l'index de la comboBox (premier élément sélectionné)
 
 }
+
+
+void MainWindow::on_autoFillButton_clicked()
+{
+
+
+
+        PythonWorker *worker = new PythonWorker;
+        worker->equipmentName = ui->lineEdit_2->text();  // اسم من LineEdit2
+
+        connect(worker, &QThread::finished, this, [=]() {
+            if (worker->output.isEmpty()) {
+                ui->lineEdit_3->setText("aucune information");
+            } else {
+                ui->lineEdit_3->setText(worker->output);
+            }
+            worker->deleteLater();  // تنظيف الذاكرة
+        });
+
+        worker->start();  // يبدأ الـ Thread وينتظر النتيجة
+
+}
+
+
+
+
+
+
+
+
 
 void MainWindow::on_pushButton_3_clicked()  //edit
 {
@@ -194,7 +218,7 @@ void MainWindow::on_pushButton_3_clicked()  //edit
     QString NOM_EQ=ui->lineEdit_2->text();
 
     QString TYPE_eq = ui->lineEdit_4->text();
-    QString DESCRIPTION=ui->lineEdit_5->text();
+    QString DESCRIPTION=ui->lineEdit_3->text();
     QDate DATE_ACHAT=ui->dd->date();
     int QUANTITE = ui->spinBox->value();
     QString ETAT= ui->comboBox->currentText();
@@ -254,7 +278,7 @@ void MainWindow::on_pushButton_3_clicked()  //edit
     ui->lineEdit->clear();   // Réinitialise le champ pour l'ID_EQUIPEMENT
     ui->lineEdit_2->clear();  // Réinitialise le champ pour le NOM_EQ
     ui->lineEdit_4->clear();  // Réinitialise le champ pour le TYPE_eq
-    ui->lineEdit_5->clear();  // Réinitialise le champ pour la DESCRIPTION
+    ui->lineEdit_3->clear();  // Réinitialise le champ pour la DESCRIPTION
     ui->dd->setDate(QDate::currentDate()); // Réinitialise la date à la date actuelle (ou vous pouvez utiliser QDate())
     ui->spinBox->setValue(0);  // Réinitialise la valeur de QUANTITE à 0
     ui->comboBox->setCurrentIndex(0);  // Réinitialise l'index de la comboBox (premier élément sélectionné)
@@ -349,7 +373,7 @@ void MainWindow::on_tableView_clicked(const QModelIndex &index)
         ui->lineEdit_2->setText(nom);
 
         ui->lineEdit_4->setText(type);
-        ui->lineEdit_5->setText(description);
+        ui->lineEdit_3->setText(description);
         ui->spinBox->setValue(quantite);
         ui->comboBox->setCurrentText(etat);
         ui->dd->setDate(date_achat);
@@ -366,7 +390,7 @@ void MainWindow::on_pushButton_5_clicked()
     ui->lineEdit->clear();   // Réinitialise le champ pour l'ID_EQUIPEMENT
     ui->lineEdit_2->clear();  // Réinitialise le champ pour le NOM_EQ
     ui->lineEdit_4->clear();  // Réinitialise le champ pour le TYPE_eq
-    ui->lineEdit_5->clear();  // Réinitialise le champ pour la DESCRIPTION
+    ui->lineEdit_3->clear();  // Réinitialise le champ pour la DESCRIPTION
     ui->dd->setDate(QDate::currentDate()); // Réinitialise la date à la date actuelle (ou vous pouvez utiliser QDate())
     ui->spinBox->setValue(0);  // Réinitialise la valeur de QUANTITE à 0
     ui->comboBox->setCurrentIndex(0);  // Réinitialise l'index de la comboBox (premier élément sélectionné)
@@ -381,7 +405,7 @@ void MainWindow::on_pushButton_5_clicked()
 void MainWindow::on_recherche_2_clicked()
 {
     if (ui->recherche->text().isEmpty()) {
-        // Si le champ de recherche est vide, afficher tous les éléments
+        QMessageBox::warning(this, "erreur", "Aucun résultat trouvé pour votre recherche.");
         ui->tableView->setModel(equ.affichierEQ());
     } else {
         // Si le champ de recherche contient du texte, rechercher avec ce texte
@@ -406,8 +430,6 @@ void MainWindow::on_trier_activated(int index)
 
 }
 
-
-
 void MainWindow::on_pdf_clicked()
 {
     QString fileName = QFileDialog::getSaveFileName(this, "Exporter en PDF", "", "*.pdf");
@@ -422,36 +444,32 @@ void MainWindow::on_pdf_clicked()
     printer.setOutputFormat(QPrinter::PdfFormat);
     printer.setOutputFileName(fileName);
     printer.setPageMargins(QMarginsF(15, 15, 15, 15));
+    printer.setPageSize(QPageSize(QSizeF(300, 400), QPageSize::Millimeter)); // الحجم الجديد
 
-    // Récupérer la date et l’heure actuelle
-    QString dateTime = QDateTime::currentDateTime().toString("dd/MM/yyyy hh:mm");
+    QString dateTime = QDateTime::currentDateTime().toString("dd/MM/yyyy");
+    QString time = QDateTime::currentDateTime().toString("hh:mm:ss.zzz");
 
-    // HTML : Partie entête avec logo, titre, date/heure
     QString html;
-    html += "<div style='width:100%;'>";
+    html += "<div style='width:100%; font-family:Arial;'>";
 
-    // Ligne du haut : date/heure à gauche, logo au centre, page number à droite
-    html += "<table width='100%' style='border: none;'>";
-    html += "<tr>";
-    html += "<td align='left' style='font-size:10pt;'>Date : " + dateTime + "</td>";
-    html += "<td align='center'><img src='c:/Users/Sahar/Bureau/project/interfce/logo9.png' width='80'/></td>";
-    html += "<td align='right' style='font-size:10pt;'>Page: <span class='pageNumber'></span></td>";
-    html += "</tr>";
-    html += "</table>";
+    // Logo, titre, date et heure
+    html += "<div style='text-align:center;'>";
+    html += "<img src='c:/Users/Sahar/Bureau/project/interfce/logo9.png' width='120'/><br>";
+    html += "<span style='font-size:11pt; color:#333;'>Labsync - Centre de Vaccination et de Recherche Biologique</span><br>";
+    html += "<span style='font-size:10pt; color:#777;'>Date : " + dateTime + " | Heure : " + time + "</span>";
+    html += "</div>";
 
-    // Adresse et titre
-    html += "<h3 align='center'>Labsync - Centre de Vaccination et de Recherche Biologique</h3>";
-    html += "<hr style='height:1px;border:none;color:#333;background-color:#333;'/>";
+    html += "<hr style='height:2px;border:none;color:#333;background-color:#333;'/>";
 
-    // Titre de la liste
-    html += "<h2 align='center'>Liste des équipements</h2>";
+    html += "<h2 align='center' style='font-size:16pt; font-weight: bold; color:#1E90FF;'>Liste des équipements</h2>";
+    html += "<hr style='height:1px;border:none;color:#333;background-color:#ccc;'/>";
 
-    // Tableau des équipements
+    // Tableau
     html += "<table border='1' cellspacing='0' cellpadding='4' width='100%'>";
     html += "<thead><tr style='background-color:#d0d0d0;'>";
 
     for (int col = 0; col < ui->tableView->model()->columnCount(); ++col)
-        html += "<th>" + ui->tableView->model()->headerData(col, Qt::Horizontal).toString() + "</th>";
+        html += "<th style='font-size:11pt; color:#333;'>" + ui->tableView->model()->headerData(col, Qt::Horizontal).toString() + "</th>";
 
     html += "</tr></thead><tbody>";
 
@@ -459,23 +477,34 @@ void MainWindow::on_pdf_clicked()
         html += "<tr>";
         for (int col = 0; col < ui->tableView->model()->columnCount(); ++col) {
             QString data = ui->tableView->model()->data(ui->tableView->model()->index(row, col)).toString();
-            html += "<td>" + data + "</td>";
+            html += "<td style='font-size:10pt; color:#333;'>" + data + "</td>";
         }
         html += "</tr>";
     }
 
     html += "</tbody></table>";
 
-    // Pied de page
-    html += "<br><hr style='height:1px;border:none;color:#333;background-color:#333;'/>";
-    html += "<p align='center' style='font-size:10pt;'>© 2025 Labsync - Tous droits réservés</p>";
+    int totalEquipements = ui->tableView->model()->rowCount();
+    html += "<p align='right' style='font-size:12pt; font-weight: bold; color:#333;'>Nombre total d'équipements : " + QString::number(totalEquipements) + "</p>";
+
+    html += "<br><br><hr style='height:1px;border:none;color:#ccc;background-color:#ccc;'/>";
+    html += "<div style='display: flex; justify-content: space-between;'>";
+    html += "<p style='font-size:11pt; color:#555;'>Chef de Lab</p>";
+    html += "<p style='font-size:11pt; color:#555;'>Signature du Responsable des Equipements – Page <span class='pageNumber'></span></p>";
     html += "</div>";
 
-    QTextDocument doc;
-    doc.setHtml(html);
-    doc.setPageSize(printer.pageRect(QPrinter::Point).size());
+    // Footer simple
+    html += "<br><hr style='height:2px;border:none;color:#333;background-color:#333;'/>";
+    html += "<div style='text-align: center; font-size:10pt; color:#777;'>";
+    html += "2025 © Tous les droits sont réservés.";
+    html += "</div>";
 
-    doc.print(&printer);
+    html += "</div>";
+
+    QTextDocument *docText = new QTextDocument();
+    docText->setHtml(html);
+    docText->setPageSize(printer.pageRect(QPrinter::Point).size());
+    docText->print(&printer);
 
     QMessageBox::information(this, "PDF Exporté", "Liste exportée avec succès sous forme de PDF !");
 }
@@ -549,14 +578,26 @@ void MainWindow::on_pushButton_clicked()
 {
     ui->tableView->setModel(equ.affichierEQ());
     ui->tableView->setWordWrap(true);
-    /*ui->tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-   ui->tableView->resizeRowsToContents();*/
+    ui->tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+   ui->tableView->resizeRowsToContents();
 
     ui->tableView->setItemDelegateForColumn(5, new EtatDelegate(ui->tableView));
 
+
+   // جعل العمود الثالث (Description) يأخذ العرض المناسب
+   ui->tableView->horizontalHeader()->setSectionResizeMode(3, QHeaderView::ResizeToContents);
+
+    ui->tableView->setColumnWidth(0, 35);   // Colonne 1: ID
+    ui->tableView->setColumnWidth(3, 30);
+   ui->tableView->setColumnWidth(4, 80);    // Colonne 4: Quantité
+    ui->tableView->setColumnWidth(5, 40);  // Colonne 6: Date achat
+
+
+   // تكبير الصفوف تلقائياً حسب النص
+   ui->tableView->resizeRowsToContents();
+
+
       // Ajuste la largeur de la colonne image (ajuste selon tes besoins)
-
-
 
 
 }

@@ -51,7 +51,8 @@ constexpr auto qt_meta_stringdata_CLASSMainWindowENDCLASS = QtMocHelpers::string
     "on_pushButton_6_clicked",
     "on_pushButton_7_clicked",
     "on_pdf_2_clicked",
-    "on_pushButton_clicked"
+    "on_pushButton_clicked",
+    "on_autoFillButton_clicked"
 );
 #else  // !QT_MOC_HAS_STRINGDATA
 #error "qtmochelpers.h not found or too old."
@@ -64,7 +65,7 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSMainWindowENDCLASS[] = {
       12,       // revision
        0,       // classname
        0,    0, // classinfo
-      12,   14, // methods
+      13,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -72,18 +73,19 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSMainWindowENDCLASS[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    0,   86,    2, 0x08,    1 /* Private */,
-       3,    0,   87,    2, 0x08,    2 /* Private */,
-       4,    0,   88,    2, 0x08,    3 /* Private */,
-       5,    1,   89,    2, 0x08,    4 /* Private */,
-       8,    0,   92,    2, 0x08,    6 /* Private */,
-       9,    0,   93,    2, 0x08,    7 /* Private */,
-      10,    1,   94,    2, 0x08,    8 /* Private */,
-      11,    0,   97,    2, 0x08,   10 /* Private */,
-      12,    0,   98,    2, 0x08,   11 /* Private */,
-      13,    0,   99,    2, 0x08,   12 /* Private */,
-      14,    0,  100,    2, 0x08,   13 /* Private */,
-      15,    0,  101,    2, 0x08,   14 /* Private */,
+       1,    0,   92,    2, 0x08,    1 /* Private */,
+       3,    0,   93,    2, 0x08,    2 /* Private */,
+       4,    0,   94,    2, 0x08,    3 /* Private */,
+       5,    1,   95,    2, 0x08,    4 /* Private */,
+       8,    0,   98,    2, 0x08,    6 /* Private */,
+       9,    0,   99,    2, 0x08,    7 /* Private */,
+      10,    1,  100,    2, 0x08,    8 /* Private */,
+      11,    0,  103,    2, 0x08,   10 /* Private */,
+      12,    0,  104,    2, 0x08,   11 /* Private */,
+      13,    0,  105,    2, 0x08,   12 /* Private */,
+      14,    0,  106,    2, 0x08,   13 /* Private */,
+      15,    0,  107,    2, 0x08,   14 /* Private */,
+      16,    0,  108,    2, 0x08,   15 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
@@ -93,6 +95,7 @@ Q_CONSTINIT static const uint qt_meta_data_CLASSMainWindowENDCLASS[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void, QMetaType::Int,    7,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -136,6 +139,8 @@ Q_CONSTINIT const QMetaObject MainWindow::staticMetaObject = { {
         // method 'on_pdf_2_clicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'on_pushButton_clicked'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'on_autoFillButton_clicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>
     >,
     nullptr
@@ -159,6 +164,7 @@ void MainWindow::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, 
         case 9: _t->on_pushButton_7_clicked(); break;
         case 10: _t->on_pdf_2_clicked(); break;
         case 11: _t->on_pushButton_clicked(); break;
+        case 12: _t->on_autoFillButton_clicked(); break;
         default: ;
         }
     }
@@ -183,13 +189,13 @@ int MainWindow::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 12)
+        if (_id < 13)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 12;
+        _id -= 13;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 12)
+        if (_id < 13)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 12;
+        _id -= 13;
     }
     return _id;
 }

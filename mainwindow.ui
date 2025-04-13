@@ -89,7 +89,7 @@ QLineEdit:hover {
       <string notr="true">font: italic 9pt &quot;Comic Sans MS&quot;;</string>
      </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;Id_equipement&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;Id   equipement&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="lineEdit_2">
@@ -172,43 +172,11 @@ QLineEdit:hover {
 </string>
      </property>
     </widget>
-    <widget class="QLineEdit" name="lineEdit_5">
-     <property name="geometry">
-      <rect>
-       <x>30</x>
-       <y>300</y>
-       <width>181</width>
-       <height>21</height>
-      </rect>
-     </property>
-     <property name="minimumSize">
-      <size>
-       <width>113</width>
-       <height>0</height>
-      </size>
-     </property>
-     <property name="styleSheet">
-      <string notr="true">QLineEdit {
-    background-color: rgba(255, 255, 255, 150); /* Semi-transparent white */
-    border: 2px solid black; /* Black border */
-    border-radius: 10px;
-    color: black; /* Default text color */
-}
-
-QLineEdit:hover {
-    background-color: rgba(255, 255, 255, 180); /* Slightly less transparent on hover */
-    border: 2px solid black; /* Keep border black */
-    border-radius: 10px;
-}
-
-</string>
-     </property>
-    </widget>
     <widget class="QComboBox" name="comboBox">
      <property name="geometry">
       <rect>
-       <x>40</x>
-       <y>540</y>
+       <x>30</x>
+       <y>480</y>
        <width>171</width>
        <height>31</height>
       </rect>
@@ -227,8 +195,8 @@ QLineEdit:hover {
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>640</y>
-       <width>111</width>
+       <y>650</y>
+       <width>93</width>
        <height>35</height>
       </rect>
      </property>
@@ -273,7 +241,7 @@ QPushButton:disabled {
     <widget class="QLabel" name="label_4">
      <property name="geometry">
       <rect>
-       <x>0</x>
+       <x>10</x>
        <y>110</y>
        <width>81</width>
        <height>31</height>
@@ -290,7 +258,7 @@ QPushButton:disabled {
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>470</y>
+       <y>420</y>
        <width>171</width>
        <height>26</height>
       </rect>
@@ -306,7 +274,7 @@ QPushButton:disabled {
      <property name="geometry">
       <rect>
        <x>30</x>
-       <y>600</y>
+       <y>560</y>
        <width>191</width>
        <height>26</height>
       </rect>
@@ -321,7 +289,7 @@ QPushButton:disabled {
     <widget class="QLabel" name="label_11">
      <property name="geometry">
       <rect>
-       <x>0</x>
+       <x>10</x>
        <y>180</y>
        <width>81</width>
        <height>31</height>
@@ -337,7 +305,7 @@ QPushButton:disabled {
     <widget class="QLabel" name="label_12">
      <property name="geometry">
       <rect>
-       <x>0</x>
+       <x>10</x>
        <y>260</y>
        <width>151</width>
        <height>41</height>
@@ -354,7 +322,7 @@ QPushButton:disabled {
      <property name="geometry">
       <rect>
        <x>10</x>
-       <y>430</y>
+       <y>380</y>
        <width>121</width>
        <height>31</height>
       </rect>
@@ -369,8 +337,8 @@ QPushButton:disabled {
     <widget class="QLabel" name="label_14">
      <property name="geometry">
       <rect>
-       <x>0</x>
-       <y>510</y>
+       <x>10</x>
+       <y>450</y>
        <width>81</width>
        <height>31</height>
       </rect>
@@ -386,7 +354,7 @@ QPushButton:disabled {
      <property name="geometry">
       <rect>
        <x>0</x>
-       <y>570</y>
+       <y>520</y>
        <width>161</width>
        <height>31</height>
       </rect>
@@ -395,15 +363,15 @@ QPushButton:disabled {
       <string notr="true">font: italic 9pt &quot;Comic Sans MS&quot;;</string>
      </property>
      <property name="text">
-      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;Date_achat&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:12pt; font-weight:700;&quot;&gt;Date   achat&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
      </property>
     </widget>
     <widget class="QPushButton" name="pushButton_3">
      <property name="geometry">
       <rect>
-       <x>140</x>
-       <y>640</y>
-       <width>121</width>
+       <x>130</x>
+       <y>650</y>
+       <width>101</width>
        <height>35</height>
       </rect>
      </property>
@@ -492,6 +460,29 @@ QPushButton:disabled {
      </property>
      <property name="text">
       <string>effacer</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="lineEdit_3">
+     <property name="geometry">
+      <rect>
+       <x>30</x>
+       <y>300</y>
+       <width>191</width>
+       <height>71</height>
+      </rect>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="autoFillButton">
+     <property name="geometry">
+      <rect>
+       <x>60</x>
+       <y>610</y>
+       <width>93</width>
+       <height>29</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>ai auto fill</string>
      </property>
     </widget>
    </widget>
@@ -1002,7 +993,7 @@ QPushButton:disabled {
      </rect>
     </property>
     <property name="text">
-     <string>PushButton</string>
+     <string>afficher</string>
     </property>
    </widget>
   </widget>

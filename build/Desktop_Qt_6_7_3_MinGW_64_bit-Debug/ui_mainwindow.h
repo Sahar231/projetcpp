@@ -37,7 +37,6 @@ public:
     QLineEdit *lineEdit_2;
     QLabel *label_7;
     QLineEdit *lineEdit_4;
-    QLineEdit *lineEdit_5;
     QComboBox *comboBox;
     QPushButton *pushButton_4;
     QLabel *label_4;
@@ -50,6 +49,8 @@ public:
     QLabel *label_15;
     QPushButton *pushButton_3;
     QPushButton *pushButton_5;
+    QLineEdit *lineEdit_3;
+    QPushButton *autoFillButton;
     QTableView *tableView;
     QComboBox *trier;
     QLineEdit *recherche;
@@ -148,32 +149,14 @@ public:
 "}\n"
 "\n"
 ""));
-        lineEdit_5 = new QLineEdit(groupBox);
-        lineEdit_5->setObjectName("lineEdit_5");
-        lineEdit_5->setGeometry(QRect(30, 300, 181, 21));
-        lineEdit_5->setMinimumSize(QSize(113, 0));
-        lineEdit_5->setStyleSheet(QString::fromUtf8("QLineEdit {\n"
-"    background-color: rgba(255, 255, 255, 150); /* Semi-transparent white */\n"
-"    border: 2px solid black; /* Black border */\n"
-"    border-radius: 10px;\n"
-"    color: black; /* Default text color */\n"
-"}\n"
-"\n"
-"QLineEdit:hover {\n"
-"    background-color: rgba(255, 255, 255, 180); /* Slightly less transparent on hover */\n"
-"    border: 2px solid black; /* Keep border black */\n"
-"    border-radius: 10px;\n"
-"}\n"
-"\n"
-""));
         comboBox = new QComboBox(groupBox);
         comboBox->setObjectName("comboBox");
-        comboBox->setGeometry(QRect(40, 540, 171, 31));
+        comboBox->setGeometry(QRect(30, 480, 171, 31));
         comboBox->setMinimumSize(QSize(111, 0));
         comboBox->setStyleSheet(QString::fromUtf8(""));
         pushButton_4 = new QPushButton(groupBox);
         pushButton_4->setObjectName("pushButton_4");
-        pushButton_4->setGeometry(QRect(10, 640, 111, 35));
+        pushButton_4->setGeometry(QRect(10, 650, 93, 35));
         pushButton_4->setMinimumSize(QSize(93, 0));
         pushButton_4->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "    background-color: #D3D3D3;  /* Gris moyen \303\251l\303\251gant */\n"
@@ -203,39 +186,39 @@ public:
 ""));
         label_4 = new QLabel(groupBox);
         label_4->setObjectName("label_4");
-        label_4->setGeometry(QRect(0, 110, 81, 31));
+        label_4->setGeometry(QRect(10, 110, 81, 31));
         label_4->setStyleSheet(QString::fromUtf8("font: italic 9pt \"Comic Sans MS\";"));
         spinBox = new QSpinBox(groupBox);
         spinBox->setObjectName("spinBox");
-        spinBox->setGeometry(QRect(30, 470, 171, 26));
+        spinBox->setGeometry(QRect(30, 420, 171, 26));
         spinBox->setMinimumSize(QSize(111, 0));
         dd = new QDateEdit(groupBox);
         dd->setObjectName("dd");
-        dd->setGeometry(QRect(30, 600, 191, 26));
+        dd->setGeometry(QRect(30, 560, 191, 26));
         dd->setMinimumSize(QSize(110, 0));
         label_11 = new QLabel(groupBox);
         label_11->setObjectName("label_11");
-        label_11->setGeometry(QRect(0, 180, 81, 31));
+        label_11->setGeometry(QRect(10, 180, 81, 31));
         label_11->setStyleSheet(QString::fromUtf8("font: italic 9pt \"Comic Sans MS\";"));
         label_12 = new QLabel(groupBox);
         label_12->setObjectName("label_12");
-        label_12->setGeometry(QRect(0, 260, 151, 41));
+        label_12->setGeometry(QRect(10, 260, 151, 41));
         label_12->setStyleSheet(QString::fromUtf8("font: italic 9pt \"Comic Sans MS\";"));
         label_13 = new QLabel(groupBox);
         label_13->setObjectName("label_13");
-        label_13->setGeometry(QRect(10, 430, 121, 31));
+        label_13->setGeometry(QRect(10, 380, 121, 31));
         label_13->setStyleSheet(QString::fromUtf8("font: italic 9pt \"Comic Sans MS\";"));
         label_14 = new QLabel(groupBox);
         label_14->setObjectName("label_14");
-        label_14->setGeometry(QRect(0, 510, 81, 31));
+        label_14->setGeometry(QRect(10, 450, 81, 31));
         label_14->setStyleSheet(QString::fromUtf8("font: italic 9pt \"Comic Sans MS\";"));
         label_15 = new QLabel(groupBox);
         label_15->setObjectName("label_15");
-        label_15->setGeometry(QRect(0, 570, 161, 31));
+        label_15->setGeometry(QRect(0, 520, 161, 31));
         label_15->setStyleSheet(QString::fromUtf8("font: italic 9pt \"Comic Sans MS\";"));
         pushButton_3 = new QPushButton(groupBox);
         pushButton_3->setObjectName("pushButton_3");
-        pushButton_3->setGeometry(QRect(140, 640, 121, 35));
+        pushButton_3->setGeometry(QRect(130, 650, 101, 35));
         pushButton_3->setMinimumSize(QSize(93, 0));
         pushButton_3->setStyleSheet(QString::fromUtf8("QPushButton {\n"
 "    background-color: #D3D3D3;  /* Gris moyen \303\251l\303\251gant */\n"
@@ -295,6 +278,12 @@ public:
 "    color: #eeeeee;\n"
 "}\n"
 ""));
+        lineEdit_3 = new QLineEdit(groupBox);
+        lineEdit_3->setObjectName("lineEdit_3");
+        lineEdit_3->setGeometry(QRect(30, 300, 191, 71));
+        autoFillButton = new QPushButton(groupBox);
+        autoFillButton->setObjectName("autoFillButton");
+        autoFillButton->setGeometry(QRect(60, 610, 93, 29));
         tableView = new QTableView(centralwidget);
         tableView->setObjectName("tableView");
         tableView->setGeometry(QRect(490, 290, 851, 431));
@@ -570,7 +559,7 @@ public:
         MainWindow->setWindowTitle(QCoreApplication::translate("MainWindow", "MainWindow", nullptr));
         groupBox->setTitle(QCoreApplication::translate("MainWindow", "Ajouter /Modifier ", nullptr));
         lineEdit->setText(QString());
-        label->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-size:12pt; font-weight:700;\">Id_equipement</span></p></body></html>", nullptr));
+        label->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-size:12pt; font-weight:700;\">Id   equipement</span></p></body></html>", nullptr));
         lineEdit_2->setText(QString());
         label_7->setText(QString());
         pushButton_4->setText(QCoreApplication::translate("MainWindow", "ajouter", nullptr));
@@ -579,9 +568,10 @@ public:
         label_12->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-size:11pt; font-weight:700;\">description</span></p></body></html>", nullptr));
         label_13->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-size:12pt; font-weight:700;\">quantite</span></p></body></html>", nullptr));
         label_14->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-size:12pt; font-weight:700;\">Etat</span></p></body></html>", nullptr));
-        label_15->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-size:12pt; font-weight:700;\">Date_achat</span></p></body></html>", nullptr));
+        label_15->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-size:12pt; font-weight:700;\">Date   achat</span></p></body></html>", nullptr));
         pushButton_3->setText(QCoreApplication::translate("MainWindow", "modifier", nullptr));
         pushButton_5->setText(QCoreApplication::translate("MainWindow", "effacer", nullptr));
+        autoFillButton->setText(QCoreApplication::translate("MainWindow", "ai auto fill", nullptr));
         label_10->setText(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-size:48pt; color:#ffffff;\">Equipement</span></p></body></html>", nullptr));
 #if QT_CONFIG(whatsthis)
         btnemploye->setWhatsThis(QCoreApplication::translate("MainWindow", "<html><head/><body><p><span style=\" font-weight:700;\">employe</span></p></body></html>", nullptr));
@@ -600,7 +590,7 @@ public:
         recherche_2->setText(QCoreApplication::translate("MainWindow", "recherche", nullptr));
         pushButton_6->setText(QCoreApplication::translate("MainWindow", "execl", nullptr));
         pushButton_7->setText(QCoreApplication::translate("MainWindow", "historique", nullptr));
-        pushButton->setText(QCoreApplication::translate("MainWindow", "PushButton", nullptr));
+        pushButton->setText(QCoreApplication::translate("MainWindow", "afficher", nullptr));
     } // retranslateUi
 
 };
