@@ -22,7 +22,7 @@ public:
             return;
         }
 
-        if (!process.waitForFinished(-1)) {
+        if (!process.waitForFinished()) {
             output = "Erreur d'exécution: " + process.errorString();
             return;
         }

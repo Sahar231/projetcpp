@@ -15,15 +15,13 @@
 #include <QPrintDialog>
 #include <QTextDocument>
 #include "statistique.h"
-#include "PythonWorker.h"
+
 
 #include <QMessageBox>
 #include <QBuffer>
 #include <QPainter>
 #include <QTextDocument>
 #include <QProcess>
-#include <QJsonDocument>
-#include <QJsonObject>
 #include <QMessageBox>
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -188,20 +186,7 @@ void MainWindow::on_autoFillButton_clicked()
 
 
 
-        PythonWorker *worker = new PythonWorker;
-        worker->equipmentName = ui->lineEdit_2->text();  // اسم من LineEdit2
-
-        connect(worker, &QThread::finished, this, [=]() {
-            if (worker->output.isEmpty()) {
-                ui->lineEdit_3->setText("aucune information");
-            } else {
-                ui->lineEdit_3->setText(worker->output);
-            }
-            worker->deleteLater();  // تنظيف الذاكرة
-        });
-
-        worker->start();  // يبدأ الـ Thread وينتظر النتيجة
-
+        //C:/Users/Sahar/Bureau/project/interfce/ai auto fill/generation.py"
 }
 
 
@@ -584,7 +569,7 @@ void MainWindow::on_pushButton_clicked()
     ui->tableView->setItemDelegateForColumn(5, new EtatDelegate(ui->tableView));
 
 
-   // جعل العمود الثالث (Description) يأخذ العرض المناسب
+
    ui->tableView->horizontalHeader()->setSectionResizeMode(3, QHeaderView::ResizeToContents);
 
     ui->tableView->setColumnWidth(0, 35);   // Colonne 1: ID
@@ -593,7 +578,7 @@ void MainWindow::on_pushButton_clicked()
     ui->tableView->setColumnWidth(5, 40);  // Colonne 6: Date achat
 
 
-   // تكبير الصفوف تلقائياً حسب النص
+
    ui->tableView->resizeRowsToContents();
 
 

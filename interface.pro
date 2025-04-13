@@ -20,7 +20,6 @@ SOURCES += \
 HEADERS += \
     EtatDelegate.h \
     Mainwindow.h \
-    PythonWorker.h \
     connection.h \
     equipement.h \
     historique.h \
