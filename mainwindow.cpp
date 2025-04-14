@@ -2,12 +2,14 @@
 #include "ui_mainwindow.h"
 #include <QMessageBox>
 #include <QRegularExpression>
+#include "chat.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    ui->combo_stat->setVisible(false); // Cacher le QComboBox au démarrage
 
     // Configuration de l'interface
     QPalette palette;
@@ -79,14 +81,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->rech->setIconSize(QSize(91, 31));
     ui->rech->setStyleSheet("QPushButton { border: 0px; background: transparent; }");
 
-    ui->pdf->setIcon(QIcon("C:/Users/21692/Downloads/Qt/Qt/interfce/pdf2.png"));
-    ui->pdf->setIconSize(QSize(91, 51));
-    ui->pdf->setStyleSheet("QPushButton { border: 0px; background: transparent; }");
-
-    ui->pdf_2->setIcon(QIcon("C:/Users/yousfi islem/Desktop/Qt/Qt/interfce/sta.png"));
-    ui->pdf_2->setIconSize(QSize(91, 51));
-    ui->pdf_2->setStyleSheet("QPushButton { border: 0px; background: transparent; }");
-
     // Configuration des champs de saisie
     ui->recherche->setPlaceholderText("Rechercher un employé par ... ");
     ui->comboBox_3->addItem("nom");
@@ -98,6 +92,11 @@ MainWindow::MainWindow(QWidget *parent)
     ui->trier->addItem("salaire");
     ui->trier->addItem("genre");
     ui->trier->addItem("spécialite");
+
+   ui->combo_stat->addItem("stat selon");
+   ui->combo_stat->addItem("Genre");
+    ui->combo_stat->addItem("Spécialité");
+    ui->combo_stat->addItem("Salaire");
 
     // Connexion des boutons
     connect(ui->pushButton_4, &QPushButton::clicked, this, &MainWindow::on_pushButton_4_clicked);
@@ -122,6 +121,7 @@ void MainWindow::on_pushButton_4_clicked()
     QString adresse = ui->lineEdit_5->text().trimmed();
     QString specialite = ui->lineEdit_6->text().trimmed();
     QString salaireStr = ui->lineEdit_7->text().trimmed(); // Nouveau champ pour le salaire
+    QString email = ui->email->text().trimmed();
 
     // Expressions régulières pour valider les entrées
     QRegularExpression regexNomPrenom("^[A-Za-zÀ-ÖØ-öø-ÿ]+$"); // Lettres et accents
@@ -167,7 +167,7 @@ void MainWindow::on_pushButton_4_clicked()
     int salaire = salaireStr.toInt();
 
     // Création de l'employé après validation
-    employe temploye(id_employe, nom, prenom, tel, genre, adresse, specialite, salaire);
+    employe temploye(id_employe, nom, prenom, tel, genre, adresse, specialite, salaire,email);
 
     // Ajout dans la base de données
     bool test = temploye.ajouter();
@@ -185,6 +185,7 @@ void MainWindow::on_pushButton_4_clicked()
         ui->lineEdit_6->clear();
         ui->lineEdit_7->clear(); // Réinitialisation du champ salaire
         ui->comboBox_2->setCurrentIndex(-1);
+        ui->email->clear();
     }
     else
     {
@@ -241,6 +242,7 @@ void MainWindow::on_modifier_clicked()
     QString adresse = ui->lineEdit_5->text();
     QString specialite = ui->lineEdit_6->text();
     int salaire = ui->lineEdit_7->text().toInt(); // Récupération du salaire
+    QString email = ui->email->text();
 
     // Vérification de l'ID
     if (id_employe.isEmpty()) {
@@ -249,7 +251,7 @@ void MainWindow::on_modifier_clicked()
         return;
     }
 
-    bool test = temploye.modifier(id_employe, nom, prenom, tel, genre, adresse, specialite, salaire);
+    bool test = temploye.modifier(id_employe, nom, prenom, tel, genre, adresse, specialite, salaire,email);
 
     if (test) {
         ui->tableView->setModel(temploye.afficher()); // Rafraîchir la vue
@@ -262,6 +264,7 @@ void MainWindow::on_modifier_clicked()
         ui->lineEdit_6->clear();
         ui->lineEdit_7->clear(); // Réinitialisation du champ salaire
         ui->comboBox_2->setCurrentIndex(-1);
+        ui->email->clear();
 
         QMessageBox::information(nullptr, QObject::tr("Modifier un employé"),
                                  QObject::tr("Modification réussie."), QMessageBox::Ok);
@@ -271,3 +274,188 @@ void MainWindow::on_modifier_clicked()
                                           "Cliquez sur Annuler pour quitter."), QMessageBox::Cancel);
     }
 }
+
+
+
+void MainWindow::on_recherche_textChanged(const QString &arg1)
+{
+    QString critere = ui->comboBox_3->currentText();
+       QString colonne;
+
+       if (critere == "nom") {
+           colonne = "nom";
+       } else if (critere == "prenom") {
+           colonne = "prenom";
+       } else if (critere == "id") {
+           colonne = "id_employe"; // Mets ici le vrai nom de ta colonne ID dans la base
+       } else {
+           // Si rien sélectionné, on affiche tout
+           ui->tableView->setModel(temploye.afficher());
+           return;
+       }
+
+       ui->tableView->setModel(temploye.rechercher(colonne, arg1));
+}
+
+
+
+void MainWindow::on_pushButton_clicked()
+{
+
+    ui->combo_stat->setVisible(true); // Cacher le QComboBox au démarrage
+
+}
+
+
+void MainWindow::on_Pdf_clicked()
+{
+    QString filePath = QFileDialog::getSaveFileName(this, "Enregistrer en PDF", "", "PDF Files (*.pdf)");
+    if (filePath.isEmpty())
+    {
+        return; // Si l'utilisateur annule, on ne fait rien
+    }
+    employe e; // Créez un objet employé
+    QSqlQueryModel *model = e.afficher(); // Récupérer les données des employés (afficher)
+if (e.exporterPDF(filePath, model))
+    {
+        QMessageBox::information(this, "PDF généré", "Le fichier PDF a été créé avec succès !");
+    }
+    else {
+        QMessageBox::critical(this, "Erreur", "Échec de la création du fichier PDF.");
+    }
+}
+
+
+
+void MainWindow::on_pushButton_5_clicked()
+{
+    chat chatDialog;
+    chatDialog.setModal(true);
+    chatDialog.exec();
+
+}
+
+
+
+
+
+
+void MainWindow::on_trier_currentTextChanged(const QString &critere)
+{
+    QString colonne;
+
+    if (critere == "salaire") {
+        colonne = "salaire";
+    } else if (critere == "genre") {
+        colonne = "genre";
+    } else if (critere == "spécialité") {
+        colonne = "specialite";
+    } else {
+        // Aucun tri ou texte non reconnu → affichage normal
+        ui->tableView->setModel(temploye.afficher());
+        return;
+    }
+
+    // Appliquer le tri selon la colonne sélectionnée
+    ui->tableView->setModel(temploye.trier_par(colonne));
+}
+
+void MainWindow::on_combo_stat_currentTextChanged(const QString &critere)
+{
+
+    if (critere == "stat selon") {
+        return; // Ne rien faire pour l'option par défaut
+    }
+
+    QPieSeries *series = new QPieSeries();
+    QSqlQuery query;
+
+    // Variables pour compter les tranches de salaire
+    int count1 = 0; // pour < 1000
+    int count2 = 0; // pour 1000-2000
+    int count3 = 0; // pour > 2000
+
+    // Préparer la requête selon le critère
+    if (critere == "Genre") {
+        query.exec("SELECT genre, COUNT(*) FROM employe GROUP BY genre");
+        // Remplir la série pour le genre
+        while (query.next()) {
+            QString label = query.value(0).toString();
+            int count = query.value(1).toInt();
+            series->append(label, count);
+        }
+    }
+    else if (critere == "Spécialité") {
+        query.exec("SELECT specialite, COUNT(*) FROM employe GROUP BY specialite");
+        // Remplir la série pour la spécialité
+        while (query.next()) {
+            QString label = query.value(0).toString();
+            int count = query.value(1).toInt();
+            series->append(label, count);
+        }
+    }
+    else if (critere == "Salaire") {
+        query.exec("SELECT salaire FROM employe");
+
+        // Calcul des tranches de salaire dans le code
+        while (query.next()) {
+            int salaire = query.value(0).toInt();
+
+            if (salaire < 1000) {
+                count1++;
+            } else if (salaire >= 1000 && salaire <= 2000) {
+                count2++;
+            } else if (salaire > 2000) {
+                count3++;
+            }
+        }
+
+        // Ajouter les tranches de salaire au graphique
+        series->append("< 1000", count1);
+        series->append("1000-2000", count2);
+        series->append("> 2000", count3);
+    }
+
+    // Afficher les labels sur le graphique
+    series->setLabelsVisible(true);
+
+    // Ajouter des couleurs personnalisées (optionnel)
+    QList<QColor> couleurs = {Qt::cyan, Qt::magenta, Qt::yellow, Qt::green, Qt::red, Qt::blue};
+    int i = 0;
+    for (auto slice : series->slices()) {
+        slice->setBrush(couleurs[i % couleurs.size()]);
+        ++i;
+    }
+
+    // Créer et configurer le graphique
+    QChart *chart = new QChart();
+    chart->addSeries(series);
+    chart->setTitle("Statistiques des employés par " + critere);
+    chart->setTitleFont(QFont("Arial", 12, QFont::Bold));
+    chart->setTitleBrush(QBrush(Qt::darkBlue));
+    chart->legend()->setVisible(true);
+    chart->legend()->setAlignment(Qt::AlignRight);
+    chart->setAnimationOptions(QChart::SeriesAnimations); // Animation douce
+
+    // Créer la vue du graphique
+    QChartView *chartView = new QChartView(chart);
+    chartView->setRenderHint(QPainter::Antialiasing);
+
+    // S'assurer que le layout existe
+    if (!ui->stat->layout()) {
+        QVBoxLayout *layout = new QVBoxLayout(ui->stat);
+        ui->stat->setLayout(layout);
+    }
+
+    // Nettoyer l'ancien graphique s’il existe
+    QLayoutItem *child;
+    while ((child = ui->stat->layout()->takeAt(0)) != nullptr) {
+        if (child->widget())
+            delete child->widget();
+        delete child;
+    }
+
+    // Ajouter le nouveau graphique à l'interface
+    ui->stat->layout()->addWidget(chartView);
+}
+

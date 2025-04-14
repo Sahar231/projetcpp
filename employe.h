@@ -1,6 +1,3 @@
-#ifndef employe_H
-#define employe_H
-
 #include <QDialog>
 #include<QSqlQuery>
 #include <QString>
@@ -16,18 +13,20 @@
 
 class employe
 {
-    QString nom,prenom,specialite,genre,adresse,id_employe;
+    QString nom,prenom,specialite,genre,adresse,id_employe,email;
     int tel;
     int salaire;
 public:
     employe();
-    employe(QString,QString,QString,int,QString,QString,QString, int);
+    employe(QString,QString,QString,int,QString,QString,QString, int,QString);
 
     QString getNom() const { return nom; }
     QString getPrenom() const { return prenom; }
     QString getspecialite() const { return specialite; }
     QString getGenre() const { return genre; }
     QString getAdresse() const { return adresse; }
+    QString getEmail() const { return email; }
+
     int getTel() const { return tel; }
     QString getid() const { return id_employe; }
     int getSalaire() const { return salaire; }
@@ -40,11 +39,15 @@ public:
     void setAdresseemploye(const QString &ad) { adresse = ad; }
     void setId(const QString &i) { id_employe = i; }
     void setSalaire(int s) { salaire = s; }
+    void setEmail(const QString &g) { email = g; }
 
     bool ajouter();
     QSqlQueryModel *afficher();
     bool supprimer(QString);
-    bool modifier(QString,QString,QString,int,QString,QString,QString, int);
-};
+    bool modifier(QString,QString,QString,int,QString,QString,QString, int,QString);
+    //trie
+    QSqlQueryModel* trier_par(const QString &colonne);
+    QSqlQueryModel* rechercher(const QString &colonne, const QString &valeur);
+    bool exporterPDF(const QString& fileName, QSqlQueryModel* model);
 
-#endif // employe_H
+};

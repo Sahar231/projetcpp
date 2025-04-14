@@ -1,33 +1,34 @@
 #include "connection.h"
-#include<QDebug>
+#include <QDebug>
+#include <QSqlError>
+#include <QSqlQuery>
+
 connection::connection()
 {
-
-
+    // Constructor body is empty
 }
-bool connection::createconnect()
-{bool test=false;;
+
+bool connection::createconnection()
+{
     db = QSqlDatabase::addDatabase("QODBC");
-    db.setHostName("localhost");
-    db.setDatabaseName("labsync");//inserer le nom de la source de données
-    db.setUserName("labsync");//inserer nom de l'utilisateur
-    db.setPassword("labsync");//inserer mot de passe de cet utilisateur
+    db.setDatabaseName("labsync");
+    db.setUserName("labsync");
+    db.setPassword("labsync");
     if (db.open())
-        test=true;
-
-
-
-return  test;
+    {
+        qDebug() << "Connection to the database successful";
+        return true;
+    }
+    else
+    {
+        QSqlError lastError = db.lastError();
+        qDebug() << "Failed to connect to the database. Error: " << lastError.text();
+        return false;
+    }
 }
 
 
-
-
-
-
-
-
-
-
-
-
+void connection::closeconnection()
+{
+    db.close();
+}

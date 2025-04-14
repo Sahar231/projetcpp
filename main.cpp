@@ -1,30 +1,35 @@
 #include "mainwindow.h"
-#include <QMessageBox>
 #include <QApplication>
+#include <QMessageBox>
 #include "connection.h"
-
+#include "login.h"
 
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    MainWindow w;
-    connection c;
-    bool test=c.createconnect();
-    if(test)
-    {w.show();
 
-        QMessageBox::information(nullptr, QObject::tr("database is open"),
-                                 QObject::tr("connection successful.\n"
-                                             "Click Cancel to exit."), QMessageBox::Cancel);
+    // Establish database connection
+    connection c;
+    bool test = c.createconnection();
+    if (!test) {
+        QMessageBox::critical(nullptr, QObject::tr("Database connection failed"),
+                              QObject::tr("Connection to database failed.\nClick Cancel to exit."),
+                              QMessageBox::Cancel);
+        return -1; // Exit if the connection fails
+    }
+    login loginDialog;
+    loginDialog.resize(450, 400);
+    while(loginDialog.exec() != QDialog::Accepted) {
+        loginDialog.show();
+
+
 
     }
-    else
-        QMessageBox::critical(nullptr, QObject::tr("database is not open"),
-                              QObject::tr("connection failed.\n"
-                                          "Click Cancel to exit."), QMessageBox::Cancel);
+
+        MainWindow mainWindow;
+        mainWindow.resize(1600, 900);
+        mainWindow.show();
+        return a.exec(); // Start the event loop
 
 
-
-    return a.exec();
 }
-

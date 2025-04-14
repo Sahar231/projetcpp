@@ -1,6 +1,3 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
 #include <QMainWindow>
 #include "employe.h"
 
@@ -29,8 +26,23 @@ private slots:
 
 
 
+
+    void on_recherche_textChanged(const QString &arg1);
+
+
+    void on_Pdf_clicked();
+
+    void on_pushButton_clicked();
+
+    void on_pushButton_5_clicked();
+
+
+
+    void on_trier_currentTextChanged(const QString &arg1);
+
+    void on_combo_stat_currentTextChanged(const QString &arg1);
+
 private:
     Ui::MainWindow *ui;
     employe temploye;                     // Employee instance
 };
-#endif // MAINWINDOW_H
