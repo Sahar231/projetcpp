@@ -3,6 +3,10 @@ QT += sql
 QT += printsupport
 QT += charts
 QT += charts
+QT += network
+QT += core gui network
+
+
 
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
@@ -16,22 +20,26 @@ CONFIG += c++17
 
 SOURCES += \
     connection.cpp \
+    ia.cpp \
     main.cpp \
     mainwindow.cpp \
-    vaccin.cpp
+    vaccin.cpp \
+
 
 HEADERS += \
     connection.h \
+    ia.h \
     mainwindow.h \
-    vaccin.h
+    vaccin.h \
+
 
 FORMS += \
+    ia.ui \
+ ia.ui \
     mainwindow.ui
-
-# Default rules for deployment.
-qnx: target.path = /tmp/$${TARGET}/bin
-else: unix:!android: target.path = /opt/$${TARGET}/bin
-!isEmpty(target.path): INSTALLS += target
 
 RESOURCES += \
     res.qrc
+    # === QR Code Support via QZXing ===
+    INCLUDEPATH += $$PWD/qzxing
+    include(qzxing/QZXing.pri)

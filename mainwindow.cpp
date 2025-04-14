@@ -30,9 +30,60 @@
 #include <QDate>
 #include <QStandardItemModel>
 #include <QTableView>
-
-
-
+#include "ia.h"  // Assurez-vous que ce fichier est inclus pour reconnaître la classe IA
+#include <QPushButton>
+#include <QIcon>
+#include "QZXing.h"
+#include <QPixmap>
+#include <QImage>
+#include <QPainter>
+#include <QDebug>
+#include <QVBoxLayout>  // Assurez-vous que cette ligne est présente
+#include <QPixmap>
+#include <QImage>
+#include <QZXing.h> // Assure-toi d'avoir bien ajouté QZXing à ton projet
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QVariant>
+#include <QZXing>
+#include <QGraphicsOpacityEffect>
+#include <QPropertyAnimation>
+#include <QDesktopServices>   // ✅ Ajout pour openUrl
+#include <QUrl>               // ✅ Ajout pour fromLocalFile
+#include <QIcon>
+#include <QPixmap>
+#include <QDateTime>
+#include <QTimer>
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QtCore>
+#include <QtNetwork>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QLabel>
+#include <QtCore>
+#include <QtNetwork>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QLabel>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QWidget>
+#include <QtWidgets/QLabel>
+#include <QtNetwork/QNetworkAccessManager>
+#include <QtNetwork/QNetworkReply>
+#include <QtNetwork/QNetworkRequest>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QDebug>
+#include <QNetworkAccessManager>
+#include <QNetworkRequest>
+#include <QNetworkReply>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QLabel>
 
 QString MainWindow::nettoyerTexte(const QString &text) {
     // Convertir en UTF-8
@@ -77,120 +128,273 @@ MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
+    // Initialisation du QNetworkAccessManager
+    manager = new QNetworkAccessManager(this);
     ui->setupUi(this);
 
+    //weather
+    // --- METEO ---
+
+    // Appel à la fonction pour récupérer et afficher la météo
+    updateWeather();
+    //timer
+    // 1. Affichage initial de la date et l'heure
+    QDateTime current = QDateTime::currentDateTime();
+    ui->label_6->setText(current.toString("dd/MM/yyyy hh:mm:ss"));
+
+    // 2. Mise à jour automatique chaque seconde
+    QTimer *timer = new QTimer(this);
+    connect(timer, &QTimer::timeout, this, [=]() {
+        QDateTime now = QDateTime::currentDateTime();
+        ui->label_6->setText(now.toString("dd/MM/yyyy hh:mm:ss"));
+    });
+    timer->start(1000); // mise à jour toutes les 1000 ms (1 sec)
+
+    // 3. Style moderne et innovant pour le QLabel
+    ui->label_6->setStyleSheet(R"(
+        QLabel {
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            background-color: qlineargradient(
+                spread:pad, x1:0, y1:0, x2:1, y2:1,
+                stop:0 #00c6ff, stop:1 #0072ff
+            );
+            border-radius: 10px;
+            padding: 5px 10px;
+        }
+    )");
+    //qr
+
+    // ======== Bouton Scan avec image scan.png ========
+    QString scanImagePath = "C:/Users/hp/Desktop/2A17/qt/interfce/scan.png";
+    QIcon scanIcon(scanImagePath);
+    ui->qr->setIcon(scanIcon);
+    ui->qr->setIconSize(ui->qr->size());
+    ui->qr->setFlat(true);
+    ui->qr->setStyleSheet("border: none;");
+    // =================================================
+
+    // Tu peux maintenant ajouter d'autres boutons/images ici
+    // en changeant les noms des variables pour éviter les conflits.
+    // Par exemple :
+    /*
+    QString chatImage = "C:/Users/hp/Desktop/2A17/qt/interfce/interfce/chat.png";
+    QIcon chatIcon(chatImage);
+    ui->chatButton->setIcon(chatIcon);
+    ui->chatButton->setIconSize(ui->chatButton->size());
+    */
+    //imagepourlaboutton ia
+    // Définir le chemin de l'image
+    QString imagePath = "C:/Users/hp/Desktop/2A17/qt/interfce/interfce/chat.png";
+
+    // Assurez-vous que le widget openia est accessible
+    QPushButton* openiaButton = ui->openia;
+
+    // Définir l'icône pour le bouton
+    openiaButton->setIcon(QIcon(imagePath));
+
+    // Ajuster la taille de l'icône, si nécessaire
+    openiaButton->setIconSize(QSize(100, 100));  // Choisissez la taille qui vous convient
+    //ia
+    // Connecter le bouton openia à la méthode qui ouvre la fenêtre IA
+    connect(ui->openia, &QPushButton::clicked, this, &MainWindow::openIA);
+
+    // Appliquer un style moderne au QLabel (label_10) après l'initialisation de l'UI
+    // Appliquer un style moderne avec une autre police (par exemple Montserrat)
+    ui->label_10->setText("Vaccins");
+    ui->label_10->setStyleSheet("QLabel {"
+                                "font-family: 'Montserrat', 'Segoe UI', sans-serif;"  // Police moderne Montserrat
+                                "font-size: 48pt;"                                    // Taille du texte plus grande
+                                "font-weight: 800;"                                   // Texte en gras
+                                "color: #1F618D;"                                     // Couleur bleue
+                                "text-align: center;"                                 // Centrer le texte
+                                "}");
 
 
-
-    // Ajouter l'icône au bouton excel
-    QIcon excelIcon("C:/Users/hp/Desktop/2A17/qt/interfce/excel.png"); // Correct
-
-
+    // Configuration de l'icône pour le bouton Excel
+    QIcon excelIcon("C:/Users/hp/Desktop/2A17/qt/interfce/excel.png");
     if (!excelIcon.isNull()) {
         ui->on_excel_clicked->setIcon(excelIcon);
-        ui->on_excel_clicked->setIconSize(QSize(71, 51)); // Même taille que le bouton
-        ui->on_excel_clicked->setFlat(true);              // Supprime l'effet 3D du bouton
+        ui->on_excel_clicked->setIconSize(QSize(71, 51));  // Taille de l'icône
+        ui->on_excel_clicked->setFlat(true);
         ui->on_excel_clicked->setStyleSheet("QPushButton { background-color: transparent; border: none; }");
     } else {
         qDebug() << "Erreur: Impossible de charger l'icône Excel.";
     }
 
+    ui->trier->setCurrentIndex(0); // Sélectionner l'option de tri par défaut
 
-    ui->trier->setCurrentIndex(0);  // Sélectionner l'option de tri par défaut, ici "id"
+    // Style moderne pour QTableView
+    QString modernTableStyle = R"(
+        QTableView {
+            background: rgba(236, 240, 241, 200);
+            border: 2px solid rgba(41, 128, 185, 255);
+            border-radius: 12px;
+            gridline-color: #BDC3C7;
+            selection-background-color: rgba(41, 128, 185, 255);
+            selection-color: white;
+            alternate-background-color: rgba(214, 234, 248, 200);
+            font-size: 10pt;
+            padding: 5px;
+        }
 
+        QHeaderView::section {
+            background-color: rgba(41, 128, 185, 255);
+            color: white;
+            padding: 6px;
+            border: none;
+            font-size: 10pt;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 6px;
+        }
 
-QString style = R"(
-    QTableView {
-        background: rgba(236, 240, 241, 200); /* Set a semi-transparent background */
-        border: 2px solid rgba(41, 128, 185, 255); /* Border color remains solid */
-        border-radius: 12px;
-        gridline-color: #BDC3C7;
-        selection-background-color: rgba(41, 128, 185, 255); /* Solid selection color */
-        selection-color: white;
-        alternate-background-color: rgba(214, 234, 248, 200); /* Semi-transparent alternate background */
-        font-size: 9pt;
-        padding: 5px;
-    }
+        QTableView::item {
+            padding: 4px;
+            border-radius: 6px;
+        }
 
-    QHeaderView::section {
-        background-color: rgba(41, 128, 185, 255); /* Solid color for header */
-        color: white;
-        padding: 6px;
-        border: none;
-        font-size: 9.5pt;
-        font-weight: bold;
-        text-transform: uppercase;
-        border-radius: 6px;
-    }
+        QTableView::item:hover {
+            background-color: rgba(133, 193, 233, 255);
+            color: #2C3E50;
+            transition: background-color 0.3s ease-in-out;
+        }
 
-    QTableView::item {
-        padding: 4px;
-        border-radius: 6px;
-    }
+        QTableView::item:selected {
+            background-color: #1F618D;
+            color: white;
+        }
+    )";
+    ui->tableViewVaccin->setStyleSheet(modernTableStyle);
 
-    QTableView::item:hover {
-        background-color: rgba(133, 193, 233, 255); /* Hover color remains solid */
-        color: #2C3E50;
-        transition: background-color 0.3s ease-in-out;
-    }
-
-    QTableView::item:selected {
-        background-color: #1F618D; /* Solid color for selected item */
-        color: white;
-    }
-
-
-)";
-
-
-    ui->tableViewVaccin->setStyleSheet(style);
-
-    // Activer les couleurs alternées
+    // Alternance des couleurs de ligne dans le QTableView
     ui->tableViewVaccin->setAlternatingRowColors(true);
 
-    // Ajuster la taille des colonnes automatiquement
+    // Ajustement automatique des colonnes
     ui->tableViewVaccin->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
 
-    // Activer le tri des colonnes
+    // Activation du tri dans le QTableView
     ui->tableViewVaccin->setSortingEnabled(true);
 
-    // Sélectionner des lignes entières au lieu des cellules
+    // Sélection de lignes entières
     ui->tableViewVaccin->setSelectionBehavior(QAbstractItemView::SelectRows);
 
-    // Créer un modèle pour le tableau
-    QStandardItemModel *model = new QStandardItemModel(0, 3, this); // 0 lignes, 3 colonnes
+    // Modèle de données pour les vaccins
+    QStandardItemModel *model = new QStandardItemModel(0, 3, this);
     model->setHorizontalHeaderLabels({"ID", "Nom Vaccin", "Détails"});
 
     // Ajouter un exemple de données avec une icône
-    QIcon icon(":/icons/vaccine.png"); // Assurez-vous que l'icône est dans les ressources Qt
+    QIcon icon(":/icons/vaccine.png");
     QStandardItem *item = new QStandardItem(icon, "Pfizer");
     model->setItem(0, 1, item);
 
-
-    // Lier le modèle au `tableViewVaccin`
+    // Lier le modèle au tableView
     ui->tableViewVaccin->setModel(model);
     initializeTable(); // Appeler la méthode d'initialisation
-    //connect(ui->btnSupprimer, &QPushButton::clicked, this, &MainWindow::on_btnSupprimer_clicked);
 
     // Initialiser le modèle des vaccins
     modelVaccins = new QSqlTableModel(this);
     connect(ui->pushButton_5, &QPushButton::clicked, this, &MainWindow::afficherVaccins);
-    //connect(ui->btnModifier, &QPushButton::clicked, this, &MainWindow::on_btnModifier_clicked);
-    connect(ui->btnRecherche, &QPushButton::clicked, this, &MainWindow::on_btnRecherche_clicked);
+    //connect(ui->btnRecherche, &QPushButton::clicked, this, &MainWindow::on_btnRecherche_clicked);
     connect(ui->trier, SIGNAL(currentIndexChanged(int)), this, SLOT(trierVaccins(int)));
-    connect(ui->pdf_3, &QPushButton::clicked, this, &MainWindow::genererPDFDocument); // Ou genererPDF si vous utilisez ce nom
+    connect(ui->pdf_3, &QPushButton::clicked, this, &MainWindow::genererPDFDocument);
     connect(ui->on_excel_clicked, &QPushButton::clicked, this, &MainWindow::on_excel_clicked);
-
-
-
+    connect(ui->qr, &QPushButton::clicked, this, &MainWindow::genererQRCode);
 
 
     // Configuration du QTableView
     ui->tableViewVaccin->setModel(modelVaccins);
-    ui->tableViewVaccin->setSelectionBehavior(QAbstractItemView::SelectRows);  // Sélection par ligne
-    ui->tableViewVaccin->setEditTriggers(QAbstractItemView::NoEditTriggers);  // Désactiver l'édition directe
+    ui->tableViewVaccin->setSelectionBehavior(QAbstractItemView::SelectRows);
+    ui->tableViewVaccin->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    // Vérification que le widget central existe avant d'appliquer une palette
+    // Style global de l'interface : changement des couleurs de fond, boutons et écritures
+    QString modernStyle = R"(
+        * {
+            font-family: 'Segoe UI', sans-serif;
+            font-size: 12pt;
+            color: #2C3E50;
+        }
+
+        QMainWindow {
+            background-color: #EAF2F8;
+        }
+
+        QPushButton {
+            background-color: #3498db;
+            border: 1px solid #2980b9;
+            border-radius: 8px;
+            padding: 10px;
+            font-weight: bold;
+            font-size: 14px;
+            color: white;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        QPushButton:hover {
+            background-color: #2980b9;
+            transform: scale(1.05);
+        }
+
+        QPushButton:pressed {
+            background-color: #1f6f8b;
+            transform: scale(0.98);
+        }
+
+        QGroupBox {
+            background-color: #D5E8FB;
+            border: 1px solid #3498db;
+            border-radius: 6px;
+            padding: 10px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        QComboBox {
+            background-color: #FFFFFF;
+            border: 1px solid #3498db;
+            border-radius: 6px;
+            padding: 5px;
+            font-size: 12pt;
+        }
+
+        QLineEdit {
+            background-color: #FFFFFF;
+            border: 1px solid #3498db;
+            border-radius: 6px;
+            padding: 6px;
+            font-size: 12pt;
+        }
+
+        QLabel {
+            color: #2C3E50;
+            font-weight: bold;
+        }
+
+        QTabWidget::pane {
+            border: 1px solid #2980b9;
+            border-radius: 6px;
+        }
+
+        QTabBar::tab {
+            background-color: #2980b9;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+        }
+
+        QTabBar::tab:hover {
+            background-color: #3498db;
+        }
+
+        QTabBar::tab:selected {
+            background-color: #1f618d;
+            font-weight: bold;
+        }
+    )";
+    this->setStyleSheet(modernStyle);
+
+    // Appliquer une palette de couleurs modernes à l'interface
     if (ui->centralwidget) {
         QPalette palette;
         QPixmap pixmap("C:/Users/hp/Desktop/2A17/qt/interfce/back55.jpg");
@@ -203,30 +407,7 @@ QString style = R"(
         }
     }
 
-    // Style commun pour les boutons
-    QString commonButtonStyle =
-        "QPushButton {"
-        "   border: 0.5px solid black;"
-        "   border-radius: 5px;"
-        "   padding: 10px;"
-        "   font-weight: bold;"
-        "   font-size: 14px;"
-        "}"
-        "QPushButton:hover, QPushButton:pressed {"
-        "   background-color: #D3D3D3;"
-        "   border: 0.5px solid black;"
-        "}";
-
-    // Application des styles à un QGroupBox
-    ui->comboBox_typeVaccin_2->setStyleSheet(
-        "QGroupBox {"
-        "background-color: Light Cyan;"
-        "border: 0.5px solid black;"
-        "border-radius: 5px;"
-        "padding: 10px;"
-        "}");
-
-    // Configuration des boutons avec icônes
+    // Style commun pour tous les boutons avec icônes
     struct ButtonConfig {
         QPushButton *button;
         QString iconPath;
@@ -250,14 +431,59 @@ QString style = R"(
             if (!icon.isNull()) {
                 btnConfig.button->setIcon(icon);
                 btnConfig.button->setIconSize(btnConfig.iconSize);
-                btnConfig.button->setStyleSheet(commonButtonStyle);
+
+                // Appliquer une police moderne et un style pour les boutons
+                btnConfig.button->setStyleSheet(R"(
+                QPushButton {
+                    font-family: 'Segoe UI', Tahoma, Geneva, sans-serif; /* Essayer plusieurs polices */
+                    font-size: 14pt;
+                    font-weight: bold;
+                    color: white;
+                    background-color: #2980b9;
+                    border: 2px solid #3498db;
+                    border-radius: 8px;
+                    padding: 10px;
+                    transition: background-color 0.3s ease, transform 0.2s ease;
+                    text-align: center;
+                }
+
+                QPushButton:hover {
+                    background-color: #3498db;
+                    transform: scale(1.05);
+                }
+
+                QPushButton:pressed {
+                    background-color: #1f618d;
+                    transform: scale(0.98);
+                }
+
+                QPushButton:focus {
+                    outline: none;
+                    box-shadow: 0 0 10px rgba(41, 128, 185, 0.7);
+                }
+            )");
             } else {
                 qDebug() << "Erreur: Impossible de charger l'icône:" << btnConfig.iconPath;
             }
         }
     }
 
-    // Configuration des boutons transparents
+
+
+    for (const auto &btnConfig : buttons) {
+        if (btnConfig.button) {
+            QIcon icon(btnConfig.iconPath);
+            if (!icon.isNull()) {
+                btnConfig.button->setIcon(icon);
+                btnConfig.button->setIconSize(btnConfig.iconSize);
+                btnConfig.button->setStyleSheet(modernStyle);
+            } else {
+                qDebug() << "Erreur: Impossible de charger l'icône:" << btnConfig.iconPath;
+            }
+        }
+    }
+
+    // Configuration des boutons transparents (PDF, statistiques)
     struct TransparentButtonConfig {
         QPushButton *button;
         QString iconPath;
@@ -265,7 +491,6 @@ QString style = R"(
     };
 
     TransparentButtonConfig transparentButtons[] = {
-        //{ui->rech, "C:/Users/hp/Desktop/2A17/qt/interfce/reche.png", QSize(91, 31)},
         {ui->pdf, "C:/Users/hp/Desktop/2A17/qt/interfce/pdf2.png", QSize(91, 51)},
         {ui->pdf_2, "C:/Users/hp/Desktop/2A17/qt/interfce/sta.png", QSize(91, 51)}
     };
@@ -283,101 +508,105 @@ QString style = R"(
         }
     }
 
-    // Configuration des placeholders
-    ui->recherche->setPlaceholderText("Rechercher un vaccin par...");
-    ui->comboBox_typeVaccin_3->addItems({"nom", "type", });
-    ui->supprimer->setPlaceholderText("ID");
-    ui->trier->addItems({ "id", "quantité"});
+    // Configuration des placeholders pour une saisie élégante
+    ui->recherche->setPlaceholderText("Rechercher un vaccin...");
+    ui->comboBox_typeVaccin_3->addItems({"Nom", "Type"});
+    ui->supprimer->setPlaceholderText("ID à supprimer");
+    ui->trier->addItems({"ID", "Quantité"});
 }
+
 
 MainWindow::~MainWindow()
 {
     delete ui;
 }
+void MainWindow::openIA()
+{
+    // Dans ta méthode openIA (ou la méthode où tu souhaites créer l'objet)
+    ia *iaWindow = new ia();  // Utiliser 'ia' avec une minuscule
 
+    // Afficher la fenêtre IA
+    iaWindow->show();
+}
 void MainWindow::on_pushButton_4_clicked()
 {
     // Vérifier si la base est bien connectée
     QSqlDatabase db = QSqlDatabase::database();
     if (!db.isOpen()) {
         qDebug() << "Erreur : Connexion à la base de données non ouverte";
+        QMessageBox::critical(this, "Erreur", "Connexion à la base de données non ouverte.");
         return;
     }
 
-    // Récupérer les valeurs des champs de saisie
+    // Récupérer les valeurs des champs
     QString nomVaccin = ui->lineEdit_nomVaccin->text().trimmed();
     QString effetsSecondaires = ui->lineEdit_effetsSecondaires->text().trimmed();
     QString composition = ui->lineEdit_composition->text().trimmed();
     QString quantiteStr = ui->lineEdit_quantite->text().trimmed();
+    QString idRechStr = ui->lineEdit_idRech->text().trimmed();
     QDate dateCreation = ui->dateEdit_dateCreation->date();
     QDate datePeremption = ui->dateEdit_datePeremption->date();
-    QString typeVaccin = ui->comboBox_typeVaccin->currentText();
-    int idRech = ui->lineEdit_idRech->text().toInt();
+    QString typeVaccin = ui->comboBox_typeVaccin->currentText().trimmed();
 
-    // Vérification des champs vides
+    // Vérification des champs obligatoires
     if (nomVaccin.isEmpty() || effetsSecondaires.isEmpty() || composition.isEmpty() ||
-        quantiteStr.isEmpty() || typeVaccin.isEmpty()) {
-        QMessageBox::warning(this, "Avertissement", "Tous les champs doivent être remplis.");
+        quantiteStr.isEmpty() || idRechStr.isEmpty() || typeVaccin.isEmpty()) {
+        QMessageBox::warning(this, "Champs manquants", "Tous les champs doivent être remplis.");
         return;
     }
 
-    // Vérification si la quantité est un nombre valide
-    bool ok;
-    int quantite = quantiteStr.toInt(&ok);
-    if (!ok || quantite <= 0) {
-        QMessageBox::warning(this, "Avertissement", "La quantité doit être un nombre supérieur à 0!");
+    // Conversion et validation de la quantité
+    bool okQuantite;
+    int quantite = quantiteStr.toInt(&okQuantite);
+    if (!okQuantite || quantite <= 0) {
+        QMessageBox::warning(this, "Quantité invalide", "Veuillez entrer une quantité valide (> 0).");
+        return;
+    }
+
+    // Conversion et validation de l'ID_RECH
+    bool okId;
+    int idRech = idRechStr.toInt(&okId);
+    if (!okId || idRech <= 0) {
+        QMessageBox::warning(this, "ID_RECH invalide", "L'ID_RECH doit être un nombre entier positif.");
+        return;
+    }
+
+    // Vérification de la date de création
+    if (dateCreation != QDate::currentDate()) {
+        QMessageBox::warning(this, "Date invalide", "La date de création doit être celle d'aujourd'hui.");
         return;
     }
 
     // Vérification de la validité des dates
-    if (dateCreation > datePeremption) {
-        QMessageBox::warning(this, "Avertissement", "La date de péremption doit être postérieure à la date de création.");
+    if (datePeremption <= dateCreation) {
+        QMessageBox::warning(this, "Date invalide", "La date de péremption doit être postérieure à la date de création.");
         return;
     }
 
-    // Vérification que la date de création est aujourd'hui
-    if (dateCreation != QDate::currentDate()) {
-        QMessageBox::warning(this, "Avertissement", "La date de création doit être la date d'aujourd'hui.");
+    // Vérification du nom (commence par majuscule)
+    if (!nomVaccin[0].isUpper()) {
+        QMessageBox::warning(this, "Nom invalide", "Le nom du vaccin doit commencer par une majuscule.");
         return;
     }
 
-    // Vérification de l'ID_RECH
-    if (idRech <= 0) {
-        QMessageBox::warning(this, "Avertissement", "L'ID_RECH doit être un nombre positif.");
+    // Vérification du nombre de mots (>= 3) dans effets secondaires et composition
+    if (effetsSecondaires.split(QRegularExpression("\\s+")).size() < 3) {
+        QMessageBox::warning(this, "Effets secondaires insuffisants", "Les effets secondaires doivent contenir au moins 3 mots.");
         return;
     }
 
-    // Vérification que le nom du vaccin commence par une majuscule
-    if (nomVaccin.isEmpty() || !nomVaccin[0].isUpper()) {
-        QMessageBox::warning(this, "Avertissement", "Le nom du vaccin doit commencer par une majuscule.");
+    if (composition.split(QRegularExpression("\\s+")).size() < 3) {
+        QMessageBox::warning(this, "Composition insuffisante", "La composition doit contenir au moins 3 mots.");
         return;
     }
 
-    // Vérification que les effets secondaires et la composition contiennent au moins trois mots
-    if (effetsSecondaires.split(" ").size() < 3) {
-        QMessageBox::warning(this, "Avertissement", "Les effets secondaires doivent contenir au moins trois mots.");
-        return;
-    }
-
-    if (composition.split(" ").size() < 3) {
-        QMessageBox::warning(this, "Avertissement", "La composition doit contenir au moins trois mots.");
-        return;
-    }
-
-    // Afficher les valeurs pour le débogage
-    qDebug() << "Valeurs récupérées:";
-    qDebug() << "Nom:" << nomVaccin << ", Effets:" << effetsSecondaires;
-    qDebug() << "Composition:" << composition << ", Quantité:" << quantiteStr;
-    qDebug() << "Date création:" << dateCreation.toString("yyyy-MM-dd") << ", Date péremption:" << datePeremption.toString("yyyy-MM-dd");
-    qDebug() << "ID_RECH:" << idRech << ", Type:" << typeVaccin;
-
-    // Préparer la requête SQL
+    // Requête SQL pour insertion
     QSqlQuery query;
     query.prepare("INSERT INTO \"C##LABSYNC_NEW\".\"VACCINS\" "
-                  "(\"NOM_VACCIN\", \"EFFET_SECONDAIRE\", \"COMPOSITION\", \"QUANTITÉ\", \"DATE_CRÉATION\", \"DATE_PEREMPTION\", \"TYPE\", \"ID_RECH_PK1\") "
+                  "(\"NOM_VACCIN\", \"EFFET_SECONDAIRE\", \"COMPOSITION\", \"QUANTITE\", \"DATE_CREATION\", \"DATE_PEREMPTION\", \"TYPE\", \"ID_RECH_PK1\") "
                   "VALUES (:nom_vaccin, :effets_secondaires, :composition, :quantite, TO_DATE(:date_creation, 'YYYY-MM-DD'), TO_DATE(:date_peremption, 'YYYY-MM-DD'), :type, :id_rech)");
 
-    // Lier les valeurs aux paramètres SQL
+    // Liaison des paramètres
     query.bindValue(":nom_vaccin", nomVaccin);
     query.bindValue(":effets_secondaires", effetsSecondaires);
     query.bindValue(":composition", composition);
@@ -387,23 +616,24 @@ void MainWindow::on_pushButton_4_clicked()
     query.bindValue(":type", typeVaccin);
     query.bindValue(":id_rech", idRech);
 
-    // Exécuter la requête et vérifier le succès
+    // Exécution et vérification
     if (!query.exec()) {
-        QMessageBox::critical(this, "Erreur", "Échec de l'insertion dans la base de données.");
-        qDebug() << "Erreur lors de l'insertion:" << query.lastError().text();
-    } else {
-        QMessageBox::information(this, "Succès", "Insertion réussie.");
-
-        // Vider les champs après une insertion réussie
-        ui->lineEdit_nomVaccin->clear();
-        ui->lineEdit_effetsSecondaires->clear();
-        ui->lineEdit_composition->clear();
-        ui->lineEdit_quantite->clear();
-        ui->lineEdit_idRech->clear();
-        ui->comboBox_typeVaccin->setCurrentIndex(0);
-        ui->dateEdit_dateCreation->setDate(QDate::currentDate());
-        ui->dateEdit_datePeremption->setDate(QDate::currentDate());
+        QMessageBox::critical(this, "Erreur", "Échec de l'insertion : " + query.lastError().text());
+        qDebug() << "Erreur SQL :" << query.lastError().text();
+        return;
     }
+
+    QMessageBox::information(this, "Succès", "Vaccin ajouté avec succès !");
+
+    // Réinitialiser les champs
+    ui->lineEdit_nomVaccin->clear();
+    ui->lineEdit_effetsSecondaires->clear();
+    ui->lineEdit_composition->clear();
+    ui->lineEdit_quantite->clear();
+    ui->lineEdit_idRech->clear();
+    ui->comboBox_typeVaccin->setCurrentIndex(0);
+    ui->dateEdit_dateCreation->setDate(QDate::currentDate());
+    ui->dateEdit_datePeremption->setDate(QDate::currentDate());
 }
 
 
@@ -494,51 +724,51 @@ void MainWindow::on_btnModifier_clicked()
         return;
     }
 
-    // Récupérer l'ID du vaccin à modifier depuis le champ de saisie
+    // Récupérer l'ID du vaccin à modifier
     bool ok;
-    int idVaccin = ui->edit->text().toInt(&ok);  // Supposons que 'edit' est le QLineEdit pour l'ID
-
-    // Vérifier que l'ID est valide
+    int idVaccin = ui->edit->text().toInt(&ok);
     if (!ok || idVaccin <= 0) {
         QMessageBox::warning(this, "Erreur", "Veuillez entrer un ID valide.");
         return;
     }
 
-    // Vérifier si l'ID existe dans la base de données
+    // Vérifier si l'ID existe dans la base
     QSqlQuery checkQuery;
     checkQuery.prepare("SELECT * FROM \"C##LABSYNC_NEW\".\"VACCINS\" WHERE \"ID_VACCIN\" = :id_vaccin");
     checkQuery.bindValue(":id_vaccin", idVaccin);
 
     if (!checkQuery.exec() || !checkQuery.next()) {
         QMessageBox::warning(this, "Erreur", "Aucun vaccin trouvé avec cet ID.");
-        return; // Ne pas continuer si l'ID n'existe pas
+        return;
     }
 
-    // Remplir le formulaire avec les données existantes
+    // Remplir les champs
     ui->lineEdit_idVaccin->setText(checkQuery.value("ID_VACCIN").toString());
-    ui->lineEdit_idVaccin->setReadOnly(true);  // Empêcher la modification de l'ID dans l'interface
+    ui->lineEdit_idVaccin->setReadOnly(true);
 
     ui->lineEdit_nomVaccin->setText(checkQuery.value("NOM_VACCIN").toString());
     ui->lineEdit_effetsSecondaires->setText(checkQuery.value("EFFET_SECONDAIRE").toString());
     ui->lineEdit_composition->setText(checkQuery.value("COMPOSITION").toString());
-    ui->lineEdit_quantite->setText(checkQuery.value("QUANTITÉ").toString());
-    ui->dateEdit_dateCreation->setDate(checkQuery.value("DATE_CRÉATION").toDate());
+    ui->lineEdit_quantite->setText(checkQuery.value("QUANTITE").toString());
+    ui->dateEdit_dateCreation->setDate(checkQuery.value("DATE_CREATION").toDate());
     ui->dateEdit_datePeremption->setDate(checkQuery.value("DATE_PEREMPTION").toDate());
     ui->comboBox_typeVaccin->setCurrentText(checkQuery.value("TYPE").toString());
     ui->lineEdit_idRech->setText(checkQuery.value("ID_RECH_PK1").toString());
 
-    // Sélectionner la ligne correspondante dans le QTableView
+    // Sélection de la ligne dans le tableau
     int rowCount = modelVaccins->rowCount();
     for (int row = 0; row < rowCount; ++row) {
-        if (modelVaccins->data(modelVaccins->index(row, 0)).toInt() == idVaccin) { // Assurez-vous que la colonne 0 contient l'ID
+        if (modelVaccins->data(modelVaccins->index(row, 0)).toInt() == idVaccin) {
             ui->tableViewVaccin->selectRow(row);
             break;
         }
     }
 
-    // Connecter le bouton de sauvegarde après avoir vérifié l'ID
+    // Déconnecter toute ancienne connexion du bouton Save
+    disconnect(ui->btnSave, nullptr, nullptr, nullptr);
+
+    // Connexion bouton Save
     connect(ui->btnSave, &QPushButton::clicked, this, [this, idVaccin]() {
-        // Vérification des champs de saisie
         QString nomVaccin = ui->lineEdit_nomVaccin->text().trimmed();
         QString effetsSecondaires = ui->lineEdit_effetsSecondaires->text().trimmed();
         QString composition = ui->lineEdit_composition->text().trimmed();
@@ -548,152 +778,202 @@ void MainWindow::on_btnModifier_clicked()
         QString typeVaccin = ui->comboBox_typeVaccin->currentText();
         int idRech = ui->lineEdit_idRech->text().toInt();
 
-        // Vérifier que l'ID n'a pas été modifié
         int idVaccinForm = ui->lineEdit_idVaccin->text().toInt();
         if (idVaccinForm != idVaccin) {
             QMessageBox::warning(this, "Erreur", "Vous ne pouvez pas modifier l'identifiant du vaccin.");
             return;
         }
 
-        // Vérification des champs vides
+        // Vérifications de base
         if (nomVaccin.isEmpty() || effetsSecondaires.isEmpty() || composition.isEmpty() ||
             quantiteStr.isEmpty() || typeVaccin.isEmpty()) {
             QMessageBox::warning(this, "Avertissement", "Tous les champs doivent être remplis.");
             return;
         }
 
-        // Vérification si la quantité est un nombre valide
-        bool ok;
-        int quantite = quantiteStr.toInt(&ok);
-        if (!ok || quantite <= 0) {
-            QMessageBox::warning(this, "Avertissement", "La quantité doit être un nombre supérieur à 0!");
+        bool okQuantite;
+        int quantite = quantiteStr.toInt(&okQuantite);
+        if (!okQuantite || quantite <= 0) {
+            QMessageBox::warning(this, "Avertissement", "La quantité doit être un nombre supérieur à 0.");
             return;
         }
 
-        // Vérification de la validité des dates
         if (dateCreation > datePeremption) {
             QMessageBox::warning(this, "Avertissement", "La date de péremption doit être postérieure à la date de création.");
             return;
         }
 
-        // Vérification que la date de création est aujourd'hui
         if (dateCreation != QDate::currentDate()) {
             QMessageBox::warning(this, "Avertissement", "La date de création doit être la date d'aujourd'hui.");
             return;
         }
 
-        // Vérification de l'ID_RECH
         if (idRech <= 0) {
             QMessageBox::warning(this, "Avertissement", "L'ID_RECH doit être un nombre positif.");
             return;
         }
 
-        // Vérification que le nom du vaccin commence par une majuscule
-        if (nomVaccin.isEmpty() || !nomVaccin[0].isUpper()) {
+        if (!nomVaccin[0].isUpper()) {
             QMessageBox::warning(this, "Avertissement", "Le nom du vaccin doit commencer par une majuscule.");
             return;
         }
 
-        // Vérification que les effets secondaires et la composition contiennent au moins trois mots
-        if (effetsSecondaires.split(" ").size() < 3) {
+        if (effetsSecondaires.split(" ", Qt::SkipEmptyParts).size() < 3) {
             QMessageBox::warning(this, "Avertissement", "Les effets secondaires doivent contenir au moins trois mots.");
             return;
         }
 
-        if (composition.split(" ").size() < 3) {
+        if (composition.split(" ", Qt::SkipEmptyParts).size() < 3) {
             QMessageBox::warning(this, "Avertissement", "La composition doit contenir au moins trois mots.");
             return;
         }
 
-        // Créer une requête de mise à jour
+        // Requête UPDATE
         QSqlQuery updateQuery;
         updateQuery.prepare("UPDATE \"C##LABSYNC_NEW\".\"VACCINS\" SET "
                             "\"NOM_VACCIN\" = :nom_vaccin, "
                             "\"EFFET_SECONDAIRE\" = :effets_secondaires, "
                             "\"COMPOSITION\" = :composition, "
-                            "\"QUANTITÉ\" = :quantite, "
-                            "\"DATE_CRÉATION\" = TO_DATE(:date_creation, 'YYYY-MM-DD'), "
-                            "\"DATE_PEREMPTION\" = TO_DATE(:date_peremption, 'YYYY-MM-DD'), "
+                            "\"QUANTITE\" = :quantite, "
+                            "\"DATE_CREATION\" = :date_creation, "
+                            "\"DATE_PEREMPTION\" = :date_peremption, "
                             "\"TYPE\" = :type, "
                             "\"ID_RECH_PK1\" = :id_rech "
                             "WHERE \"ID_VACCIN\" = :id_vaccin");
 
-        // Lier les valeurs aux paramètres SQL
         updateQuery.bindValue(":id_vaccin", idVaccin);
         updateQuery.bindValue(":nom_vaccin", nomVaccin);
         updateQuery.bindValue(":effets_secondaires", effetsSecondaires);
         updateQuery.bindValue(":composition", composition);
         updateQuery.bindValue(":quantite", quantite);
-        updateQuery.bindValue(":date_creation", dateCreation.toString("yyyy-MM-dd"));
-        updateQuery.bindValue(":date_peremption", datePeremption.toString("yyyy-MM-dd"));
+        updateQuery.bindValue(":date_creation", dateCreation);
+        updateQuery.bindValue(":date_peremption", datePeremption);
         updateQuery.bindValue(":type", typeVaccin);
         updateQuery.bindValue(":id_rech", idRech);
 
-        // Exécuter la requête et vérifier le succès
         if (!updateQuery.exec()) {
             QMessageBox::critical(this, "Erreur", "Échec de la mise à jour du vaccin.");
-            qDebug() << "Erreur lors de la mise à jour:" << updateQuery.lastError().text();
+            qDebug() << "Erreur SQL:" << updateQuery.lastError().text();
         } else {
             QMessageBox::information(this, "Succès", "Vaccin mis à jour avec succès.");
-            afficherVaccins();  // Mettre à jour l'affichage des vaccins
-            disconnect(ui->btnSave, nullptr, nullptr, nullptr); // Déconnecter le signal pour éviter des appels multiples
+            afficherVaccins(); // Mise à jour de la vue
+
+            // Réinitialiser le formulaire
+            ui->lineEdit_idVaccin->clear();
+            ui->lineEdit_idVaccin->setReadOnly(false);
+
+            ui->lineEdit_nomVaccin->clear();
+            ui->lineEdit_effetsSecondaires->clear();
+            ui->lineEdit_composition->clear();
+            ui->lineEdit_quantite->clear();
+            ui->dateEdit_dateCreation->setDate(QDate::currentDate());
+            ui->dateEdit_datePeremption->setDate(QDate::currentDate());
+            ui->comboBox_typeVaccin->setCurrentIndex(0);
+            ui->lineEdit_idRech->clear();
+
+            ui->tableViewVaccin->clearSelection();
+
+            disconnect(ui->btnSave, nullptr, nullptr, nullptr); // Déconnexion propre
         }
     });
 }
 
+//rech
+// Recherche
 void MainWindow::on_btnRecherche_clicked() {
-    // Vérifier si la base de données est connectée
     QSqlDatabase db = QSqlDatabase::database();
     if (!db.isOpen()) {
         QMessageBox::critical(this, "Erreur", "La connexion à la base de données est fermée.");
         return;
     }
 
-    // Récupérer le texte de recherche et le critère de recherche choisi
     QString rechercheTexte = ui->recherche->text().trimmed();
     QString critereRecherche = ui->comboBox_typeVaccin_3->currentText();
 
-    // Vérifier que le texte de recherche n'est pas vide
     if (rechercheTexte.isEmpty()) {
-        QMessageBox::warning(this, "Avertissement", "Veuillez entrer un texte de recherche.");
+        QMessageBox::warning(this, "Avertissement", "Veuillez entrer un texte de recherche. 😊");
         return;
     }
 
-    // Construire la requête de recherche selon le critère sélectionné
+    QString champSQL;
+    if (critereRecherche == "Nom") {
+        champSQL = "\"NOM_VACCIN\"";
+    } else if (critereRecherche == "Type") {
+        champSQL = "\"TYPE\"";
+    } else if (critereRecherche == "Tous") {
+        champSQL = "\"NOM_VACCIN\"";  // ou "*" selon ce que tu veux afficher
+    } else {
+        QMessageBox::warning(this, "Avertissement", "Critère de recherche non valide.");
+        return;
+    }
+
+    QSqlQueryModel *model = new QSqlQueryModel(this);
     QSqlQuery query;
-    QString requeteSql;
 
-    if (critereRecherche == "nom") {
-        requeteSql = "SELECT * FROM \"C##LABSYNC_NEW\".\"VACCINS\" WHERE \"NOM_VACCIN\" LIKE :rechercheTexte";
-    } else if (critereRecherche == "type") {
-        requeteSql = "SELECT * FROM \"C##LABSYNC_NEW\".\"VACCINS\" WHERE \"TYPE\" LIKE :rechercheTexte";
-    } else if (critereRecherche == "état") {
-        requeteSql = "SELECT * FROM \"C##LABSYNC_NEW\".\"VACCINS\" WHERE \"EFFET_SECONDAIRE\" LIKE :rechercheTexte";
-    } else if (critereRecherche == "date_création") {
-        requeteSql = "SELECT * FROM \"C##LABSYNC_NEW\".\"VACCINS\" WHERE \"DATE_CRÉATION\" LIKE :rechercheTexte";
-    } else if (critereRecherche == "date_peremption") {
-        requeteSql = "SELECT * FROM \"C##LABSYNC_NEW\".\"VACCINS\" WHERE \"DATE_PEREMPTION\" LIKE :rechercheTexte";
-    }
+    query.prepare(QString("SELECT * FROM \"C##LABSYNC_NEW\".\"VACCINS\" WHERE %1 LIKE :recherche").arg(champSQL));
+    query.bindValue(":recherche", "%" + rechercheTexte + "%");
 
-    // Préparer la requête SQL
-    query.prepare(requeteSql);
-    query.bindValue(":rechercheTexte", "%" + rechercheTexte + "%");  // Utiliser des wildcards pour une recherche partielle
-
-    // Exécuter la requête
     if (!query.exec()) {
-        QMessageBox::critical(this, "Erreur", "Échec de la recherche des vaccins.");
-        qDebug() << "Erreur lors de la recherche:" << query.lastError().text();
+        QMessageBox::critical(this, "Erreur SQL", "Échec lors de l'exécution de la recherche : " + query.lastError().text());
         return;
     }
 
-    // Mettre à jour le QTableView avec les résultats de la recherche
-    modelVaccins->setQuery(std::move(query));  // Déplacer le query pour éviter la copie (déprécié)
+    model->setQuery(std::move(query));
 
-    // Vérifier si des résultats ont été retournés
-    if (modelVaccins->rowCount() == 0) {
-        QMessageBox::information(this, "Aucun résultat", "Aucun vaccin ne correspond à votre recherche.");
+    // 🔁 Forcer le chargement des lignes pour éviter l'affichage multiple des messages
+    while (model->canFetchMore()) {
+        model->fetchMore();
+    }
+
+    int nbResultats = model->rowCount();
+
+    if (nbResultats == 0) {
+        QMessageBox::information(this, "Recherche", "Aucun vaccin trouvé pour la recherche.");
+    } else {
+        QMessageBox::information(this, "Succès", "Recherche effectuée avec succès !");
+        ui->tableViewVaccin->setModel(model);
+        ui->tableViewVaccin->resizeColumnsToContents();
+
+        // ⏱️ Timer pour proposer la réinitialisation
+        QTimer::singleShot(2000, this, &MainWindow::askForReset);
     }
 }
+
+// Demander à l'utilisateur s'il souhaite réinitialiser le tableau
+void MainWindow::askForReset() {
+    QMessageBox::StandardButton reply;
+    reply = QMessageBox::question(this, "Réinitialiser le tableau",
+                                  "Souhaitez-vous réinitialiser le tableau ?",
+                                  QMessageBox::Yes | QMessageBox::No);
+
+    if (reply == QMessageBox::Yes) {
+        resetTableView();
+    }
+}
+
+// Fonction pour réinitialiser le tableau
+void MainWindow::resetTableView() {
+    QSqlQueryModel *model = new QSqlQueryModel(this);
+    QSqlQuery query;
+
+    query.prepare("SELECT * FROM \"C##LABSYNC_NEW\".\"VACCINS\"");
+
+    if (query.exec()) {
+        model->setQuery(std::move(query));
+
+        // 🔁 Forcer le chargement ici aussi (bonne pratique)
+        while (model->canFetchMore()) {
+            model->fetchMore();
+        }
+
+        ui->tableViewVaccin->setModel(model);
+        ui->tableViewVaccin->resizeColumnsToContents();
+    } else {
+        QMessageBox::critical(this, "Erreur", "Échec lors de la réinitialisation de la table.");
+    }
+}
+
+
 void MainWindow::trierVaccins(int index)
 {
     QString critere;
@@ -705,7 +985,7 @@ void MainWindow::trierVaccins(int index)
         critere = "ID_VACCIN";  // Tri par ID (ordre croissant)
         break;
     case 1:
-        critere = "QUANTITÉ";   // Tri par quantité (ordre décroissant)
+        critere = "QUANTITE";   // Tri par quantité (ordre décroissant)
         ordre = "DESC";
         break;
     default:
@@ -731,82 +1011,93 @@ void MainWindow::trierVaccins(int index)
 
 //pdf
 void MainWindow::genererPDFDocument() {
-    // Ouvrir une boîte de dialogue pour enregistrer le fichier PDF
     QString filePath = QFileDialog::getSaveFileName(this, "Enregistrer le fichier PDF",
                                                     QApplication::applicationDirPath() + "/vaccins.pdf",
                                                     "Fichiers PDF (*.pdf)");
+    if (filePath.isEmpty()) return;
 
-    // Vérifier si l'utilisateur a sélectionné un fichier
-    if (filePath.isEmpty()) {
-        return;
-    }
-
-    // Créer un objet QPdfWriter pour écrire dans le fichier
     QPdfWriter writer(filePath);
-    writer.setPageSize(QPageSize::A4);
 
+    // Définir la page au format A4 paysage (format rectangle)
+    writer.setPageSize(QPageSize(QPageSize::A4));
+    writer.setPageOrientation(QPageLayout::Landscape); // Orientation paysage
+
+    writer.setResolution(300);
     QPainter painter(&writer);
 
-    // Vérifier si le QPainter a bien été initialisé
     if (!painter.isActive()) {
         QMessageBox::critical(this, "Erreur", "Impossible d'initialiser le QPainter pour le PDF.");
         return;
     }
 
-    // Définir les marges et dimensions
-    int marginLeft = 50;   // Marge de gauche
-    int marginTop = 50;    // Marge en haut
-    int rowHeight = 40;    // Hauteur des lignes
-    int availableWidth = writer.width() - 2 * marginLeft; // Largeur disponible pour les vaccins
+    QAbstractItemModel* model = ui->tableViewVaccin->model();
+    if (!model) return;
 
-    // Liste des vaccins
-    QList<QString> vaccinsList = {"Grippe", "Tétanos", "COVID-19", "Rougeole"};
+    int pageWidth = writer.width();
+    int pageHeight = writer.height();
 
-    // Calculer l'espacement horizontal nécessaire
-    int totalTextWidth = 0;
-    for (const QString &vaccin : vaccinsList) {
-        totalTextWidth += painter.fontMetrics().horizontalAdvance(vaccin);  // Largeur totale des textes
-    }
+    // Marges réduites pour maximiser l'espace
+    int marginLeft = 40;
+    int marginTop = 80;   // Ajustement pour l'orientation paysage
+    int marginRight = 40;
+    int marginBottom = 40;
 
-    // Calculer l'espacement horizontal disponible
-    int horizontalSpacing = (availableWidth - totalTextWidth) / (vaccinsList.size() + 1); // Ajouter un espacement entre chaque vaccin
+    int usableWidth = pageWidth - marginLeft - marginRight;
+    int usableHeight = pageHeight - marginTop - marginBottom;
 
-    // Définir la police et la taille de l'en-tête
-    QFont titleFont("Arial", 18, QFont::Bold);
+    int rowCount = model->rowCount();
+    int columnCount = model->columnCount();
+
+    // --- Calcul dynamique pour remplir toute la page
+    // Réduire la taille du tableau en fonction de l'espace disponible
+    int cellWidth = usableWidth / columnCount;
+    int cellHeight = (rowCount > 0) ? usableHeight / (rowCount + 1) : 40;
+
+    // Ajuster la hauteur des cellules si nécessaire pour mieux afficher tout le texte
+    cellHeight = std::max(cellHeight, 20); // Assurez-vous que les cellules ne sont pas trop petites
+
+    // --- Titre
+    QFont titleFont("Arial", 20, QFont::Bold);
     painter.setFont(titleFont);
-
-    // Dessiner l'en-tête du PDF centré
-    QString title = "Liste des Vaccins";
+    painter.setPen(QColor("#0D47A1"));
+    QString title = "Liste Complète des Vaccins";
     int titleWidth = painter.fontMetrics().horizontalAdvance(title);
-    painter.drawText((writer.width() - titleWidth) / 2, marginTop, title);
+    painter.drawText((pageWidth - titleWidth) / 2, 60, title);
 
-    // Ajouter un espace vertical plus grand avant la liste des vaccins
-    int titleSpacing = 200; // Augmenter encore l'espacement entre le titre et la liste des vaccins
-    int startY = marginTop + titleSpacing;  // Nouveau point de départ pour la liste des vaccins
+    // --- Police pour tableau
+    QFont tableFont("Helvetica", 10);  // Réduire légèrement la taille de la police
+    painter.setFont(tableFont);
+    painter.setPen(Qt::black);
 
-    // Modifier la police pour la liste des vaccins
-    QFont vaccinFont("Arial", 14);
-    painter.setFont(vaccinFont);
-
-    // Espacement vertical avant la liste des vaccins
-    startY += rowHeight;  // Commencer un peu plus bas après le titre et l'espacement
-
-    int startX = marginLeft;
-
-    // Afficher les vaccins sur la même ligne avec l'espacement calculé
-    for (const QString &vaccin : vaccinsList) {
-        painter.drawText(startX, startY, vaccin);  // Dessiner chaque vaccin à la position (startX, startY)
-
-        // Mettre à jour la position horizontale pour le vaccin suivant
-        startX += painter.fontMetrics().horizontalAdvance(vaccin) + horizontalSpacing;  // Calculer la prochaine position horizontale
+    // --- En-têtes de colonnes
+    for (int c = 0; c < columnCount; ++c) {
+        QRect rect(marginLeft + c * cellWidth, marginTop, cellWidth, cellHeight);
+        painter.fillRect(rect, QColor("#BBDEFB")); // bleu clair
+        painter.setPen(QColor("#0D47A1"));
+        painter.drawRect(rect);
+        QString headerText = model->headerData(c, Qt::Horizontal).toString();
+        painter.drawText(rect.adjusted(5, 0, -5, 0), Qt::AlignCenter, headerText);
     }
 
-    // Terminer l'écriture du PDF
-    painter.end();
+    // --- Lignes de données (remplies verticalement)
+    for (int r = 0; r < rowCount; ++r) {
+        for (int c = 0; c < columnCount; ++c) {
+            QRect rect(marginLeft + c * cellWidth, marginTop + (r + 1) * cellHeight, cellWidth, cellHeight);
+            QColor bg = (r % 2 == 0) ? QColor("#E3F2FD") : QColor("#FFFFFF");
+            painter.fillRect(rect, bg);
+            painter.setPen(Qt::black);
+            painter.drawRect(rect);
 
-    // Afficher un message de succès
-    QMessageBox::information(this, "Succès", "Le PDF a été généré avec succès à l'emplacement : " + filePath);
+            QString text = model->data(model->index(r, c)).toString();
+            QString finalText = painter.fontMetrics().elidedText(text, Qt::ElideRight, cellWidth - 10);
+            painter.drawText(rect.adjusted(5, 0, -5, 0), Qt::AlignVCenter | Qt::AlignLeft, finalText);
+        }
+    }
+
+    painter.end();
+    QMessageBox::information(this, "Succès", "Le PDF a été généré avec succès à l'emplacement :\n" + filePath);
 }
+
 
 //stat
 
@@ -821,7 +1112,7 @@ void MainWindow::on_pdf_2_clicked()
 
     // Préparer la requête pour additionner les quantités par nom de vaccin
     QMap<QString, int> quantiteParVaccin;
-    QSqlQuery query("SELECT \"NOM_VACCIN\", \"QUANTITÉ\" FROM \"C##LABSYNC_NEW\".\"VACCINS\"");
+    QSqlQuery query("SELECT \"NOM_VACCIN\", \"QUANTITE\" FROM \"C##LABSYNC_NEW\".\"VACCINS\"");
 
     while (query.next()) {
         QString nomVaccin = query.value(0).toString();
@@ -874,10 +1165,13 @@ void MainWindow::on_excel_clicked()
 {
     qDebug() << "Bouton Excel cliqué !";
 
-    // Demander à l'utilisateur de choisir l'emplacement de sauvegarde
     QString fileName = QFileDialog::getSaveFileName(this, "Exporter en Excel", "", "Fichiers CSV (*.csv)");
     if (fileName.isEmpty())
         return;
+
+    if (!fileName.endsWith(".csv", Qt::CaseInsensitive)) {
+        fileName += ".csv";
+    }
 
     QFile file(fileName);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Text)) {
@@ -886,25 +1180,193 @@ void MainWindow::on_excel_clicked()
     }
 
     QTextStream out(&file);
+    // Pas besoin de setCodec() dans Qt6, UTF-8 est utilisé par défaut
 
-    // Exporter les en-têtes de colonnes
     QAbstractItemModel *model = ui->tableViewVaccin->model();
+    if (!model) {
+        QMessageBox::warning(this, "Erreur", "Aucun modèle de données trouvé.");
+        file.close();
+        return;
+    }
+
     QStringList headers;
     for (int col = 0; col < model->columnCount(); ++col) {
-        headers << model->headerData(col, Qt::Horizontal).toString();
+        QString header = model->headerData(col, Qt::Horizontal).toString();
+        header.replace("\"", "\"\""); // Échapper les guillemets
+        headers << "\"" + header + "\"";
     }
     out << headers.join(";") << "\n";
 
-    // Exporter les données de chaque ligne
     for (int row = 0; row < model->rowCount(); ++row) {
         QStringList rowValues;
         for (int col = 0; col < model->columnCount(); ++col) {
             QString data = model->data(model->index(row, col)).toString();
-            rowValues << data;
+            data.replace("\"", "\"\""); // Échapper les guillemets
+            rowValues << "\"" + data + "\"";
         }
         out << rowValues.join(";") << "\n";
     }
 
     file.close();
-    QMessageBox::information(this, "Succès", "Exportation vers Excel réussie !");
+    QMessageBox::information(this, "Succès", "Exportation vers Excel réussie !\nFichier sauvegardé à : " + fileName);
+
+    QDesktopServices::openUrl(QUrl::fromLocalFile(fileName)); // ✅ Ouvre le fichier après export
+}
+//qrcode
+void MainWindow::genererQRCode()
+{
+    // Récupérer la ligne sélectionnée dans la table
+    QModelIndex index = ui->tableViewVaccin->currentIndex();
+
+    if (!index.isValid()) {
+        QMessageBox::warning(this, "Avertissement", "Veuillez sélectionner un vaccin dans la table.");
+        return;
+    }
+
+    // Récupérer l'ID_VACCIN de la ligne sélectionnée (supposé en colonne 0)
+    int row = index.row();
+    QModelIndex idIndex = ui->tableViewVaccin->model()->index(row, 0);
+    int idVaccin = ui->tableViewVaccin->model()->data(idIndex).toInt();
+
+    // Requête pour récupérer les données du vaccin
+    QSqlQuery query;
+    query.prepare("SELECT ID_VACCIN, nom_vaccin, type, QUANTITE, DATE_CREATION, DATE_PEREMPTION, composition FROM vaccins WHERE ID_VACCIN = :id");
+    query.bindValue(":id", idVaccin);
+
+    if (!query.exec()) {
+        qDebug() << "Erreur d'exécution de la requête : " << query.lastError().text();
+        return;
+    }
+
+    if (query.next()) {
+        QString nomVaccin = query.value("nom_vaccin").toString();
+        QString typeVaccin = query.value("type").toString();
+        int quantite = query.value("QUANTITE").toInt();
+        QDate dateCreation = query.value("DATE_CREATION").toDate();
+        QDate datePeremption = query.value("DATE_PEREMPTION").toDate();
+        QString composition = query.value("composition").toString();
+
+        // Chaîne de texte du QR Code
+        QString data = QString("ID=%1; Nom=%2; Type=%3; Quantité=%4; Créé=%5; Expire=%6; Composition=%7")
+                           .arg(idVaccin)
+                           .arg(nomVaccin)
+                           .arg(typeVaccin)
+                           .arg(quantite)
+                           .arg(dateCreation.toString("yyyy-MM-dd"))
+                           .arg(datePeremption.toString("yyyy-MM-dd"))
+                           .arg(composition);
+
+        // Génération QR Code
+        QZXingEncoderConfig config;
+        config.format = QZXing::EncoderFormat_QR_CODE;
+        QImage qrImage = QZXing::encodeData(data, config);
+
+        if (!qrImage.isNull()) {
+            QPixmap pixmap = QPixmap::fromImage(qrImage).scaled(300, 300, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+
+            // Boîte de dialogue moderne
+            QDialog *qrDialog = new QDialog(this);
+            qrDialog->setWindowTitle("QR Code du Vaccin");
+            qrDialog->setFixedSize(420, 420);
+            qrDialog->setStyleSheet("background-color: #f5f9ff; border-radius: 10px;");
+
+            QLabel *qrCodeLabel = new QLabel(qrDialog);
+            qrCodeLabel->setPixmap(pixmap);
+            qrCodeLabel->setAlignment(Qt::AlignCenter);
+            qrCodeLabel->setStyleSheet("background: white; border: 2px solid #4A90E2; border-radius: 8px; padding: 10px;");
+
+            QVBoxLayout *layout = new QVBoxLayout(qrDialog);
+            layout->addWidget(qrCodeLabel);
+            qrDialog->setLayout(layout);
+
+            qrDialog->exec();  // Affichage modal
+        } else {
+            qDebug() << "Échec de génération du QR Code.";
+        }
+    } else {
+        QMessageBox::warning(this, "Erreur", "Le vaccin sélectionné n’a pas pu être trouvé.");
+    }
+}
+//metio
+void MainWindow::updateWeather()
+{
+    // Créer un gestionnaire de réseau
+    QNetworkAccessManager *manager = new QNetworkAccessManager(this);
+
+    // Créer la requête pour l'API météo
+    QUrl url("https://api.weatherapi.com/v1/current.json?key=d9a982256c974318823233842251304&q=Tunis");
+    QNetworkRequest request(url);
+
+    // Effectuer la requête
+    QNetworkReply *reply = manager->get(request);
+
+    // Connecter le signal de fin de la requête à une fonction lambda
+    connect(reply, &QNetworkReply::finished, this, [this, reply]() {
+        // Vérifier si la réponse a bien été reçue
+        if (reply->error() == QNetworkReply::NoError) {
+            // Lire la réponse JSON
+            QByteArray response = reply->readAll();
+            QJsonDocument jsonDoc = QJsonDocument::fromJson(response);
+            QJsonObject jsonObject = jsonDoc.object();
+
+            // Extraire la température
+            QJsonObject current = jsonObject["current"].toObject();
+            double tempC = current["temp_c"].toDouble();
+            QString condition = current["condition"].toObject()["text"].toString();  // Condition météo (ex: "Sunny")
+
+            // Définir un emoji pour la condition météo
+            QString emoji;
+            if (condition.toLower().contains("sunny")) {
+                emoji = "☀️";  // Soleil
+            } else if (condition.toLower().contains("cloudy")) {
+                emoji = "☁️";  // Nuages
+            } else if (condition.toLower().contains("rain")) {
+                emoji = "🌧️";  // Pluie
+            } else if (condition.toLower().contains("snow")) {
+                emoji = "❄️";  // Neige
+            } else {
+                emoji = "🌈";  // Par défaut, arc-en-ciel
+            }
+
+            // Préparer le texte pour l'affichage
+            QString tempText = QString("Température: %1°C\n%2 %3").arg(tempC).arg(emoji).arg(condition);
+
+            // Mettre à jour l'affichage du QLabel avec la température et l'emoji
+            ui->label_14->setText(tempText);
+
+            // Appliquer un style moderne au QLabel
+            ui->label_14->setStyleSheet("QLabel {"
+                                        "font: 16pt Arial;"
+                                        "color: #ffffff;"
+                                        "background-color: rgba(0, 0, 0, 80);"
+                                        "border-radius: 10px;"
+                                        "padding: 10px;"
+                                        "}");
+
+            // Optionnel : appliquer un fondu lors de la mise à jour
+            QGraphicsOpacityEffect *opacityEffect = new QGraphicsOpacityEffect;
+            ui->label_14->setGraphicsEffect(opacityEffect);
+            QPropertyAnimation *fadeIn = new QPropertyAnimation(opacityEffect, "opacity");
+            fadeIn->setDuration(500);
+            fadeIn->setStartValue(0);
+            fadeIn->setEndValue(1);
+            fadeIn->start(QAbstractAnimation::DeleteWhenStopped);
+
+            // Repaint pour forcer la mise à jour de l'interface utilisateur
+            ui->label_14->repaint();
+
+        } else {
+            // Afficher une erreur si la requête échoue
+            ui->label_14->setText("Erreur de récupération des données météo");
+            ui->label_14->setStyleSheet("QLabel {"
+                                        "font: 14pt Arial;"
+                                        "color: #ff0000;"
+                                        "background-color: rgba(0, 0, 0, 80);"
+                                        "border-radius: 10px;"
+                                        "padding: 10px;"
+                                        "}");
+            qDebug() << "Erreur de réseau: " << reply->errorString();
+        }
+        reply->deleteLater();  // Supprimer l'objet reply après usage
+    });
 }

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>ia</class>
+ <widget class="QWidget" name="ia">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1601</width>
+    <height>734</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <widget class="QLabel" name="labelImage">
+   <property name="enabled">
+    <bool>true</bool>
+   </property>
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>20</y>
+     <width>921</width>
+     <height>271</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnAjouterImage">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>250</y>
+     <width>151</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Ajouter image </string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="btnAjouterImage_2">
+   <property name="geometry">
+    <rect>
+     <x>1360</x>
+     <y>240</y>
+     <width>151</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>générer text</string>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="textEdit">
+   <property name="geometry">
+    <rect>
+     <x>280</x>
+     <y>340</y>
+     <width>911</width>
+     <height>381</height>
+    </rect>
+   </property>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

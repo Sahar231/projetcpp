@@ -8,10 +8,14 @@
 #include <QtSql/QSqlTableModel> // Cette ligne est essentielle
 #include <QComboBox>
 #include <QTableView>  // Assurez-vous d'inclure QTableView
+#include <QVBoxLayout>  // Inclure pour QVBoxLayout (si ce n'est pas déjà inclus)
+#include <QLabel>  // Si vous affichez des QR Codes avec des QLabel
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
 
-// If you are using a PDF generation library, add the necessary include
-// Example (for QtPdf):
-// #include <QtPdf/QPdfWriter>
+namespace Ui {
+class MainWindow;
+}
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -40,19 +44,30 @@ private slots:
     void trierVaccins(int index);    // Déclarez la méthode trierVaccins ici
     void genererPDFDocument();       // Add this declaration for your PDF function
     void on_pdf_2_clicked();
-void on_excel_clicked();
-
-
+    void on_excel_clicked();
+    void resetTableView();  // Déclaration de la fonction de réinitialisation du tableau
+    void askForReset();
+    void openIA();  // Déclaration de la méthode openIA
+    void genererQRCode(); // Votre fonction pour générer un QR Code
+ //void onWeatherDataReceived(QNetworkReply *reply);
+    void updateWeather();
 private:
+QNetworkAccessManager *manager;
     Ui::MainWindow *ui;
     void setupTableView();
     QSqlDatabase db;  // Pour la base de données
     QSqlTableModel *modelVaccins;
     QTableView *tableViewVaccins;
+    QVBoxLayout *qrLayout; // Ajouter cette ligne pour votre layout QR
+
+    QString currentWeatherText;   // météo
+    void updateDateTime();        // heure + météo
+
+void fetchWeatherData();
     // Déclaration de la fonction nettoyerTexte
     QString nettoyerTexte(const QString &texte);
     QList<QString> getListeVaccins();
+     QNetworkAccessManager *networkManager;  // Déclaration du QNetworkAccessManager
 };
-
 
 #endif // MAINWINDOW_H
