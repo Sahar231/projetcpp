@@ -84,6 +84,42 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QLabel>
+//arduino
+#include <QCoreApplication>
+#include <QSerialPort>
+#include <QSerialPortInfo>
+#include <QTextStream>
+
+int main(int argc, char *argv[])
+{
+    QCoreApplication a(argc, argv);
+
+    // Initialisation du port série
+    QSerialPort serial;
+    serial.setPortName("COM5"); // Remplace COM5 par ton port COM virtuel
+    serial.setBaudRate(QSerialPort::Baud9600); // Définir la vitesse (9600 baud)
+    serial.setDataBits(QSerialPort::Data8);    // 8 bits de données
+    serial.setParity(QSerialPort::NoParity);   // Pas de parité
+    serial.setStopBits(QSerialPort::OneStop);  // 1 bit de stop
+    serial.setFlowControl(QSerialPort::NoFlowControl); // Pas de contrôle de flux
+
+    // Ouvrir le port série en mode lecture
+    if (serial.open(QIODevice::ReadOnly)) {
+        QTextStream(stdout) << "Port série ouvert avec succès !" << endl;
+
+        // Lecture des données série
+        while (serial.isOpen()) {
+            if (serial.waitForReadyRead(1000)) {  // Attente de nouvelles données
+                QByteArray data = serial.readAll(); // Lire toutes les données disponibles
+                QTextStream(stdout) << "Données reçues : " << data << endl;
+            }
+        }
+    } else {
+        QTextStream(stdout) << "Impossible d'ouvrir le port série !" << endl;
+    }
+
+    return a.exec();
+}
 
 QString MainWindow::nettoyerTexte(const QString &text) {
     // Convertir en UTF-8
