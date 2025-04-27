@@ -1,17 +1,15 @@
-// statistique.h
 #ifndef STATISTIQUE_H
 #define STATISTIQUE_H
 
 #include <QDialog>
 #include <QtCharts>
 
-
-
-    namespace Ui {
-    class statistique;
+namespace Ui {
+class statistique;
 }
 
-class statistique : public QDialog
+
+    class statistique : public QDialog
 {
     Q_OBJECT
 
@@ -23,8 +21,9 @@ private:
     Ui::statistique *ui;
 
     QWidget* createPieChart(const QString &field, const QString &title);
-    QWidget* createMonthlyChart();
     QWidget* createQuantityChart();
+    QWidget* createEtatParTypeChart();
+    QWidget* createTotalEquipementWidget();
     QWidget* createErrorWidget(const QString &message);
 };
 

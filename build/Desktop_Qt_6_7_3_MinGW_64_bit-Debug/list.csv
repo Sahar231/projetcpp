@@ -1,6 +1,0 @@
-ID_EQUIPEMENT;NOM_EQ;TYPE_EQ;DESCRIPTION;QUANTITE;ETAT;DATE_ACHAT
-99;a;appariel d'observation;Permet d'observer des échantillons microscopiques.;2;disponible;2025-01-02T00:00:00.000
-66;dd;dd;ddd;3;en panne;2000-01-03T00:00:00.000
-1;a-;appariel d'observation;Permet d'observer des échantillons microscopiques.;2;en service;2025-01-02T00:00:00.000
-13;a;appariel d'observation;Permet d'observer des échantillons microscopiques.;2;disponible;2025-01-02T00:00:00.000
-22;nbb;kkk;kkkk;2;en service;2000-01-02T00:00:00.000

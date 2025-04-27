@@ -16,13 +16,22 @@
 #include <QTextDocument>
 #include "statistique.h"
 
-
+#include <QNetworkRequest>
 #include <QMessageBox>
 #include <QBuffer>
 #include <QPainter>
 #include <QTextDocument>
 #include <QProcess>
 #include <QMessageBox>
+
+#include <QDebug>
+
+#include <QNetworkAccessManager>
+#include <QNetworkReply>
+#include <QNetworkRequest>
+
+#include <QUrl>
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -45,13 +54,13 @@ MainWindow::MainWindow(QWidget *parent)
     ui->pushButton_2->setIcon(QIcon("c:/Users/Sahar/Bureau/project/interfce/delete.png"));
         ui->pushButton_2->setIconSize(QSize(138, 29));
     ui->comboBox->addItem("en panne");
-    ui->comboBox->setItemData(0, QColor(Qt::red), Qt::ForegroundRole);
+    ui->comboBox->setItemData(1, QColor(Qt::red), Qt::ForegroundRole);
 
     ui->comboBox->addItem("en service");
-    ui->comboBox->setItemData(1, QColor(Qt::blue), Qt::ForegroundRole);
+    ui->comboBox->setItemData(2, QColor(Qt::blue), Qt::ForegroundRole);
 
     ui->comboBox->addItem("disponible");
-    ui->comboBox->setItemData(2, QColor(Qt::green), Qt::ForegroundRole);
+    ui->comboBox->setItemData(0, QColor(Qt::green), Qt::ForegroundRole);
 
     ui->btnemploye->setIcon(QIcon("c:/Users/Sahar/Bureau/project/interfce/employe.png"));
     ui->btnemploye->setIconSize(QSize(50, 50));
@@ -75,18 +84,38 @@ MainWindow::MainWindow(QWidget *parent)
 
 
 
-    ui->pdf->setIcon(QIcon("c:/Users/Sahar/Bureau/project/interface/pdf2.png"));
+    ui->pdf->setIcon(QIcon("c:/Users/Sahar/Bureau/project/interfce/pdf2.png"));
     ui->pdf->setIconSize(QSize(91, 51));
     ui->pdf->setStyleSheet("QPushButton { border: 0px; background: transparent; }");
-    ui->pdf_2->setIcon(QIcon("c:/Users/Sahar/Bureau/project/interface/sta.png"));
-    ui->pdf_2->setIconSize(QSize(91, 51));
+    ui->pdf_2->setIcon(QIcon("c:/Users/Sahar/Bureau/project/interfce/stat.png"));
+    ui->pdf_2->setIconSize(QSize(120, 90));
     ui->pdf_2->setStyleSheet("QPushButton { border: 0px; background: transparent; }");
+    // Actualiser
+    ui->actuliser->setIcon(QIcon("c:/Users/Sahar/Bureau/project/interfce/actualiser.png"));
+    ui->actuliser->setIconSize(QSize(80, 40));
+    ui->actuliser->setStyleSheet("QPushButton { border: 0px; background: transparent; }");
 
-    ui->recherche->setPlaceholderText("rechercher un equipement par ... ");
+    // Rechercher
+    ui->rechercher->setIcon(QIcon("c:/Users/Sahar/Bureau/project/interfce/rechecher.png"));
+    ui->rechercher->setIconSize(QSize(80, 40));
+    ui->rechercher->setStyleSheet("QPushButton { border: 0px; background: transparent; }");
+
+    // Historique
+    ui->historique->setIcon(QIcon("c:/Users/Sahar/Bureau/project/interfce/historique.png"));
+    ui->historique->setIconSize(QSize(80, 40));
+    ui->historique->setStyleSheet("QPushButton { border: 0px; background: transparent; }");
+
+    // Autofill
+    ui->autoFillButton->setIcon(QIcon("c:/Users/Sahar/Bureau/project/interfce/autofill.png"));
+    ui->autoFillButton->setIconSize(QSize(91, 51));
+    ui->autoFillButton->setStyleSheet("QPushButton { border: 0px; background: transparent; }");
+
+
+    ui->recherche->setPlaceholderText("rechercher un equipement  ");
 
 
     ui->supprimer->setPlaceholderText("donner id a supprime");
-    ui->trier->addItem("trier par");
+
 
 
     ui->trier->addItem("nom");
@@ -101,7 +130,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->tableView->resizeRowsToContents(); // Ajuster la hauteur des lignes automatiquement
 
     ui->tableView->setItemDelegateForColumn(5, new EtatDelegate(ui->tableView));
-    connect(ui->pushButton_7, &QPushButton::clicked, this, &MainWindow::on_pushButton_7_clicked);
+
 
 
 
@@ -114,7 +143,7 @@ void MainWindow::on_pushButton_4_clicked()  //ajouter
     int ID_EQUIPEMENT = ui->lineEdit->text().toInt();
     QString NOM_EQ=ui->lineEdit_2->text();
     QString TYPE_eq = ui->lineEdit_4->text();
-    QString DESCRIPTION=ui->lineEdit_3->text();
+    QString DESCRIPTION=ui->textEdit->toPlainText();
     QDate DATE_ACHAT=ui->dd->date();
     int QUANTITE = ui->spinBox->value();
     QString ETAT= ui->comboBox->currentText();
@@ -173,9 +202,9 @@ void MainWindow::on_pushButton_4_clicked()  //ajouter
     ui->lineEdit->clear();   // Réinitialise le champ pour l'ID_EQUIPEMENT
     ui->lineEdit_2->clear();  // Réinitialise le champ pour le NOM_EQ
     ui->lineEdit_4->clear();  // Réinitialise le champ pour le TYPE_eq
-    ui->lineEdit_3->clear();  // Réinitialise le champ pour la DESCRIPTION
+    ui->textEdit->clear();  // Réinitialise le champ pour la DESCRIPTION
     ui->dd->setDate(QDate::currentDate()); // Réinitialise la date à la date actuelle (ou vous pouvez utiliser QDate())
-    ui->spinBox->setValue(0);  // Réinitialise la valeur de QUANTITE à 0
+    ui->spinBox->setValue(1);  // Réinitialise la valeur de QUANTITE à 0
     ui->comboBox->setCurrentIndex(0);  // Réinitialise l'index de la comboBox (premier élément sélectionné)
 
 }
@@ -186,14 +215,87 @@ void MainWindow::on_autoFillButton_clicked()
 
 
 
-        //C:/Users/Sahar/Bureau/project/interfce/ai auto fill/generation.py"
+
+
+        QString apiKey = "AIzaSyCDpmQmNjDY9ME5fIGPgaNL9-c9n5fnGJc";
+
+    QString equipmentName = ui->lineEdit_2->text().trimmed();
+    if (equipmentName.isEmpty()) {
+        QMessageBox::warning(this, "Champ vide", "Veuillez entrer le nom de l'équipement.");
+        return;
+    }
+
+        QString prompt = QString(
+                             "Donne-moi le type simple et description plus plus plus plus plus  simple et plus plus courte    de l'équipement de laboratoire appelé '%1'. "
+                             "Réponds au format :\nType: ...\nDescription: ..."
+                             ).arg(equipmentName);
+
+    QString url = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=" + apiKey;
+
+
+
+
+
+
+
+       QNetworkRequest request = QNetworkRequest(QUrl(url));
+        request.setHeader(QNetworkRequest::ContentTypeHeader, "application/json");
+
+        QJsonObject textPart;
+        textPart["text"] = prompt;
+
+        QJsonObject message;
+        QJsonArray parts;
+        parts.append(textPart);
+        message["contents"] = QJsonArray{ QJsonObject{ { "parts", parts } } };
+
+        QJsonDocument doc(message);
+
+        QNetworkAccessManager* manager = new QNetworkAccessManager(this);
+        connect(manager, &QNetworkAccessManager::finished, this, [=](QNetworkReply* reply) {
+            if (reply->error() == QNetworkReply::NoError) {
+                QByteArray responseData = reply->readAll();
+                QJsonDocument responseDoc = QJsonDocument::fromJson(responseData);
+                QJsonObject rootObj = responseDoc.object();
+
+                QJsonArray candidates = rootObj["candidates"].toArray();
+                if (!candidates.isEmpty()) {
+                    QString content = candidates[0].toObject()["content"].toObject()["parts"].toArray()[0].toObject()["text"].toString();
+
+                    QString type, description;
+                    QStringList lines = content.split('\n');
+                    for (const QString& line : lines) {
+                        if (line.toLower().startsWith("type:"))
+                            type = line.section(':', 1).trimmed();
+                        else if (line.toLower().startsWith("description:"))
+                            description = line.section(':', 1).trimmed();
+                    }
+
+                    ui->lineEdit_4->setText(type);
+                    ui->textEdit->setText(description);
+
+                    if (type.isEmpty() || description.isEmpty()) {
+                        QMessageBox::warning(this, "Erreur", "La réponse de l'IA est incomplète.");
+                    } else {
+                        QMessageBox::information(this, "Succès", "Les informations ont été récupérées avec succès.");
+                    }
+                } else {
+                    QMessageBox::warning(this, "Erreur", "Aucune réponse de l'IA.");
+                }
+            } else {
+                QMessageBox::critical(this, "Erreur", "Échec de la requête : " + reply->errorString());
+            }
+
+            reply->deleteLater();
+            manager->deleteLater();
+        });
+
+        manager->post(request, doc.toJson());
+        ui->dd->setDate(QDate::currentDate()); // Réinitialise la date à la date actuelle (ou vous pouvez utiliser QDate())
+        ui->spinBox->setValue(1);  // Réinitialise la valeur de QUANTITE à 0
+        ui->comboBox->setCurrentIndex(0);  // Réinitialise l'index de la comboBox (premier élément sélectionné)
+
 }
-
-
-
-
-
-
 
 
 
@@ -203,7 +305,7 @@ void MainWindow::on_pushButton_3_clicked()  //edit
     QString NOM_EQ=ui->lineEdit_2->text();
 
     QString TYPE_eq = ui->lineEdit_4->text();
-    QString DESCRIPTION=ui->lineEdit_3->text();
+    QString DESCRIPTION=ui->textEdit->toPlainText();
     QDate DATE_ACHAT=ui->dd->date();
     int QUANTITE = ui->spinBox->value();
     QString ETAT= ui->comboBox->currentText();
@@ -263,7 +365,7 @@ void MainWindow::on_pushButton_3_clicked()  //edit
     ui->lineEdit->clear();   // Réinitialise le champ pour l'ID_EQUIPEMENT
     ui->lineEdit_2->clear();  // Réinitialise le champ pour le NOM_EQ
     ui->lineEdit_4->clear();  // Réinitialise le champ pour le TYPE_eq
-    ui->lineEdit_3->clear();  // Réinitialise le champ pour la DESCRIPTION
+    ui->textEdit->clear();  // Réinitialise le champ pour la DESCRIPTION
     ui->dd->setDate(QDate::currentDate()); // Réinitialise la date à la date actuelle (ou vous pouvez utiliser QDate())
     ui->spinBox->setValue(0);  // Réinitialise la valeur de QUANTITE à 0
     ui->comboBox->setCurrentIndex(0);  // Réinitialise l'index de la comboBox (premier élément sélectionné)
@@ -358,7 +460,7 @@ void MainWindow::on_tableView_clicked(const QModelIndex &index)
         ui->lineEdit_2->setText(nom);
 
         ui->lineEdit_4->setText(type);
-        ui->lineEdit_3->setText(description);
+        ui->textEdit->setText(description);
         ui->spinBox->setValue(quantite);
         ui->comboBox->setCurrentText(etat);
         ui->dd->setDate(date_achat);
@@ -375,7 +477,7 @@ void MainWindow::on_pushButton_5_clicked()
     ui->lineEdit->clear();   // Réinitialise le champ pour l'ID_EQUIPEMENT
     ui->lineEdit_2->clear();  // Réinitialise le champ pour le NOM_EQ
     ui->lineEdit_4->clear();  // Réinitialise le champ pour le TYPE_eq
-    ui->lineEdit_3->clear();  // Réinitialise le champ pour la DESCRIPTION
+    ui->textEdit->clear();  // Réinitialise le champ pour la DESCRIPTION
     ui->dd->setDate(QDate::currentDate()); // Réinitialise la date à la date actuelle (ou vous pouvez utiliser QDate())
     ui->spinBox->setValue(0);  // Réinitialise la valeur de QUANTITE à 0
     ui->comboBox->setCurrentIndex(0);  // Réinitialise l'index de la comboBox (premier élément sélectionné)
@@ -383,29 +485,6 @@ void MainWindow::on_pushButton_5_clicked()
 
 }
 
-
-
-
-
-void MainWindow::on_recherche_2_clicked()
-{
-    if (ui->recherche->text().isEmpty()) {
-        QMessageBox::warning(this, "erreur", "Aucun résultat trouvé pour votre recherche.");
-        ui->tableView->setModel(equ.affichierEQ());
-    } else {
-        // Si le champ de recherche contient du texte, rechercher avec ce texte
-        QSqlQueryModel *model = equ.Rechercher(ui->recherche->text());
-
-        // Vérifier si le modèle est vide (c'est-à-dire aucune correspondance)
-        if (model->rowCount() == 0) {
-            QMessageBox::warning(this, "Aucun résultat", "Aucun résultat trouvé pour votre recherche.");
-        }
-
-
-        ui->tableView->setModel(model);
-    }
-
-}
 
 
 void MainWindow::on_trier_activated(int index)
@@ -429,25 +508,41 @@ void MainWindow::on_pdf_clicked()
     printer.setOutputFormat(QPrinter::PdfFormat);
     printer.setOutputFileName(fileName);
     printer.setPageMargins(QMarginsF(15, 15, 15, 15));
-    printer.setPageSize(QPageSize(QSizeF(300, 400), QPageSize::Millimeter)); // الحجم الجديد
+    printer.setPageSize(QPageSize(QSizeF(280, 396), QPageSize::Millimeter));
 
-    QString dateTime = QDateTime::currentDateTime().toString("dd/MM/yyyy");
-    QString time = QDateTime::currentDateTime().toString("hh:mm:ss.zzz");
+
+
 
     QString html;
-    html += "<div style='width:100%; font-family:Arial;'>";
 
-    // Logo, titre, date et heure
-    html += "<div style='text-align:center;'>";
-    html += "<img src='c:/Users/Sahar/Bureau/project/interfce/logo9.png' width='120'/><br>";
-    html += "<span style='font-size:11pt; color:#333;'>Labsync - Centre de Vaccination et de Recherche Biologique</span><br>";
-    html += "<span style='font-size:10pt; color:#777;'>Date : " + dateTime + " | Heure : " + time + "</span>";
+
+
+    html += "<div style='display: flex; justify-content: space-between; align-items: center; width: 100%; font-family: Arial;'>";
+
+    // Gauche
+    html += "<div style='text-align: left; font-size: 10pt;'>";
+    html += "Labsync<br>";
+    html += "Centre de Vaccination <br>";
+    html += "et de Recherche Biologique<br>";
     html += "</div>";
 
-    html += "<hr style='height:2px;border:none;color:#333;background-color:#333;'/>";
+    // Centre - Logo
+    html += "<div style='text-align: center;'>";
+    html += "<img src='c:/Users/Sahar/Bureau/project/interfce/logo9.png' width='80'/>";
+    html += "</div>";
 
-    html += "<h2 align='center' style='font-size:16pt; font-weight: bold; color:#1E90FF;'>Liste des équipements</h2>";
-    html += "<hr style='height:1px;border:none;color:#333;background-color:#ccc;'/>";
+    // Droite - Date et Heure
+    html += "<div style='text-align: right; font-size: 10pt;'>";
+    html += "Date : " + QDate::currentDate().toString("dd/MM/yyyy") + "<br>";
+    html += "Heure : " + QTime::currentTime().toString("hh:mm:ss");
+    html += "</div>";
+
+    html += "</div>";  // Fin de la ligne
+
+    html += "<div style='text-align:center; margin-top:15px;'>";
+    html += "<h2 style='font-size:14pt; color:#1E90FF;'>Liste des équipements</h2>";
+    html += "</div>";
+
 
     // Tableau
     html += "<table border='1' cellspacing='0' cellpadding='4' width='100%'>";
@@ -459,7 +554,7 @@ void MainWindow::on_pdf_clicked()
     html += "</tr></thead><tbody>";
 
     for (int row = 0; row < ui->tableView->model()->rowCount(); ++row) {
-        html += "<tr>";
+        html += (row % 2 == 0) ? "<tr style='background-color:#f9f9f9;'>" : "<tr>";
         for (int col = 0; col < ui->tableView->model()->columnCount(); ++col) {
             QString data = ui->tableView->model()->data(ui->tableView->model()->index(row, col)).toString();
             html += "<td style='font-size:10pt; color:#333;'>" + data + "</td>";
@@ -472,17 +567,16 @@ void MainWindow::on_pdf_clicked()
     int totalEquipements = ui->tableView->model()->rowCount();
     html += "<p align='right' style='font-size:12pt; font-weight: bold; color:#333;'>Nombre total d'équipements : " + QString::number(totalEquipements) + "</p>";
 
-    html += "<br><br><hr style='height:1px;border:none;color:#ccc;background-color:#ccc;'/>";
-    html += "<div style='display: flex; justify-content: space-between;'>";
-    html += "<p style='font-size:11pt; color:#555;'>Chef de Lab</p>";
-    html += "<p style='font-size:11pt; color:#555;'>Signature du Responsable des Equipements – Page <span class='pageNumber'></span></p>";
+    // Signature
+    html += "<div style='margin-top: 40px; text-align: right; font-size:11pt; color:#555;'>";
+    html += "Signature du Responsable des Equipements";
     html += "</div>";
 
-    // Footer simple
-    html += "<br><hr style='height:2px;border:none;color:#333;background-color:#333;'/>";
-    html += "<div style='text-align: center; font-size:10pt; color:#777;'>";
-    html += "2025 © Tous les droits sont réservés.";
+    // Footer
+    html += "<div style='width:100%; text-align:center; font-size:9pt; color:#777; margin-top:80px;'>";
+    html += "2025 © Tous droits sont réservés.";
     html += "</div>";
+
 
     html += "</div>";
 
@@ -495,60 +589,7 @@ void MainWindow::on_pdf_clicked()
 }
 
 
-void MainWindow::on_pushButton_6_clicked()
-{
 
-        QString fileName = QFileDialog::getSaveFileName(this, "Exporter en Excel", "", "*.csv");
-
-        if (fileName.isEmpty())
-            return;
-
-        if (!fileName.endsWith(".csv"))
-            fileName += ".csv";
-
-        QFile file(fileName);
-        if (file.open(QIODevice::WriteOnly | QIODevice::Text)) {
-            QTextStream stream(&file);
-
-            // En-têtes
-            QAbstractItemModel *model = ui->tableView->model();
-            for (int col = 0; col < model->columnCount(); ++col) {
-                stream << model->headerData(col, Qt::Horizontal).toString();
-                if (col != model->columnCount() - 1)
-                    stream << ";";
-            }
-            stream << "\n";
-
-            // Lignes
-            for (int row = 0; row < model->rowCount(); ++row) {
-                for (int col = 0; col < model->columnCount(); ++col) {
-                    QString data = model->data(model->index(row, col)).toString();
-                    stream << data;
-                    if (col != model->columnCount() - 1)
-                        stream << ";";
-                }
-                stream << "\n";
-            }
-
-            file.close();
-            QMessageBox::information(this, "Export réussi", "La liste a été exportée vers Excel avec succès.");
-        } else {
-            QMessageBox::critical(this, "Erreur", "Impossible d’ouvrir le fichier pour l’écriture.");
-        }
-
-
-}
-
-
-
-
-
-void MainWindow::on_pushButton_7_clicked()
-{
-    historique histDialog(this);
-
-    histDialog.exec();
-}
 
 
 void MainWindow::on_pdf_2_clicked()
@@ -559,32 +600,47 @@ void MainWindow::on_pdf_2_clicked()
 }
 
 
-void MainWindow::on_pushButton_clicked()
+
+
+
+
+void MainWindow::on_historique_clicked()
+{
+    historique histDialog(this);
+
+    histDialog.exec();
+}
+
+
+
+void MainWindow::on_rechercher_clicked()
+{
+    if (ui->recherche->text().isEmpty()) {
+        QMessageBox::warning(this, "erreur", "rechercher d un equipement ne doivent pas être vides .");
+        ui->tableView->setModel(equ.affichierEQ());
+    } else {
+        // Si le champ de recherche contient du texte, rechercher avec ce texte
+        QSqlQueryModel *model = equ.Rechercher(ui->recherche->text());
+
+        // Vérifier si le modèle est vide (c'est-à-dire aucune correspondance)
+        if (model->rowCount() == 0) {
+            QMessageBox::warning(this, "Aucun résultat", "Aucun résultat trouvé pour votre recherche.");
+            ui->tableView->setModel(equ.affichierEQ());
+        }
+
+
+        ui->tableView->setModel(model);
+    }
+}
+
+
+void MainWindow::on_actuliser_clicked()
 {
     ui->tableView->setModel(equ.affichierEQ());
     ui->tableView->setWordWrap(true);
     ui->tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
-   ui->tableView->resizeRowsToContents();
-
+    ui->tableView->resizeRowsToContents();
     ui->tableView->setItemDelegateForColumn(5, new EtatDelegate(ui->tableView));
-
-
-
-   ui->tableView->horizontalHeader()->setSectionResizeMode(3, QHeaderView::ResizeToContents);
-
-    ui->tableView->setColumnWidth(0, 35);   // Colonne 1: ID
-    ui->tableView->setColumnWidth(3, 30);
-   ui->tableView->setColumnWidth(4, 80);    // Colonne 4: Quantité
-    ui->tableView->setColumnWidth(5, 40);  // Colonne 6: Date achat
-
-
-
-   ui->tableView->resizeRowsToContents();
-
-
-      // Ajuste la largeur de la colonne image (ajuste selon tes besoins)
-
-
+    ui->tableView->resizeRowsToContents();
 }
-
 

@@ -45,3 +45,4 @@ CONFIG +=console
 QT += printsupport
 
 QT += core gui charts
+QT += network
