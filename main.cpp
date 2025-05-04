@@ -1,17 +1,26 @@
-#include "mainwindow.h"
+#include "equip.h"
 #include <QMessageBox>
 #include <QApplication>
 #include "connection.h"
-
-
-int main(int argc, char *argv[])
+#include "connection.cpp"
+#include <QString>
+#include <QChar>
+#include "menu.h"
+#include "login.h"
+int main(int arg, char *ar[])
 {
-    QApplication a(argc, argv);
-    MainWindow w;
+    QApplication a(arg, ar);
+     menu w;
+    login loginDialog;
+
+
     connection c;
     bool test=c.createconnect();
     if(test)
-    {w.show();
+    {    loginDialog.resize(1400, 770);
+        while(loginDialog.exec() != QDialog::Accepted) {
+            loginDialog.show();
+        }
 
         QMessageBox::information(nullptr, QObject::tr("database is open"),
                                  QObject::tr("connection successful.\n"
@@ -24,7 +33,9 @@ int main(int argc, char *argv[])
                                           "Click Cancel to exit."), QMessageBox::Cancel);
 
 
+    w.show();
 
     return a.exec();
 }
+
 

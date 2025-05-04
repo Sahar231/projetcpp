@@ -1,3 +1,23 @@
 <RCC>
     <qresource prefix="/background"/>
+    <qresource prefix="/">
+        <file>employe.png</file>
+        <file>equipement.png</file>
+        <file>formation.png</file>
+        <file>logo9.png</file>
+        <file>recherche.png</file>
+        <file>patient.png</file>
+        <file>vaccins.png</file>
+        <file>back55.jpg</file>
+        <file>temp.png</file>
+        <file>cal.png</file>
+        <file>capteur.png</file>
+        <file>email.png</file>
+        <file>traduction.png</file>
+        <file>chatbot.png</file>
+        <file>pdft.png</file>
+        <file>sms.png</file>
+        <file>stat.png</file>
+        <file>pdf2.png</file>
+    </qresource>
 </RCC>
