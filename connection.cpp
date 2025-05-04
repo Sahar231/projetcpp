@@ -1,10 +1,7 @@
 #include "connection.h"
 #include<QDebug>
 connection::connection()
-{
-
-
-}
+{}
 bool connection::createconnect()
 {bool test=false;;
     db = QSqlDatabase::addDatabase("QODBC");
@@ -17,17 +14,6 @@ bool connection::createconnect()
 
 
 
-return  test;
+    return  test;
 }
-
-
-
-
-
-
-
-
-
-
-
 
