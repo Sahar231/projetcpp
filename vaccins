@@ -1,0 +1,30 @@
+--------------------------------------------------------
+--  Fichier créé - dimanche-mai-04-2025   
+--------------------------------------------------------
+--------------------------------------------------------
+--  DDL for Table VACCINS
+--------------------------------------------------------
+
+  CREATE TABLE "LABSYNC"."VACCINS" 
+   (	"ID_VACCIN" NUMBER(30,0), 
+	"NOM_VACCIN" VARCHAR2(200 BYTE), 
+	"EFFET_SECONDAIRE" VARCHAR2(200 BYTE), 
+	"COMPOSITION" VARCHAR2(1000 BYTE), 
+	"QUANTITE" NUMBER(30,0), 
+	"DATE_CREATION" DATE, 
+	"DATE_PEREMPTION" DATE, 
+	"TYPE" VARCHAR2(200 BYTE), 
+	"ID_RECH_PK1" NUMBER(30,0) DEFAULT 1
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "SYSTEM" ;
+REM INSERTING into LABSYNC.VACCINS
+SET DEFINE OFF;
+Insert into LABSYNC.VACCINS (ID_VACCIN,NOM_VACCIN,EFFET_SECONDAIRE,COMPOSITION,QUANTITE,DATE_CREATION,DATE_PEREMPTION,TYPE,ID_RECH_PK1) values (20,'Tétanos','Douleur musculaire, rougeur au site d''injection','Antigène grippal, sel tamponné, eau',300,to_date('09-03-25','DD-MM-RR'),to_date('01-01-31','DD-MM-RR'),'Recombinant
+',1);
+Insert into LABSYNC.VACCINS (ID_VACCIN,NOM_VACCIN,EFFET_SECONDAIRE,COMPOSITION,QUANTITE,DATE_CREATION,DATE_PEREMPTION,TYPE,ID_RECH_PK1) values (21,'COVID-19','Fatigue, maux de tête, douleur au site d''injection','ARN messager, lipides, sels',1000,to_date('10-03-25','DD-MM-RR'),to_date('01-01-32','DD-MM-RR'),'Virus Modifié',1);
+Insert into LABSYNC.VACCINS (ID_VACCIN,NOM_VACCIN,EFFET_SECONDAIRE,COMPOSITION,QUANTITE,DATE_CREATION,DATE_PEREMPTION,TYPE,ID_RECH_PK1) values (23,'Rougeole','Éruption cutanée, légère fièvre','Virus de la rougeole atténué, excipients',750,to_date('09-03-25','DD-MM-RR'),to_date('01-01-32','DD-MM-RR'),'Virus Modifié',1);
+Insert into LABSYNC.VACCINS (ID_VACCIN,NOM_VACCIN,EFFET_SECONDAIRE,COMPOSITION,QUANTITE,DATE_CREATION,DATE_PEREMPTION,TYPE,ID_RECH_PK1) values (34,'Menactra','Fièvre légère Douleurs musculaires Rougeur au site d’injection','Polysaccharides CRM197 Solution saline',55,to_date('13-04-25','DD-MM-RR'),to_date('01-01-63','DD-MM-RR'),'Vivants Atténués
+',1);

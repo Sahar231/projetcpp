@@ -18,16 +18,21 @@ class ia : public QWidget
 
 public:
     explicit ia(QWidget *parent = nullptr);
-    void sendImagePathToAPI(const QString &imagePath);
+
     ~ia();
 
 private slots:
-    void on_btnAjouterImage_2_clicked();
-    void handleAPIResponse(QNetworkReply *reply);
+
+
+
+    void envoyerImageHuggingFace(const QString &filePath);
+
+
 
 private:
     Ui::ia *ui;
     QString imagePath;
+    void envoyerPromptGemini(const QString &prompt);
     //void sendImagePathToAPI(const QString &imagePath);
 };
 

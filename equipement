@@ -1,0 +1,80 @@
+--------------------------------------------------------
+--  Fichier créé - dimanche-mai-04-2025   
+--------------------------------------------------------
+--------------------------------------------------------
+--  DDL for Table EQUIPEMENT
+--------------------------------------------------------
+
+  CREATE TABLE "LABSYNC"."EQUIPEMENT" 
+   (	"ID_EQUIPEMENT" NUMBER, 
+	"NOM_EQ" VARCHAR2(20 BYTE), 
+	"TYPE_EQ" VARCHAR2(20 BYTE), 
+	"DESCRIPTION" VARCHAR2(20 BYTE), 
+	"QUANTITE" NUMBER, 
+	"ETAT" VARCHAR2(20 BYTE), 
+	"DATE_ACHAT" DATE
+   ) SEGMENT CREATION IMMEDIATE 
+  PCTFREE 10 PCTUSED 40 INITRANS 1 MAXTRANS 255 NOCOMPRESS LOGGING
+  STORAGE(INITIAL 65536 NEXT 1048576 MINEXTENTS 1 MAXEXTENTS 2147483645
+  PCTINCREASE 0 FREELISTS 1 FREELIST GROUPS 1 BUFFER_POOL DEFAULT FLASH_CACHE DEFAULT CELL_FLASH_CACHE DEFAULT)
+  TABLESPACE "SYSTEM" ;
+REM INSERTING into LABSYNC.EQUIPEMENT
+SET DEFINE OFF;
+Insert into LABSYNC.EQUIPEMENT (ID_EQUIPEMENT,NOM_EQ,TYPE_EQ,DESCRIPTION,QUANTITE,ETAT,DATE_ACHAT) values (9,'ll','m','mm',3,'en panne',to_date('01-01-00','DD-MM-RR'));
+Insert into LABSYNC.EQUIPEMENT (ID_EQUIPEMENT,NOM_EQ,TYPE_EQ,DESCRIPTION,QUANTITE,ETAT,DATE_ACHAT) values (2,'microscope','lll','ppppp',6,'disponible',to_date('03-05-25','DD-MM-RR'));
+Insert into LABSYNC.EQUIPEMENT (ID_EQUIPEMENT,NOM_EQ,TYPE_EQ,DESCRIPTION,QUANTITE,ETAT,DATE_ACHAT) values (19,'microscope','lll','ppppp',6,'disponible',to_date('04-05-25','DD-MM-RR'));
+Insert into LABSYNC.EQUIPEMENT (ID_EQUIPEMENT,NOM_EQ,TYPE_EQ,DESCRIPTION,QUANTITE,ETAT,DATE_ACHAT) values (1,'microscope','lll','ppppp',10,'en service',to_date('04-05-25','DD-MM-RR'));
+Insert into LABSYNC.EQUIPEMENT (ID_EQUIPEMENT,NOM_EQ,TYPE_EQ,DESCRIPTION,QUANTITE,ETAT,DATE_ACHAT) values (10,'lkk','m','mm',3,'en panne',to_date('04-05-25','DD-MM-RR'));
+Insert into LABSYNC.EQUIPEMENT (ID_EQUIPEMENT,NOM_EQ,TYPE_EQ,DESCRIPTION,QUANTITE,ETAT,DATE_ACHAT) values (14,'lkk','m','mm',3,'en panne',to_date('01-01-00','DD-MM-RR'));
+--------------------------------------------------------
+--  DDL for Trigger HISDELETE
+--------------------------------------------------------
+
+  CREATE OR REPLACE TRIGGER "LABSYNC"."HISDELETE" 
+AFTER DELETE ON EQUIPEMENT
+FOR EACH ROW
+BEGIN
+    IF DELETING THEN
+        INSERT INTO HISTORIQUE (ID_EQ,ACTION, DETAILS, DATE_HIS)
+        VALUES (
+            :OLD.ID_EQUIPEMENT,
+            'suppression',
+            :OLD.NOM_EQ,
+            SYSDATE
+        );
+    END IF;
+END;
+/
+ALTER TRIGGER "LABSYNC"."HISDELETE" ENABLE;
+--------------------------------------------------------
+--  DDL for Trigger HIS
+--------------------------------------------------------
+
+  CREATE OR REPLACE TRIGGER "LABSYNC"."HIS" 
+BEFORE INSERT OR UPDATE  ON EQUIPEMENT
+FOR EACH ROW
+BEGIN
+    
+    IF INSERTING THEN
+        INSERT INTO HISTORIQUE (ID_EQ,ACTION, DETAILS, DATE_HIS)
+        VALUES (
+            :OLD.ID_EQUIPEMENT,
+            'ajout',
+            'Nouvel équipement ajouté : ' || :NEW.NOM_EQ,
+            SYSDATE    
+        );
+
+       ELSIF UPDATING THEN
+        INSERT INTO HISTORIQUE (ID_EQ,ACTION, DETAILS, DATE_HIS)
+        VALUES (
+        :OLD.ID_EQUIPEMENT,
+            'modification',
+            'Équipement modifié : ' || :OLD.NOM_EQ || 
+            
+            ' | État: ' || :OLD.ETAT || ' ? ' || :NEW.ETAT,
+            SYSDATE        
+        );
+         END IF;
+END;
+/
+ALTER TRIGGER "LABSYNC"."HIS" ENABLE;

@@ -5,8 +5,6 @@ QT += charts
 QT += charts
 QT += network
 QT += core gui network
-#arduino
-QT += core serialport
 
 
 

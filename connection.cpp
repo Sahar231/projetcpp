@@ -1,25 +1,30 @@
 #include "connection.h"
-#include <QSqlDatabase>
-#include <QSqlError>
-#include <QDebug>
+#include<QDebug>
+connection::connection()
+{}
+bool connection::createconnect()
+{bool test=false;;
+    db = QSqlDatabase::addDatabase("QODBC");
+    db.setHostName("localhost");
+    db.setDatabaseName("Source_Projet2A17v");//inserer le nom de la source de données
+    db.setUserName("labsync");//inserer nom de l'utilisateur
+    db.setPassword("labsync");//inserer mot de passe de cet utilisateur
+    if (db.open())
+        test=true;
 
-connection::connection() {
-    // Constructeur
+
+
+return  test;
 }
 
-bool connection::createconnection() {
-    // Créer la connexion à la base de données Oracle
-    QSqlDatabase db = QSqlDatabase::addDatabase("QODBC");  // "QOCI" est le pilote pour Oracle
 
 
-    db.setDatabaseName("labsync");  // Nom de la source de données
-    db.setUserName("C##LABSYNC_NEW");  // Nom d'utilisateur
-    db.setPassword("labsync");  // Mot de passe
 
-    if (!db.open()) {
-        qDebug() << "Erreur de connexion à la base de données : " << db.lastError().text();
-        return false;
-    }
 
-    return true;
-}
+
+
+
+
+
+
+

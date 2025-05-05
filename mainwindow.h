@@ -10,8 +10,6 @@
 #include <QTableView>  // Assurez-vous d'inclure QTableView
 #include <QVBoxLayout>  // Inclure pour QVBoxLayout (si ce n'est pas déjà inclus)
 #include <QLabel>  // Si vous affichez des QR Codes avec des QLabel
-#include <QNetworkAccessManager>
-#include <QNetworkReply>
 
 namespace Ui {
 class MainWindow;
@@ -49,10 +47,20 @@ private slots:
     void askForReset();
     void openIA();  // Déclaration de la méthode openIA
     void genererQRCode(); // Votre fonction pour générer un QR Code
- //void onWeatherDataReceived(QNetworkReply *reply);
-    void updateWeather();
+
+    void on_btnemploye_clicked();
+
+    void on_btnpatient_clicked();
+
+    void on_btnequipement_clicked();
+
+    void on_btnformation_clicked();
+
+    void on_btnrecherche_clicked();
+
+    void on_logout_clicked();
+
 private:
-QNetworkAccessManager *manager;
     Ui::MainWindow *ui;
     void setupTableView();
     QSqlDatabase db;  // Pour la base de données
@@ -60,14 +68,9 @@ QNetworkAccessManager *manager;
     QTableView *tableViewVaccins;
     QVBoxLayout *qrLayout; // Ajouter cette ligne pour votre layout QR
 
-    QString currentWeatherText;   // météo
-    void updateDateTime();        // heure + météo
-
-void fetchWeatherData();
     // Déclaration de la fonction nettoyerTexte
     QString nettoyerTexte(const QString &texte);
     QList<QString> getListeVaccins();
-     QNetworkAccessManager *networkManager;  // Déclaration du QNetworkAccessManager
 };
 
 #endif // MAINWINDOW_H

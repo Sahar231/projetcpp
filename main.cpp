@@ -1,33 +1,41 @@
-#include "mainwindow.h"
-#include <QApplication>
+#include "equip.h"
 #include <QMessageBox>
-#include "connection.h"  // Ensure the path is correct
-
-int main(int argc, char *argv[])
+#include <QApplication>
+#include "connection.h"
+#include "connection.cpp"
+#include <QString>
+#include <QChar>
+#include "menu.h"
+#include "login.h"
+int main(int arg, char *ar[])
 {
-    QApplication a(argc, argv);
+    QApplication a(arg, ar);
+     menu w;
+    login loginDialog;
 
-    connection c;  // Create an object of the connection class
-    bool test = c.createconnection();  // Call the createconnection() method
 
-    MainWindow w;
-    w.resize(1600, 900);
+    connection c;
+    bool test=c.createconnect();
+    if(test)
+    {    loginDialog.resize(1400, 770);
+        while(loginDialog.exec() != QDialog::Accepted) {
+            loginDialog.show();
+        }
 
-    if (test) {
-        // Show the main window
-        w.show();
+        QMessageBox::information(nullptr, QObject::tr("database is open"),
+                                 QObject::tr("connection successful.\n"
+                                             "Click Cancel to exit."), QMessageBox::Cancel);
 
-        // Display a success message
-        QMessageBox::information(nullptr, QObject::tr("Database is open"),
-                                 QObject::tr("Connection successful.\nClick OK to continue."),
-                                 QMessageBox::Ok);
-    } else {
-        // Display an error message if connection fails
-        QMessageBox::critical(nullptr, QObject::tr("Database is not open"),
-                              QObject::tr("Connection failed.\nClick OK to exit."),
-                              QMessageBox::Ok);
-        return -1;  // Exit if connection fails
     }
+    else
+        QMessageBox::critical(nullptr, QObject::tr("database is not open"),
+                              QObject::tr("connection failed.\n"
+                                          "Click Cancel to exit."), QMessageBox::Cancel);
 
-    return a.exec();  // Start the event loop
+
+    w.show();
+
+    return a.exec();
 }
+
+
